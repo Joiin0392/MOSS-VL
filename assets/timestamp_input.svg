@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg viewBox="0 74.515 800 375.485" xmlns="http://www.w3.org/2000/svg" xmlns:bx="https://boxy-svg.com">
+  <rect width="800" height="375.589" fill="#0f172a" rx="10" style="" y="74.411" id="object-0"/>
+  <g transform="translate(50, 100)">
+    <text x="0" y="-10" fill="#e2e8f0" font-family="Arial" font-size="14" font-weight="bold" style="white-space: pre;">Input Video Frames</text>
+    <rect x="0" y="0" width="700" height="80" fill="#1e293b" stroke="#334155" rx="4"/>
+    <g id="frames">
+      <rect x="10" y="10" width="100" height="60" fill="#3b82f6" rx="2" fill-opacity="0.8"/>
+      <text x="60" y="45" text-anchor="middle" fill="white" font-size="10" style="white-space: pre;">Frame 0s</text>
+      <rect x="125" y="10" width="100" height="60" fill="#3b82f6" rx="2" fill-opacity="0.8"/>
+      <text x="175" y="45" text-anchor="middle" fill="white" font-size="10" style="white-space: pre;">Frame 1.2s</text>
+      <rect x="240" y="10" width="100" height="60" fill="#3b82f6" rx="2" fill-opacity="0.8"/>
+      <text x="290" y="45" text-anchor="middle" fill="white" font-size="10" style="white-space: pre;">Frame 2.3s</text>
+      <rect x="355" y="10" width="100" height="60" fill="#3b82f6" rx="2" fill-opacity="0.8"/>
+      <text x="405" y="45" text-anchor="middle" fill="white" font-size="10" style="white-space: pre;">Frame 3.5s</text>
+      <circle cx="500" cy="40" r="2" fill="#94a3b8"/>
+      <circle cx="520" cy="40" r="2" fill="#94a3b8"/>
+      <circle cx="540" cy="40" r="2" fill="#94a3b8"/>
+    </g>
+  </g>
+  <path d="M 107.847 188.109 L 107.847 228.109" stroke="#f59e0b" stroke-width="2" stroke-dasharray="4" marker-end="url(#arrow)" style="stroke-width: 2;"/>
+  <path d="M 225.263 187.908 L 225.263 227.908" stroke="#f59e0b" stroke-width="2" stroke-dasharray="4" marker-end="url(#arrow)" style="stroke-width: 2;"/>
+  <path d="M 342.059 187.001 L 342.059 227.001" stroke="#f59e0b" stroke-width="2" stroke-dasharray="4" marker-end="url(#arrow)" style="stroke-width: 2;"/>
+  <path d="M 456.863 187.206 L 456.863 227.206" stroke="#f59e0b" stroke-width="2" stroke-dasharray="4" marker-end="url(#arrow)" style="stroke-width: 2;"/>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="5" refY="5" orient="auto">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#f59e0b"/>
+    </marker>
+    <bx:export>
+      <bx:file format="svg" href="#object-0" path="未命名.svg"/>
+    </bx:export>
+  </defs>
+  <rect x="48.4" y="243.212" width="700" height="40" fill="#451a03" rx="20" stroke="#f59e0b" stroke-width="1" style="stroke-width: 1;"/>
+  <text x="387.73" y="267.106" text-anchor="middle" fill="#fbbf24" font-family="monospace" font-size="14" font-weight="bold" style="white-space: pre; stroke-width: 1; font-size: 14px;">
+      Absolute Timestamp Encoding: &lt;|time_start|&gt; T &lt;|time_end|&gt;
+    </text>
+  <g transform="translate(50, 320)">
+    <text x="0" y="-10" fill="#e2e8f0" font-family="Arial" font-size="14" font-weight="bold" style="white-space: pre;">Model Input Sequence (Token Stream)</text>
+    <rect width="700" height="100" fill="#020617" stroke="#1e293b" rx="4"/>
+    <svg x="10" y="10" width="680" height="80" viewBox="0 0 1000 80">
+      <g id="token-flow">
+        <animateTransform attributeName="transform" type="translate" from="0 0" to="-400 0" dur="10s" repeatCount="indefinite"/>
+        <rect x="0" y="25" width="80" height="30" fill="#475569" rx="4"/>
+        <text x="40" y="45" text-anchor="middle" fill="white" font-family="monospace" font-size="10" style="white-space: pre;">|im_start|</text>
+        <rect x="85" y="25" width="100" height="30" fill="#475569" rx="4"/>
+        <text x="135" y="45" text-anchor="middle" fill="white" font-family="monospace" font-size="10" style="white-space: pre;">|vision_start|</text>
+        <rect x="190" y="25" width="110" height="30" fill="#92400e" rx="4" stroke="#f59e0b"/>
+        <text x="245" y="45" text-anchor="middle" fill="white" font-family="monospace" font-size="10" style="white-space: pre;">0.0 seconds</text>
+        <rect x="305" y="25" width="80" height="30" fill="#1e40af" rx="4"/>
+        <text x="345" y="45" text-anchor="middle" fill="white" font-family="monospace" font-size="10" style="white-space: pre;">|img_pad|</text>
+        <rect x="390" y="25" width="110" height="30" fill="#92400e" rx="4" stroke="#f59e0b"/>
+        <text x="445" y="45" text-anchor="middle" fill="white" font-family="monospace" font-size="10" style="white-space: pre;">1.2 seconds</text>
+        <rect x="505" y="25" width="80" height="30" fill="#1e40af" rx="4"/>
+        <text x="545" y="45" text-anchor="middle" fill="white" font-family="monospace" font-size="10" style="white-space: pre;">|img_pad|</text>
+        <rect x="590" y="25" width="110" height="30" fill="#92400e" rx="4" stroke="#f59e0b"/>
+        <text x="645" y="45" text-anchor="middle" fill="white" font-family="monospace" font-size="10" style="white-space: pre;">2.3 seconds</text>
+        <rect x="705" y="25" width="80" height="30" fill="#1e40af" rx="4"/>
+        <text x="745" y="45" text-anchor="middle" fill="white" font-family="monospace" font-size="10" style="white-space: pre;">|img_pad|</text>
+        <rect x="790" y="25" width="110" height="30" fill="#92400e" rx="4" stroke="#f59e0b"/>
+        <text x="845" y="45" text-anchor="middle" fill="white" font-family="monospace" font-size="10" style="white-space: pre;">3.5 seconds</text>
+        <rect x="905" y="25" width="80" height="30" fill="#1e40af" rx="4"/>
+        <text x="945" y="45" text-anchor="middle" fill="white" font-family="monospace" font-size="10" style="white-space: pre;">|img_pad|</text>
+      </g>
+    </svg>
+    <linearGradient id="fade" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0" stop-color="#020617" stop-opacity="1"/>
+      <stop offset="0.1" stop-color="#020617" stop-opacity="0"/>
+      <stop offset="0.9" stop-color="#020617" stop-opacity="0"/>
+      <stop offset="1" stop-color="#020617" stop-opacity="1"/>
+    </linearGradient>
+    <rect width="700" height="100" fill="url(#fade)" pointer-events="none"/>
+  </g>
+  <rect x="550" y="110" width="172.719" height="64.257" fill="#1e293b" rx="8" stroke="#38bdf8" stroke-width="1" style=""/>
+  <text x="558.49" y="125.199" fill="#38bdf8" font-size="10" font-family="sans-serif" style="white-space: pre; font-size: 10px;">Feature Highlight:</text>
+  <text x="560" y="138.426" fill="#f8fafc" font-size="9" font-family="sans-serif" style="white-space: pre; font-size: 9px;">• Relative order is not enough.</text>
+  <text x="560" y="152.554" fill="#f8fafc" font-size="9" font-family="sans-serif" style="white-space: pre; font-size: 9px;">• Absolute time unlocks precise </text>
+  <text x="560" y="166.036" fill="#f8fafc" font-size="9" font-family="sans-serif" style="white-space: pre; font-size: 9px;">  temporal analysis.</text>
+</svg>
