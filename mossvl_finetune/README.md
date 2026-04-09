@@ -205,8 +205,8 @@ torchrun --nproc_per_node=8 mossvl_finetune/train.py \
 
 To ensure the model learns effectively, we apply a specific masking strategy to our training tokens:
 
-- Training Targets: Only the Assistant's responses are used as active training labels.
+- **Training Targets:** Only the Assistant's responses are used as active training labels.
 
-- Masked Content: System prompts, user queries, and all vision-related tokens (e.g., <|image_pad|>) are assigned an ignore_index=-100 to exclude them from loss calculation.
+- **Masked Content:** System prompts, user queries, and all vision-related tokens (e.g., <|image_pad|>) are assigned an ignore_index=-100 to exclude them from loss calculation.
 
-- EOS Learning: The trailing <|im_end|> token at the end of each Assistant turn is explicitly included in the labels, ensuring the model learns when to stop generating.
+- **EOS Learning:** The trailing <|im_end|> token at the end of each Assistant turn is explicitly included in the labels, ensuring the model learns when to stop generating.
