@@ -2,9 +2,11 @@ from __future__ import annotations
 
 import argparse
 import json
+import queue
 import time
 from pathlib import Path
-from typing import Any, Dict, List
+from threading import Thread
+from typing import Any, Dict, Iterable, List
 
 import torch
 from transformers import AutoModelForCausalLM, AutoProcessor
@@ -46,27 +48,23 @@ GENERATE_DEFAULTS: Dict[str, Any] = {
     "vision_chunked_length": 64,
 }
 
-OPTIONAL_QUERY_KEYS = (
-    "thinking_mode",
-    "system_prompt_type",
-    "system_prompt",
-)
+LEGACY_MODE_ALIASES = ("offline", "image", "video", "batch")
 
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Run MOSS-VL inference with README-aligned entry points.",
+        description="Run MOSS-VL inference via the generic offline_generate API.",
     )
     parser.add_argument(
         "--checkpoint",
         required=True,
-        help="Path to the MOSS-VL checkpoint directory.",
+        help="Path to the checkpoint directory, for example /path/to/dummy-checkpoint.",
     )
     parser.add_argument(
         "--mode",
         required=True,
-        choices=("image", "video", "batch"),
-        help="Inference mode: image, video, or batch.",
+        choices=LEGACY_MODE_ALIASES,
+        help="Legacy label kept for compatibility. All modes now route through offline_generate.",
     )
     parser.add_argument(
         "--input",
@@ -77,6 +75,12 @@ def parse_args() -> argparse.Namespace:
         "--output",
         default=None,
         help="Optional path to save output JSON. Defaults to <input>_results.json.",
+    )
+    parser.add_argument(
+        "--timeout-seconds",
+        type=float,
+        default=300.0,
+        help="Timeout per query while waiting for offline_generate to finish.",
     )
     return parser.parse_args()
 
@@ -124,30 +128,77 @@ def resolve_video_entry(base_dir: Path, value: Any) -> Any:
     raise ValueError(f"Unsupported video entry type: {type(value).__name__}")
 
 
+def resolve_message_content_media_paths(content: Any, base_dir: Path) -> Any:
+    if not isinstance(content, list):
+        return content
+
+    resolved_content = []
+    for item in content:
+        if not isinstance(item, dict):
+            resolved_content.append(item)
+            continue
+
+        item_copy = dict(item)
+        if item_copy.get("type") == "image" or "image" in item_copy or "image_url" in item_copy:
+            if item_copy.get("image") is not None:
+                item_copy["image"] = resolve_path(base_dir, item_copy["image"])
+            if item_copy.get("image_url") is not None:
+                item_copy["image_url"] = resolve_path(base_dir, item_copy["image_url"])
+        elif item_copy.get("type") == "video" or "video" in item_copy:
+            if item_copy.get("video") is not None:
+                item_copy["video"] = resolve_video_entry(base_dir, item_copy["video"])
+        resolved_content.append(item_copy)
+    return resolved_content
+
+
 def resolve_query_media_paths(query: Dict[str, Any], base_dir: Path) -> Dict[str, Any]:
     resolved = dict(query)
     resolved["images"] = [resolve_path(base_dir, image) for image in query.get("images", [])]
     resolved["videos"] = [resolve_video_entry(base_dir, video) for video in query.get("videos", [])]
     resolved["media_kwargs"] = dict(query.get("media_kwargs") or {})
     resolved["generate_kwargs"] = dict(query.get("generate_kwargs") or {})
+
+    if query.get("messages") is not None:
+        resolved_messages = []
+        for message in query.get("messages") or []:
+            if not isinstance(message, dict):
+                continue
+            message_copy = dict(message)
+            message_copy["content"] = resolve_message_content_media_paths(message.get("content", ""), base_dir)
+            resolved_messages.append(message_copy)
+        resolved["messages"] = resolved_messages
+
     return resolved
 
 
-def ensure_mode_query_shape(mode: str, query: Dict[str, Any], index: int) -> None:
-    images = query.get("images") or []
-    videos = query.get("videos") or []
-    if mode == "image":
-        if len(images) != 1 or videos:
-            raise ValueError(
-                f"Image mode expects exactly one image and zero videos for query #{index}, "
-                f"but got {len(images)} image(s) and {len(videos)} video(s)."
-            )
-    elif mode == "video":
-        if len(videos) != 1 or images:
-            raise ValueError(
-                f"Video mode expects exactly one video and zero images for query #{index}, "
-                f"but got {len(images)} image(s) and {len(videos)} video(s)."
-            )
+def iter_message_media_items(messages: Iterable[Dict[str, Any]]) -> Iterable[Dict[str, Any]]:
+    for message in messages:
+        if not isinstance(message, dict):
+            continue
+        content = message.get("content")
+        if not isinstance(content, list):
+            continue
+        for item in content:
+            if isinstance(item, dict):
+                yield item
+
+
+def query_has_images(query: Dict[str, Any]) -> bool:
+    if query.get("images"):
+        return True
+    return any(
+        item.get("type") == "image" or "image" in item or "image_url" in item
+        for item in iter_message_media_items(query.get("messages") or [])
+    )
+
+
+def query_has_videos(query: Dict[str, Any]) -> bool:
+    if query.get("videos"):
+        return True
+    return any(
+        item.get("type") == "video" or "video" in item
+        for item in iter_message_media_items(query.get("messages") or [])
+    )
 
 
 def merge_defaults(defaults: Dict[str, Any], overrides: Dict[str, Any]) -> Dict[str, Any]:
@@ -156,35 +207,80 @@ def merge_defaults(defaults: Dict[str, Any], overrides: Dict[str, Any]) -> Dict[
     return merged
 
 
-def validate_batch_shared_fields(queries: List[Dict[str, Any]]) -> None:
-    if not queries:
-        return
+def normalize_query_for_offline_generate(query: Dict[str, Any], base_dir: Path) -> Dict[str, Any]:
+    resolved = resolve_query_media_paths(query, base_dir)
 
-    def collect_mismatched_keys(field_name: str) -> List[str]:
-        values = [dict(query.get(field_name) or {}) for query in queries]
-        all_keys = set()
-        for value in values:
-            all_keys.update(value.keys())
+    default_media_kwargs: Dict[str, Any] = {}
+    if query_has_images(resolved):
+        default_media_kwargs.update(IMAGE_MEDIA_DEFAULTS)
+    if query_has_videos(resolved):
+        default_media_kwargs.update(VIDEO_MEDIA_DEFAULTS)
 
-        mismatched: List[str] = []
-        for key in sorted(all_keys):
-            unique_values = {repr(value.get(key)) for value in values}
-            if len(unique_values) > 1:
-                mismatched.append(key)
-        return mismatched
+    normalized = dict(resolved)
+    normalized["media_kwargs"] = merge_defaults(default_media_kwargs, resolved["media_kwargs"])
+    normalized["generate_kwargs"] = merge_defaults(GENERATE_DEFAULTS, resolved["generate_kwargs"])
+    return normalized
 
-    mismatched_media = collect_mismatched_keys("media_kwargs")
-    mismatched_generate = collect_mismatched_keys("generate_kwargs")
-    if mismatched_media or mismatched_generate:
-        parts = []
-        if mismatched_media:
-            parts.append(f"media_kwargs: {', '.join(mismatched_media)}")
-        if mismatched_generate:
-            parts.append(f"generate_kwargs: {', '.join(mismatched_generate)}")
-        raise ValueError(
-            "Batch mode requires all queries to share the same configuration. "
-            + "; ".join(parts)
-        )
+
+def collect_offline_generate_output(
+    output_queue: "queue.Queue[str]",
+    timeout_seconds: float,
+) -> Dict[str, Any]:
+    deadline = time.time() + timeout_seconds
+    chunks: List[str] = []
+    events: List[str] = []
+    error_text = None
+
+    while time.time() < deadline:
+        remaining = max(0.1, min(1.0, deadline - time.time()))
+        try:
+            item = output_queue.get(timeout=remaining)
+        except queue.Empty:
+            continue
+
+        events.append(item)
+        if item == "<|round_start|>":
+            continue
+        if item == "<|round_end|>":
+            return {
+                "text": "".join(chunks),
+                "events": events,
+                "error": error_text,
+            }
+        if item.startswith("[ERROR] "):
+            error_text = item
+            continue
+        chunks.append(item)
+
+    raise TimeoutError("Timed out waiting for offline_generate to finish the current round.")
+
+
+def run_offline_generate_query(
+    model,
+    processor,
+    query: Dict[str, Any],
+    timeout_seconds: float,
+) -> Dict[str, Any]:
+    input_queue: "queue.Queue[Dict[str, Any]]" = queue.Queue()
+    output_queue: "queue.Queue[str]" = queue.Queue()
+    worker = Thread(
+        target=model.offline_generate,
+        args=(processor, input_queue, output_queue),
+        kwargs={"vision_chunked_length": query["generate_kwargs"].get("vision_chunked_length", 64)},
+        daemon=True,
+    )
+    worker.start()
+
+    try:
+        input_queue.put(dict(query))
+        result = collect_offline_generate_output(output_queue, timeout_seconds)
+    finally:
+        input_queue.put({"stop_offline_generate": True})
+        worker.join(timeout=30.0)
+
+    if result["error"] is not None:
+        raise RuntimeError(result["error"])
+    return result
 
 
 def build_single_result(
@@ -192,131 +288,56 @@ def build_single_result(
     original_query: Dict[str, Any],
     response_text: str,
     elapsed_seconds: float,
+    events: List[str],
 ) -> Dict[str, Any]:
     return {
         "index": index,
         "prompt": original_query.get("prompt", ""),
+        "messages": original_query.get("messages"),
         "images": original_query.get("images", []),
         "videos": original_query.get("videos", []),
         "media_kwargs": original_query.get("media_kwargs", {}),
         "generate_kwargs": original_query.get("generate_kwargs", {}),
         "text": response_text,
         "elapsed_seconds": round(elapsed_seconds, 3),
+        "event_count": len(events),
     }
 
 
-def apply_optional_query_args(target_kwargs: Dict[str, Any], query: Dict[str, Any]) -> None:
-    for key in OPTIONAL_QUERY_KEYS:
-        if query.get(key) is not None:
-            target_kwargs[key] = query[key]
-
-
-def run_image_queries(model, processor, original_queries: List[Dict[str, Any]], input_dir: Path) -> List[Dict[str, Any]]:
+def run_queries_via_offline_generate(
+    model,
+    processor,
+    original_queries: List[Dict[str, Any]],
+    input_dir: Path,
+    timeout_seconds: float,
+) -> Dict[str, Any]:
     results = []
-    for index, original_query in enumerate(original_queries):
-        resolved_query = resolve_query_media_paths(original_query, input_dir)
-        ensure_mode_query_shape("image", resolved_query, index)
 
-        media_kwargs = merge_defaults(IMAGE_MEDIA_DEFAULTS, resolved_query["media_kwargs"])
-        generate_kwargs = merge_defaults(GENERATE_DEFAULTS, resolved_query["generate_kwargs"])
-        call_kwargs: Dict[str, Any] = {
-            "prompt": resolved_query.get("prompt", ""),
-            "image": resolved_query["images"][0],
-            "shortest_edge": media_kwargs["min_pixels"],
-            "longest_edge": media_kwargs["max_pixels"],
-            "multi_image_max_pixels": media_kwargs["multi_image_max_pixels"],
-            "patch_size": media_kwargs["patch_size"],
-            "temporal_patch_size": media_kwargs["temporal_patch_size"],
-            "merge_size": media_kwargs["merge_size"],
-            "image_mean": media_kwargs["image_mean"],
-            "image_std": media_kwargs["image_std"],
-            "max_new_tokens": generate_kwargs["max_new_tokens"],
-            "temperature": generate_kwargs["temperature"],
-            "top_k": generate_kwargs["top_k"],
-            "top_p": generate_kwargs["top_p"],
-            "repetition_penalty": generate_kwargs["repetition_penalty"],
-            "do_sample": generate_kwargs["do_sample"],
-            "vision_chunked_length": generate_kwargs["vision_chunked_length"],
-        }
-        apply_optional_query_args(call_kwargs, resolved_query)
+    overall_start = time.time()
+    for index, original_query in enumerate(original_queries):
+        resolved_query = normalize_query_for_offline_generate(original_query, input_dir)
 
         start_time = time.time()
-        text = model.offline_image_generate(processor, **call_kwargs)
+        run_result = run_offline_generate_query(
+            model,
+            processor,
+            resolved_query,
+            timeout_seconds=timeout_seconds,
+        )
         elapsed_seconds = time.time() - start_time
-        results.append(build_single_result(index, original_query, text, elapsed_seconds))
-    return results
-
-
-def run_video_queries(model, processor, original_queries: List[Dict[str, Any]], input_dir: Path) -> List[Dict[str, Any]]:
-    results = []
-    for index, original_query in enumerate(original_queries):
-        resolved_query = resolve_query_media_paths(original_query, input_dir)
-        ensure_mode_query_shape("video", resolved_query, index)
-
-        media_kwargs = merge_defaults(VIDEO_MEDIA_DEFAULTS, resolved_query["media_kwargs"])
-        generate_kwargs = merge_defaults(GENERATE_DEFAULTS, resolved_query["generate_kwargs"])
-        call_kwargs: Dict[str, Any] = {
-            "prompt": resolved_query.get("prompt", ""),
-            "video": resolved_query["videos"][0],
-            "shortest_edge": media_kwargs["min_pixels"],
-            "longest_edge": media_kwargs["max_pixels"],
-            "video_max_pixels": media_kwargs["video_max_pixels"],
-            "patch_size": media_kwargs["patch_size"],
-            "temporal_patch_size": media_kwargs["temporal_patch_size"],
-            "merge_size": media_kwargs["merge_size"],
-            "video_fps": media_kwargs["video_fps"],
-            "min_frames": media_kwargs["min_frames"],
-            "max_frames": media_kwargs["max_frames"],
-            "num_extract_threads": media_kwargs["num_extract_threads"],
-            "image_mean": media_kwargs["image_mean"],
-            "image_std": media_kwargs["image_std"],
-            "max_new_tokens": generate_kwargs["max_new_tokens"],
-            "temperature": generate_kwargs["temperature"],
-            "top_k": generate_kwargs["top_k"],
-            "top_p": generate_kwargs["top_p"],
-            "repetition_penalty": generate_kwargs["repetition_penalty"],
-            "do_sample": generate_kwargs["do_sample"],
-            "vision_chunked_length": generate_kwargs["vision_chunked_length"],
-        }
-        apply_optional_query_args(call_kwargs, resolved_query)
-
-        start_time = time.time()
-        text = model.offline_video_generate(processor, **call_kwargs)
-        elapsed_seconds = time.time() - start_time
-        results.append(build_single_result(index, original_query, text, elapsed_seconds))
-    return results
-
-
-def run_batch_queries(model, processor, original_queries: List[Dict[str, Any]], input_dir: Path) -> Dict[str, Any]:
-    resolved_queries = [resolve_query_media_paths(query, input_dir) for query in original_queries]
-    validate_batch_shared_fields(resolved_queries)
-
-    start_time = time.time()
-    output = model.offline_batch_generate(processor, resolved_queries)
-    elapsed_seconds = time.time() - start_time
-
-    results = []
-    raw_results = output.get("results", [])
-    for item in raw_results:
-        index = item["index"]
-        original_query = original_queries[index]
         results.append(
-            {
-                "index": index,
-                "prompt": original_query.get("prompt", ""),
-                "images": original_query.get("images", []),
-                "videos": original_query.get("videos", []),
-                "media_kwargs": original_query.get("media_kwargs", {}),
-                "generate_kwargs": original_query.get("generate_kwargs", {}),
-                "text": item.get("text", ""),
-                "input_text": item.get("input_text", ""),
-            }
+            build_single_result(
+                index=index,
+                original_query=original_query,
+                response_text=run_result["text"],
+                elapsed_seconds=elapsed_seconds,
+                events=run_result["events"],
+            )
         )
 
     return {
         "results": results,
-        "session_states": output.get("session_states", []),
-        "elapsed_seconds": round(elapsed_seconds, 3),
+        "elapsed_seconds": round(time.time() - overall_start, 3),
     }
 
 
@@ -342,31 +363,21 @@ def main() -> None:
 
     queries = load_queries(input_path)
     model, processor = load_model(checkpoint)
+    output = run_queries_via_offline_generate(
+        model,
+        processor,
+        queries,
+        input_path.parent,
+        timeout_seconds=args.timeout_seconds,
+    )
 
-    if args.mode == "image":
-        results = run_image_queries(model, processor, queries, input_path.parent)
-        payload: Dict[str, Any] = {
-            "mode": "image",
-            "checkpoint": checkpoint,
-            "input": str(input_path),
-            "results": results,
-        }
-    elif args.mode == "video":
-        results = run_video_queries(model, processor, queries, input_path.parent)
-        payload = {
-            "mode": "video",
-            "checkpoint": checkpoint,
-            "input": str(input_path),
-            "results": results,
-        }
-    else:
-        batch_output = run_batch_queries(model, processor, queries, input_path.parent)
-        payload = {
-            "mode": "batch",
-            "checkpoint": checkpoint,
-            "input": str(input_path),
-            **batch_output,
-        }
+    payload: Dict[str, Any] = {
+        "mode": "offline_generate",
+        "mode_alias": args.mode,
+        "checkpoint": checkpoint,
+        "input": str(input_path),
+        **output,
+    }
 
     save_json(output_path, payload)
     print(f"Saved results to {output_path}")

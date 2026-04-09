@@ -204,6 +204,9 @@ MOSS-VL 通过系统性的**四阶段预训练**，从零开始逐步构建多�
 
 ## 🚀 快速上手
 
+> [!NOTE]
+> 我们目前正在完善 MOSS-VL 的训练方法，即将发布。
+
 ### 环境配置
 
 ```bash
@@ -214,138 +217,81 @@ pip install -i https://pypi.org/simple --no-build-isolation -r requirements.txt
 
 ### 模型推理
 
-更多推理示例（图像、视频、批量推理）及可直接运行的 JSON 查询文件，请参阅 [`inference/`](inference/) 目录。
-
-<details>
-<summary><strong>单图离线推理 (Python)</strong></summary>
-
-<br>
+更多可直接运行的推理示例、JSON 查询文件和素材，请参阅 [`inference/README.md`](inference/README.md)。
 
 ```python
+import queue
+import threading
 import torch
 from transformers import AutoModelForCausalLM, AutoProcessor
 
-checkpoint = "path/to/checkpoint"
-image_path = "data/example_image.jpg"
-prompt = "Describe this image."
+checkpoint = "/path/to/dummy-checkpoint"
 
-
-def load_model(checkpoint: str):
-    processor = AutoProcessor.from_pretrained(
-        checkpoint,
-        trust_remote_code=True,
-        frame_extract_num_threads=1,
-    )
-    model = AutoModelForCausalLM.from_pretrained(
-        checkpoint,
-        trust_remote_code=True,
-        device_map="auto",
-        torch_dtype=torch.bfloat16,
-        attn_implementation="flash_attention_2",
-    )
-    return model, processor
-
-
-model, processor = load_model(checkpoint)
-
-text = model.offline_image_generate(
-    processor,
-    prompt=prompt,
-    image=image_path,
-    shortest_edge=4096,
-    longest_edge=16777216,
-    multi_image_max_pixels=201326592,
-    patch_size=16,
-    temporal_patch_size=1,
-    merge_size=2,
-    image_mean=[0.5, 0.5, 0.5],
-    image_std=[0.5, 0.5, 0.5],
-    max_new_tokens=256,
-    temperature=1.0,
-    top_k=50,
-    top_p=1.0,
-    repetition_penalty=1.0,
-    do_sample=False,
-    vision_chunked_length=64,
+processor = AutoProcessor.from_pretrained(
+    checkpoint,
+    trust_remote_code=True,
+    frame_extract_num_threads=1,
+)
+model = AutoModelForCausalLM.from_pretrained(
+    checkpoint,
+    trust_remote_code=True,
+    device_map="auto",
+    torch_dtype=torch.bfloat16,
+    attn_implementation="flash_attention_2",
 )
 
-print(text)
-```
+query = {
+    "messages": [
+        {
+            "role": "user",
+            "content": [
+                {"type": "image", "image": "path/to/example.jpg"},
+                {"type": "text", "text": "描述这张图片。"},
+            ],
+        }
+    ],
+    "media_kwargs": {},
+    "generate_kwargs": {
+        "max_new_tokens": 256,
+        "do_sample": False,
+        "vision_chunked_length": 64,
+    },
+}
 
-</details>
-
-<details>
-<summary><strong>单视频离线推理 (Python)</strong></summary>
-
-<br>
-
-```python
-import torch
-from transformers import AutoModelForCausalLM, AutoProcessor
-
-checkpoint = "path/to/checkpoint"
-video_path = "data/example_video.mp4"
-prompt = "Describe this video."
-
-
-def load_model(checkpoint: str):
-    processor = AutoProcessor.from_pretrained(
-        checkpoint,
-        trust_remote_code=True,
-        frame_extract_num_threads=1,
-    )
-    model = AutoModelForCausalLM.from_pretrained(
-        checkpoint,
-        trust_remote_code=True,
-        device_map="auto",
-        torch_dtype=torch.bfloat16,
-        attn_implementation="flash_attention_2",
-    )
-    return model, processor
-
-
-model, processor = load_model(checkpoint)
-
-text = model.offline_video_generate(
-    processor,
-    prompt=prompt,
-    video=video_path,
-    shortest_edge=4096,
-    longest_edge=16777216,
-    video_max_pixels=201326592,
-    patch_size=16,
-    temporal_patch_size=1,
-    merge_size=2,
-    video_fps=1.0,
-    min_frames=1,
-    max_frames=256,
-    num_extract_threads=4,
-    image_mean=[0.5, 0.5, 0.5],
-    image_std=[0.5, 0.5, 0.5],
-    max_new_tokens=256,
-    temperature=1.0,
-    top_k=50,
-    top_p=1.0,
-    repetition_penalty=1.0,
-    do_sample=False,
-    vision_chunked_length=64,
+input_queue = queue.Queue()
+output_queue = queue.Queue()
+worker = threading.Thread(
+    target=model.offline_generate,
+    args=(processor, input_queue, output_queue),
+    kwargs={"vision_chunked_length": 64},
+    daemon=True,
 )
+worker.start()
 
-print(text)
+input_queue.put(query)
+text_chunks = []
+while True:
+    item = output_queue.get()
+    if item in {"<|round_start|>"}:
+        continue
+    if item == "<|round_end|>":
+        break
+    text_chunks.append(item)
+
+print("".join(text_chunks))
+
+input_queue.put({"stop_offline_generate": True})
+worker.join()
 ```
 
-</details>
-
-<details>
-<summary><strong>批量离线推理 (Python)</strong></summary>
-
-<br>
+如果需要简单的 batch 离线推理，也可以直接使用 `offline_batch_generate`：
 
 ```python
 import torch
 from transformers import AutoModelForCausalLM, AutoProcessor
 
-checkpoint = "path/to/checkpoint"
+checkpoint = "/path/to/dummy-checkpoint"
+
 processor = AutoProcessor.from_pretrained(
     checkpoint,
     trust_remote_code=True,
@@ -361,42 +307,37 @@ model = AutoModelForCausalLM.from_pretrained(
 
 queries = [
     {
-        "prompt": "Describe sample A.",
-        "images": [],
-        "videos": ["data/sample_a.mp4"],
-        "media_kwargs": {"video_fps": 1.0, "min_frames": 8, "max_frames": 256},
-        "generate_kwargs": {
-            "temperature": 1.0,
-            "top_k": 50,
-            "top_p": 1.0,
-            "max_new_tokens": 256,
-            "repetition_penalty": 1.0,
-            "do_sample": False,
-        },
+        "messages": [
+            {
+                "role": "user",
+                "content": [{"type": "text", "text": "描述样本 A。"}],
+            }
+        ],
+        "media_kwargs": {},
+        "generate_kwargs": {"max_new_tokens": 256, "do_sample": False},
     },
     {
-        "prompt": "Describe sample B.",
-        "images": [],
-        "videos": ["data/sample_b.mp4"],
-        "media_kwargs": {"video_fps": 1.0, "min_frames": 8, "max_frames": 256},
-        "generate_kwargs": {
-            "temperature": 1.0,
-            "top_k": 50,
-            "top_p": 1.0,
-            "max_new_tokens": 256,
-            "repetition_penalty": 1.0,
-            "do_sample": False,
-        },
+        "messages": [
+            {
+                "role": "user",
+                "content": [{"type": "text", "text": "描述样本 B。"}],
+            }
+        ],
+        "media_kwargs": {},
+        "generate_kwargs": {"max_new_tokens": 256, "do_sample": False},
     },
 ]
 
 with torch.no_grad():
-    result = model.offline_batch_generate(processor, queries, vision_chunked_length=64)
+    result = model.offline_batch_generate(
+        processor,
+        queries,
+        vision_chunked_length=64,
+    )
 
 texts = [item["text"] for item in result["results"]]
+print(texts)
 ```
-
-</details>
 
 ### 微调 (Fine-Tuning)
 
@@ -424,7 +365,7 @@ bash mossvl_finetune/scripts/run_sft_lora.sh
 ]
 ```
 
-**同时支持多轮对话格式**，详细文档请参阅 [`mossvl_finetune/README.md`](mossvl_finetune/README.md)。
+同时支持多轮对话格式，详细文档请参阅 [`mossvl_finetune/README.md`](mossvl_finetune/README.md)。
 
 ---
 

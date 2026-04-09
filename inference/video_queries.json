@@ -1,9 +1,19 @@
 [
   {
-    "prompt": "根据柜员的说法，柜台上三个杯子分别对应什么大小的？",
-    "images": [],
-    "videos": [
-      "assets/videos/罗哥扇耳光.mp4"
+    "messages": [
+      {
+        "role": "user",
+        "content": [
+          {
+            "type": "video",
+            "video": "assets/videos/罗哥扇耳光.mp4"
+          },
+          {
+            "type": "text",
+            "text": "根据柜员的说法，柜台上三个杯子分别对应什么大小的？"
+          }
+        ]
+      }
     ],
     "media_kwargs": {
       "video_fps": 1.0,

@@ -1,47 +1,14 @@
 [
   {
-    "prompt": "输出图中的所有文本及其bbox",
-    "images": [
-      "assets/images/玫珑瓜.png"
-    ],
-    "videos": [],
-    "media_kwargs": {},
-    "generate_kwargs": {
-      "max_new_tokens": 512,
-      "temperature": 1.0,
-      "top_k": 50,
-      "top_p": 1.0,
-      "repetition_penalty": 1.0,
-      "do_sample": false,
-      "vision_chunked_length": 64
-    }
-  },
-  {
-    "prompt": "提取图中的店名、服务员名字、账单号、人数、购买物品的品名数量和金额、总计金额、打印时间，输出json格式，购买物品呈现为list",
-    "images": [
-      "assets/images/bill.png"
-    ],
-    "videos": [],
-    "media_kwargs": {},
-    "generate_kwargs": {
-      "max_new_tokens": 512,
-      "temperature": 1.0,
-      "top_k": 50,
-      "top_p": 1.0,
-      "repetition_penalty": 1.0,
-      "do_sample": false,
-      "vision_chunked_length": 64
-    }
-  },
-  {
-    "prompt": "根据柜员的说法，柜台上三个杯子分别对应什么大小的？",
-    "images": [],
-    "videos": [
-      "assets/videos/罗哥扇耳光.mp4"
+    "messages": [
+      {
+        "role": "user",
+        "content": "请用三句话解释什么是多模态大模型，并说明图像理解和视频理解的主要区别。"
+      }
     ],
     "media_kwargs": {},
     "generate_kwargs": {
-      "max_new_tokens": 512,
+      "max_new_tokens": 256,
       "temperature": 1.0,
       "top_k": 50,
       "top_p": 1.0,
