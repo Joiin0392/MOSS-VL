@@ -98,18 +98,21 @@ Relative media paths in the JSON are resolved relative to the JSON file's parent
 
 ### Video Entries
 
-Videos can be a plain path string or a dict with segments:
+Video entries can be provided either as a simple file path string or as an object containing specific time segments:
 
 ```json
 {
   "videos": [
     "path/to/video.mp4",
-    {"video_path": "path/to/video.mp4", "segments": [[0, 10], [20, 30]]}
+    {
+      "video_path": "path/to/video.mp4", 
+      "segments": [[0, 10], [20, 30]]
+    }
   ]
 }
 ```
 
-The segmented dict above expands to two video units, so it needs two `<|video|>` placeholders during training text construction.
+> **Note:** Because the segmented object in the example above defines two distinct time brackets, it expands into two separate video units. Consequently, you must include two corresponding `<|video|>` placeholders when constructing the training text.
 
 ## Usage
 
