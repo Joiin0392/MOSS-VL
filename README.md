@@ -216,6 +216,11 @@ pip install -i https://pypi.org/simple --no-build-isolation -r requirements.txt
 
 For complete runnable examples and demo assets, see [`inference/README.md`](inference/README.md).
 
+<details>
+<summary><strong>Single-query inference with <code>offline_generate</code></strong></summary>
+
+<br>
+
 ```python
 import queue
 import threading
@@ -281,7 +286,14 @@ input_queue.put({"stop_offline_generate": True})
 worker.join()
 ```
 
+</details>
+
 For simple batched offline inference, you can also use `offline_batch_generate`:
+
+<details>
+<summary><strong>Batched inference with <code>offline_batch_generate</code></strong></summary>
+
+<br>
 
 ```python
 import torch
@@ -335,6 +347,8 @@ with torch.no_grad():
 texts = [item["text"] for item in result["results"]]
 print(texts)
 ```
+
+</details>
 
 ### Fine-Tuning
 

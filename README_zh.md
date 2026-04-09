@@ -219,6 +219,11 @@ pip install -i https://pypi.org/simple --no-build-isolation -r requirements.txt
 
 更多可直接运行的推理示例、JSON 查询文件和素材，请参阅 [`inference/README.md`](inference/README.md)。
 
+<details>
+<summary><strong>使用 <code>offline_generate</code> 做单条推理</strong></summary>
+
+<br>
+
 ```python
 import queue
 import threading
@@ -284,7 +289,14 @@ input_queue.put({"stop_offline_generate": True})
 worker.join()
 ```
 
+</details>
+
 如果需要简单的 batch 离线推理，也可以直接使用 `offline_batch_generate`：
+
+<details>
+<summary><strong>使用 <code>offline_batch_generate</code> 做 batch 推理</strong></summary>
+
+<br>
 
 ```python
 import torch
@@ -338,6 +350,8 @@ with torch.no_grad():
 texts = [item["text"] for item in result["results"]]
 print(texts)
 ```
+
+</details>
 
 ### 微调 (Fine-Tuning)
 
