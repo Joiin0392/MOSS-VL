@@ -1,12 +1,14 @@
 # Inference
 
 This directory contains ready-to-run offline inference examples for MOSS-VL.
-The script uses `model.offline_generate(...)` to run:
+The script supports full-modality offline inference through `model.offline_generate(...)`, including:
 
+- pure text
 - single image
 - multiple images
 - single video
-- pure text
+- multiple videos
+- interleaved image-video inputs in the `messages` format
 
 ## Run
 

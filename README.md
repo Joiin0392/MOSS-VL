@@ -215,6 +215,7 @@ pip install -i https://pypi.org/simple --no-build-isolation -r requirements.txt
 ### Run Inference
 
 For complete runnable examples and demo assets, see [`inference/README.md`](inference/README.md).
+Inference supports full-modality offline queries, including pure text, single/multi-image, single/multi-video, and interleaved image-video inputs in the `messages` format.
 
 <details>
 <summary><strong>Single-query inference with <code>offline_generate</code></strong></summary>

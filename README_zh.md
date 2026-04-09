@@ -218,6 +218,7 @@ pip install -i https://pypi.org/simple --no-build-isolation -r requirements.txt
 ### 模型推理
 
 更多可直接运行的推理示例、JSON 查询文件和素材，请参阅 [`inference/README.md`](inference/README.md)。
+推理支持全模态离线查询，包括纯文本、单图、多图、单视频、多视频，以及基于 `messages` 格式的图视频交错输入。
 
 <details>
 <summary><strong>使用 <code>offline_generate</code> 做单条推理</strong></summary>
