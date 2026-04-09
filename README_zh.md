@@ -424,7 +424,7 @@ bash mossvl_finetune/scripts/run_sft_lora.sh
 ]
 ```
 
-同时支持多轮对话格式，详细文档请参阅 [`mossvl_finetune/README.md`](mossvl_finetune/README.md)。
+**同时支持多轮对话格式**，详细文档请参阅 [`mossvl_finetune/README.md`](mossvl_finetune/README.md)。
 
 ---
 
