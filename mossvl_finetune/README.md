@@ -1,6 +1,6 @@
 # MOSS-VL Fine-Tuning
 
-Supervised fine-tuning framework for MOSS-VL, built purely on HuggingFace `transformers.Trainer`.
+Supervised fine-tuning framework for MOSS-VL, built on HuggingFace `transformers.Trainer`.
 
 ## Directory Structure
 
@@ -50,7 +50,17 @@ Training data is a JSON list. Two formats are supported:
 ]
 ```
 
-Media placeholders (`<|image|>`, `<|video|>`) are prepended to the user message automatically. Images always consume one `<|image|>` each. Videos consume one `<|video|>` for a plain path entry, or one `<|video|>` per segment when using `{"video_path": ..., "segments": [...]}`.
+**Automatic Media Placement**
+
+Media placeholders (`<|image|>` and `<|video|>`) are automatically **prepended** to the user message according to the following rules:
+
+* **Images:** Each image consumes a single `<|image|>` placeholder.
+* **Videos:**
+    * **Plain Paths:** One `<|video|>` placeholder per video.
+    * **Segmented Videos:** One `<|video|>` placeholder **per segment** when using the dictionary format:
+        ```json
+        {"video_path": "...", "segments": [...]}
+        ```
 
 ### Format 2: Conversations (multi-turn, explicit placeholders)
 
@@ -70,9 +80,17 @@ Media placeholders (`<|image|>`, `<|video|>`) are prepended to the user message 
 ]
 ```
 
-In conversation format, you must include `<|image|>` / `<|video|>` placeholders explicitly in the content. Images always consume one `<|image|>` each. Plain video paths consume one `<|video|>` each, while segmented video dicts consume one `<|video|>` per segment.
+Multimodal Placeholder Rules
 
-For backward compatibility, if your conversation data still uses one `<|video|>` per top-level video entry, the loader will automatically expand segmented entries to the correct number of placeholders before tokenization.
+When formatting conversations, you must explicitly include <|image|> or <|video|> placeholders within the content:
+
+- Images: Each image requires exactly one <|image|> placeholder.
+
+- Videos: * Standard: Each plain video path consumes one <|video|> placeholder.
+
+- Segmented: Each segment within a video dictionary consumes one <|video|> placeholder.
+
+Backward Compatibility: If your existing data uses a single <|video|> placeholder for a top-level video entry (regardless of segments), the loader will automatically expand it to the correct number of placeholders during the pre-tokenization phase.
 
 ### Path Resolution
 
@@ -95,7 +113,8 @@ The segmented dict above expands to two video units, so it needs two `<|video|>`
 
 ## Usage
 
-Run from the repository root.
+> [!NOTE]
+> Run from the repository root.
 
 ### Full-Parameter SFT
 
@@ -181,4 +200,10 @@ torchrun --nproc_per_node=8 mossvl_finetune/train.py \
 
 ## Label Masking
 
-Only assistant response tokens are used as training targets. System messages, user messages, and vision tokens (`<|image_pad|>`, inside `<|vision_start|>…<|vision_end|>`) are masked with `ignore_index=-100`. The trailing `<|im_end|>` token of each assistant turn **is** included in the labels so the model learns to produce the stop signal.
+To ensure the model learns effectively, we apply a specific masking strategy to our training tokens:
+
+- Training Targets: Only the Assistant's responses are used as active training labels.
+
+- Masked Content: System prompts, user queries, and all vision-related tokens (e.g., <|image_pad|>) are assigned an ignore_index=-100 to exclude them from loss calculation.
+
+- EOS Learning: The trailing <|im_end|> token at the end of each Assistant turn is explicitly included in the labels, ensuring the model learns when to stop generating.
