@@ -90,7 +90,7 @@ When formatting conversations, you must explicitly include <|image|> or <|video|
 
 - **Segmented:** Each segment within a video dictionary consumes one <|video|> placeholder.
 
-Backward Compatibility: If your existing data uses a single <|video|> placeholder for a top-level video entry (regardless of segments), the loader will automatically expand it to the correct number of placeholders during the pre-tokenization phase.
+**Backward Compatibility:** If your existing data uses a single <|video|> placeholder for a top-level video entry (regardless of segments), the loader will automatically expand it to the correct number of placeholders during the pre-tokenization phase.
 
 ### Path Resolution
 
