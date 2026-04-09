@@ -86,7 +86,7 @@ When formatting conversations, you must explicitly include <|image|> or <|video|
 
 - Images: Each image requires exactly one <|image|> placeholder.
 
-- Videos: * Standard: Each plain video path consumes one <|video|> placeholder.
+- Videos: Standard: Each plain video path consumes one <|video|> placeholder.
 
 - Segmented: Each segment within a video dictionary consumes one <|video|> placeholder.
 
