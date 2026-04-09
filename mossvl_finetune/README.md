@@ -84,11 +84,11 @@ Multimodal Placeholder Rules
 
 When formatting conversations, you must explicitly include <|image|> or <|video|> placeholders within the content:
 
-- Images: Each image requires exactly one <|image|> placeholder.
+- **Images:** Each image requires exactly one <|image|> placeholder.
 
-- Videos: Standard: Each plain video path consumes one <|video|> placeholder.
+- **Videos:** Standard: Each plain video path consumes one <|video|> placeholder.
 
-- Segmented: Each segment within a video dictionary consumes one <|video|> placeholder.
+- **Segmented:** Each segment within a video dictionary consumes one <|video|> placeholder.
 
 Backward Compatibility: If your existing data uses a single <|video|> placeholder for a top-level video entry (regardless of segments), the loader will automatically expand it to the correct number of placeholders during the pre-tokenization phase.
 
