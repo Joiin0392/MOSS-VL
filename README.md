@@ -400,7 +400,7 @@ texts = [item["text"] for item in result["results"]]
 
 ### Fine-Tuning
 
-We provide a lightweight SFT framework built purely on HuggingFace `transformers.Trainer`. It supports full-parameter training, LoRA, and DeepSpeed, with the vision encoder, language model, and LM head independently controllable.
+We provide a lightweight SFT framework built on HuggingFace `transformers.Trainer`. It supports full-parameter training, LoRA, with the vision encoder, language model, and LM head independently controllable.
 
 ```bash
 # Full-parameter SFT (vision encoder frozen by default)
@@ -424,7 +424,7 @@ Training data uses a simple JSON format compatible with the inference query stru
 ]
 ```
 
-Multi-turn conversations are also supported. See [`mossvl_finetune/README.md`](mossvl_finetune/README.md) for full documentation.
+**Multi-turn conversations are also supported.** See [`mossvl_finetune/README.md`](mossvl_finetune/README.md) for full documentation.
 
 ---
 
