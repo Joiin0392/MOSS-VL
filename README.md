@@ -205,10 +205,6 @@ The chart below visualizes MOSS-VL's balanced and well-rounded capability profil
 
 ## 🚀 Quick Start
 
-> [!NOTE]
-> We are currently refining the training for MOSS-VL. Stay tuned for further updates.
-
-
 ### Environment Setup
 ```bash
 conda create -n moss_vl python=3.12 pip -y
@@ -217,6 +213,8 @@ pip install -i https://pypi.org/simple --no-build-isolation -r requirements.txt
 ```
 
 ### Run Inference
+
+For more inference examples (image, video, batch) with ready-to-run JSON queries, see the [`inference/`](inference/) directory.
 
 <details>
 <summary><strong>Single-image offline inference (Python)</strong></summary>
@@ -399,6 +397,34 @@ texts = [item["text"] for item in result["results"]]
 ```
 
 </details>
+
+### Fine-Tuning
+
+We provide a lightweight SFT framework built purely on HuggingFace `transformers.Trainer`. It supports full-parameter training, LoRA, and DeepSpeed, with the vision encoder, language model, and LM head independently controllable.
+
+```bash
+# Full-parameter SFT (vision encoder frozen by default)
+bash mossvl_finetune/scripts/run_sft.sh
+
+# LoRA SFT
+pip install -i https://pypi.org/simple peft
+bash mossvl_finetune/scripts/run_sft_lora.sh
+```
+
+Training data uses a simple JSON format compatible with the inference query structure — just add a `response` field:
+
+```json
+[
+  {
+    "prompt": "Describe this image.",
+    "response": "A beautiful landscape with mountains.",
+    "images": ["path/to/image.jpg"],
+    "videos": []
+  }
+]
+```
+
+Multi-turn conversations are also supported. See [`mossvl_finetune/README.md`](mossvl_finetune/README.md) for full documentation.
 
 ---
 

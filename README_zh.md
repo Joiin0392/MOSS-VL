@@ -204,9 +204,6 @@ MOSS-VL 通过系统性的**四阶段预训练**，从零开始逐步构建多�
 
 ## 🚀 快速上手
 
-> [!NOTE]
-> 我们目前正在完善 MOSS-VL 的训练方法，即将发布。
-
 ### 环境配置
 
 ```bash
@@ -216,6 +213,8 @@ pip install -i https://pypi.org/simple --no-build-isolation -r requirements.txt
 ```
 
 ### 模型推理
+
+更多推理示例（图像、视频、批量推理）及可直接运行的 JSON 查询文件，请参阅 [`inference/`](inference/) 目录。
 
 <details>
 <summary><strong>单图离线推理 (Python)</strong></summary>
@@ -398,6 +397,34 @@ texts = [item["text"] for item in result["results"]]
 ```
 
 </details>
+
+### 微调 (Fine-Tuning)
+
+我们提供了一套基于 HuggingFace `transformers.Trainer` 的轻量级 SFT 微调框架，支持全参数训练、LoRA 及 DeepSpeed，视觉编码器、语言模型、LM Head 可独立控制是否训练。
+
+```bash
+# 全参数 SFT（默认冻结视觉编码器）
+bash mossvl_finetune/scripts/run_sft.sh
+
+# LoRA SFT
+pip install -i https://pypi.org/simple peft
+bash mossvl_finetune/scripts/run_sft_lora.sh
+```
+
+训练数据采用与推理查询格式兼容的 JSON 结构，只需额外添加 `response` 字段：
+
+```json
+[
+  {
+    "prompt": "描述这张图片。",
+    "response": "一幅群山环绕的美丽风景画。",
+    "images": ["path/to/image.jpg"],
+    "videos": []
+  }
+]
+```
+
+同时支持多轮对话格式，详细文档请参阅 [`mossvl_finetune/README.md`](mossvl_finetune/README.md)。
 
 ---
 

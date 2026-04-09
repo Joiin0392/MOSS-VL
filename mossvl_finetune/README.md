@@ -1,0 +1,184 @@
+# MOSS-VL Fine-Tuning
+
+Supervised fine-tuning framework for MOSS-VL, built purely on HuggingFace `transformers.Trainer`.
+
+## Directory Structure
+
+```
+mossvl_finetune/
+├── train.py          # Training entry point
+├── data.py           # Dataset and data collator
+├── arguments.py      # Argument dataclasses
+├── scripts/
+│   ├── run_sft.sh        # Full-parameter SFT launch script
+│   └── run_sft_lora.sh   # LoRA SFT launch script
+└── demo/
+    └── sft_data.json     # Example training data
+```
+
+## Environment
+
+Use the same environment as the model checkpoint:
+
+```bash
+conda create -n moss_vl python=3.12 pip -y
+conda activate moss_vl
+pip install -i https://pypi.org/simple --no-build-isolation -r requirements.txt
+```
+
+For LoRA training, additionally install:
+
+```bash
+pip install peft
+```
+
+## Data Format
+
+Training data is a JSON list. Two formats are supported:
+
+### Format 1: Prompt / Response (compatible with inference queries)
+
+```json
+[
+  {
+    "prompt": "Describe this image.",
+    "response": "A beautiful landscape with mountains and a sunset.",
+    "images": ["path/to/image.jpg"],
+    "videos": [],
+    "system_prompt": "You are a helpful assistant."
+  }
+]
+```
+
+Media placeholders (`<|image|>`, `<|video|>`) are prepended to the user message automatically. Images always consume one `<|image|>` each. Videos consume one `<|video|>` for a plain path entry, or one `<|video|>` per segment when using `{"video_path": ..., "segments": [...]}`.
+
+### Format 2: Conversations (multi-turn, explicit placeholders)
+
+```json
+[
+  {
+    "conversations": [
+      {"role": "system", "content": "You are a helpful assistant."},
+      {"role": "user", "content": "<|image|>\nDescribe this image."},
+      {"role": "assistant", "content": "A beautiful landscape."},
+      {"role": "user", "content": "What is the dominant color?"},
+      {"role": "assistant", "content": "Green."}
+    ],
+    "images": ["path/to/image.jpg"],
+    "videos": []
+  }
+]
+```
+
+In conversation format, you must include `<|image|>` / `<|video|>` placeholders explicitly in the content. Images always consume one `<|image|>` each. Plain video paths consume one `<|video|>` each, while segmented video dicts consume one `<|video|>` per segment.
+
+For backward compatibility, if your conversation data still uses one `<|video|>` per top-level video entry, the loader will automatically expand segmented entries to the correct number of placeholders before tokenization.
+
+### Path Resolution
+
+Relative media paths in the JSON are resolved relative to the JSON file's parent directory (or the `--data_dir` argument if provided).
+
+### Video Entries
+
+Videos can be a plain path string or a dict with segments:
+
+```json
+{
+  "videos": [
+    "path/to/video.mp4",
+    {"video_path": "path/to/video.mp4", "segments": [[0, 10], [20, 30]]}
+  ]
+}
+```
+
+The segmented dict above expands to two video units, so it needs two `<|video|>` placeholders during training text construction.
+
+## Usage
+
+Run from the repository root.
+
+### Full-Parameter SFT
+
+```bash
+bash mossvl_finetune/scripts/run_sft.sh
+```
+
+### LoRA SFT
+
+```bash
+bash mossvl_finetune/scripts/run_sft_lora.sh
+```
+
+### Single-GPU Quick Test
+
+```bash
+python mossvl_finetune/train.py \
+  --model_name_or_path /path/to/checkpoint \
+  --data_path mossvl_finetune/demo/sft_data.json \
+  --output_dir ./checkpoints/test \
+  --bf16 True \
+  --per_device_train_batch_size 1 \
+  --gradient_accumulation_steps 1 \
+  --num_train_epochs 1 \
+  --dataloader_num_workers 0 \
+  --gradient_checkpointing True \
+  --report_to none
+```
+
+## Key Arguments
+
+### ModelArguments
+
+| Argument | Default | Description |
+|---|---|---|
+| `--model_name_or_path` | (required) | Path to the MOSS-VL checkpoint |
+| `--tune_vision` | `False` | Train the vision encoder |
+| `--tune_language` | `True` | Train the language model layers |
+| `--tune_lm_head` | `True` | Train the LM head projection |
+
+### DataArguments
+
+| Argument | Default | Description |
+|---|---|---|
+| `--data_path` | (required) | Path to the training data JSON file |
+| `--data_dir` | auto | Base directory for relative media paths |
+| `--max_length` | `4096` | Maximum token sequence length |
+
+### TrainingArguments (extends HF TrainingArguments)
+
+| Argument | Default | Description |
+|---|---|---|
+| `--vision_chunked_length` | `64` | Chunk size for vision encoding (saves VRAM) |
+| `--lora_enable` | `False` | Enable LoRA training |
+| `--lora_r` | `64` | LoRA rank |
+| `--lora_alpha` | `128` | LoRA alpha |
+| `--lora_dropout` | `0.0` | LoRA dropout |
+| `--lora_target_modules` | `q_proj,k_proj,v_proj,o_proj` | Comma-separated LoRA target modules |
+
+Plus all standard HuggingFace `TrainingArguments` (`--learning_rate`, `--num_train_epochs`, `--deepspeed`, etc.).
+
+## Module Freeze Control
+
+By default the vision encoder is frozen while the language model and LM head are trained:
+
+```
+tune_vision=False   →  vision encoder frozen
+tune_language=True  →  all decoder layers trained
+tune_lm_head=True   →  output projection trained
+```
+
+When LoRA is enabled (`--lora_enable True`), all base parameters are frozen and only the LoRA adapters are trained.
+
+## DeepSpeed
+
+Pass a DeepSpeed config via `--deepspeed`:
+
+```bash
+torchrun --nproc_per_node=8 mossvl_finetune/train.py \
+  ... \
+  --deepspeed ds_config_zero2.json
+```
+
+## Label Masking
+
+Only assistant response tokens are used as training targets. System messages, user messages, and vision tokens (`<|image_pad|>`, inside `<|vision_start|>…<|vision_end|>`) are masked with `ignore_index=-100`. The trailing `<|im_end|>` token of each assistant turn **is** included in the labels so the model learns to produce the stop signal.
