@@ -34,7 +34,7 @@ pip install peft
 
 ## Data Format
 
-Training data is a JSON list. Two formats are supported:
+Training data must be a JSON list. Each item should use exactly one of the following formats.
 
 ### Format 1: Prompt / Response (compatible with inference queries)
 
@@ -49,6 +49,14 @@ Training data is a JSON list. Two formats are supported:
   }
 ]
 ```
+
+Use this format for single-turn supervised fine-tuning data.
+
+- `prompt`: user input text.
+- `response`: target assistant output text.
+- `images`: optional list of image paths.
+- `videos`: optional list of video entries, with the supported formats described later in `Video Entries`.
+- `system_prompt`: optional system instruction.
 
 **Automatic Media Placement**
 
@@ -80,17 +88,25 @@ Media placeholders (`<|image|>` and `<|video|>`) are automatically **prepended**
 ]
 ```
 
+Use this format for multi-turn chat data.
+
+- `conversations`: required list of chat messages.
+- Each message should be an object like `{"role": "...", "content": "..."}`.
+- `images`: optional list of image paths.
+- `videos`: optional list of video entries, with the supported formats described later in `Video Entries`.
+
 Multimodal Placeholder Rules
 
-When formatting conversations, you must explicitly include <|image|> or <|video|> placeholders within the content:
+When using `conversations`, you must explicitly include `<|image|>` or `<|video|>` placeholders in the message content:
 
-- **Images:** Each image requires exactly one <|image|> placeholder.
+- Images: each image requires exactly one `<|image|>` placeholder.
 
-- **Videos:** Standard: Each plain video path consumes one <|video|> placeholder.
+- Videos: each plain video path consumes one `<|video|>` placeholder.
 
-- **Segmented:** Each segment within a video dictionary consumes one <|video|> placeholder.
+- Segmented videos: each segment within a video dictionary consumes one `<|video|>` placeholder.
 
-**Backward Compatibility:** If your existing data uses a single <|video|> placeholder for a top-level video entry (regardless of segments), the `mossvl_finetune/data.py` will automatically expand it to the correct number of placeholders during the pre-tokenization phase.
+> [!NOTE]
+> For backward compatibility, if older conversation-format data uses one `<|video|>` placeholder per top-level video entry, and a top-level entry is a segmented video dict, the loader will expand that placeholder to one `<|video|>` per segment during pre-tokenization.
 
 ### Path Resolution
 
@@ -98,21 +114,45 @@ Relative media paths in the JSON are resolved relative to the JSON file's parent
 
 ### Video Entries
 
-Video entries can be provided either as a simple file path string or as an object containing specific time segments:
+Each item in `videos` can use one of the following formats.
+
+**1. Plain video path**
 
 ```json
 {
   "videos": [
-    "path/to/video.mp4",
+    "path/to/video.mp4"
+  ]
+}
+```
+
+This represents one full video and consumes one `<|video|>` placeholder.
+
+**2. Segmented videos**
+
+```json
+{
+  "videos": [
     {
-      "video_path": "path/to/video.mp4", 
-      "segments": [[0, 10], [20, 30]]
+      "video_path": "path/to/video_1.mp4",
+      "segments": [[0, 10]]
+    },
+    {
+      "video_path": "path/to/video_2.mp4",
+      "segments": [[20, 30]]
     }
   ]
 }
 ```
 
-> **Note:** Because the segmented object in the example above defines two distinct time brackets, it expands into two separate video units. Consequently, you must include two corresponding `<|video|>` placeholders when constructing the training text.
+In the segmented format:
+
+- `video_path` is the path to the source video file.
+- `segments` is a list of time segments in seconds.
+- Each segment is written as `[start, end]`, using a left-closed, right-open interval: `[start, end)`.
+- Each segment expands to one video unit and therefore consumes one `<|video|>` placeholder during training text construction.
+
+In the example above, there are two segmented video entries and each entry has one segment, so the sample expands to two video units and needs two `<|video|>` placeholders.
 
 ## Usage
 
@@ -205,8 +245,8 @@ torchrun --nproc_per_node=8 mossvl_finetune/train.py \
 
 To ensure the model learns effectively, we apply a specific masking strategy to our training tokens:
 
-- **Training Targets:** Only the Assistant's responses are used as active training labels.
+- Training Targets: Only the Assistant's responses are used as active training labels.
 
-- **Masked Content:** System prompts, user queries, and all vision-related tokens (e.g., <|image_pad|>) are assigned an ignore_index=-100 to exclude them from loss calculation.
+- Masked Content: System prompts, user queries, and all vision-related tokens (e.g., <|image_pad|>) are assigned an ignore_index=-100 to exclude them from loss calculation.
 
-- **EOS Learning:** The trailing <|im_end|> token at the end of each Assistant turn is explicitly included in the labels, ensuring the model learns when to stop generating.
+- EOS Learning: The trailing <|im_end|> token at the end of each Assistant turn is explicitly included in the labels, ensuring the model learns when to stop generating.
