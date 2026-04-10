@@ -107,6 +107,7 @@ When using `conversations`, you must explicitly include `<|image|>` or `<|video|
 
 > [!NOTE]
 > If a sample provides fewer `<|video|>` placeholders than the actual number of video segments, the loader will expand them during preprocessing.
+>
 > **After this expansion, the final placement of `<|video|>` placeholders may not exactly match the user's original expectation.**
 
 ### Path Resolution
