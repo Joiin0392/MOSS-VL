@@ -8,7 +8,7 @@
     <a href="https://huggingface.co/collections/OpenMOSS-Team/moss-vl"><img src="https://img.shields.io/badge/Huggingface-Download-orange?logo=Huggingface&amp"></a>
     <a href="https://modelscope.cn/collections/openmoss/MOSS-VL"><img src="https://img.shields.io/badge/ModelScope-Download-blue?logo=ModelScope" alt="ModelScope"></a>
     <br>
-    <a href="https://fnlp-vision.github.io/MOSS-VL-Demo/#/"><img src="https://img.shields.io/badge/Website-View-blue?logo=Website&amp"></a>
+    <a href="https://OpenMOSS.github.io/MOSS-VL-Demo/#/"><img src="https://img.shields.io/badge/Website-View-blue?logo=Website&amp"></a>
     <a href="#"><img src="https://img.shields.io/badge/Arxiv-Coming%20Soon-red?logo=Arxiv"></a>
     <a href="./LICENSE"><img src="https://img.shields.io/badge/License-Apache%202.0-blue.svg" alt="license"></a>
 </div>
@@ -34,8 +34,8 @@
 - [🧩 绝对时间戳](#-绝对时间戳)
 - [🧬 交叉注意力旋转位置编码 (XRoPE)](#-交叉注意力旋转位置编码-xrope)
 - [🎬 演示视频](#-演示视频)
-- [🧬 训练策略](#-训练策略)
-- [🏆 评测结果](#-评测结果)
+- [📊 训练策略](#-训练策略)
+- [📊 评测结果](#-评测结果)
 - [🚀 快速上手](#-快速上手)
 - [📥 模型下载](#-模型下载)
 - [📑 路线图与待办事项](#-路线图与待办事项)
@@ -125,7 +125,7 @@ MOSS-VL 采用了专门针对其基于交叉注意力的视觉-语言架构而�
 
 ---
 
-## 🧬 训练策略
+## 📊 训练策略
 MOSS-VL 采用多阶段训练方法，逐步构建多模态能力。
 
 <p align="center">
@@ -145,20 +145,20 @@ MOSS-VL 通过系统性的**四阶段预训练**，从零开始逐步构建多�
 
 * **第四阶段 — 退火与长上下文外推** —— 将模型的视野延伸至长视频理解，同时通过精心设计的退火（Annealing）策略，利用精选的顶级多模态数据进行训练，将模型的最终性能推向巅峰。
 
-| 阶段 | 策略 | 数据占比 |
+| 阶段 | 策略 | 数据组成 |
 | :--- | :--- | :--- |
-| **第一阶段** | **视觉-语言对齐** | <img src="assets/pt-stage1.png" width="400"/> |
-| **第二阶段** | **大规模多模态预训练** | <img src="assets/pt-stage2.png" width="400"/> |
-| **第三阶段** | **高质量多模态预训练** | <img src="assets/pt-stage3.png" width="400"/> |
-| **第四阶段** | **退火训练与长上下文外推** | <img src="assets/pt-stage4.png" width="400"/> |
+| **1** | **视觉-语言对齐** | <img src="assets/pt-stage1.png" width="400"/> |
+| **2** | **大规模多模态预训练** | <img src="assets/pt-stage2.png" width="400"/> |
+| **3** | **高质量多模态预训练** | <img src="assets/pt-stage3.png" width="400"/> |
+| **4** | **退火训练与长上下文外推** | <img src="assets/pt-stage4.png" width="400"/> |
 
 ### 指令微调 (SFT)
 在预训练模型的基础上，**MOSS-VL** 通过**有监督微调 (SFT)** 进行了进一步优化，以对齐人类意图，并全面释放其交互与指令遵循能力。
 
 <p align="center">
-    <img src="assets/SFT.png" alt="SFT 数据占比" width="50%"/>
+    <img src="assets/SFT.png" alt="MOSS-VL SFT 数据组成" width="50%"/>
     <br>
-    <em>图 5：SFT 数据占比图。</em>
+    <em>图 5：MOSS-VL SFT 数据组成图。</em>
 </p>
 
 
@@ -169,7 +169,7 @@ MOSS-VL 通过系统性的**四阶段预训练**，从零开始逐步构建多�
 
 ---
 
-## 🏆 评测结果
+## 📊 评测结果
 
 我们对 MOSS-VL 在四个关键维度上进行了全面评估：多模态感知、多模态推理、文档/OCR、以及视频理解。评估结果表明，MOSS-VL 取得了卓越的性能，尤其在**通用多模态感知**和**复杂视频分析**方面表现出色。
 
@@ -197,15 +197,12 @@ MOSS-VL 通过系统性的**四阶段预训练**，从零开始逐步构建多�
 <p align="center">
   <img src="assets/radar.png" width="600px" alt="MOSS-VL Evaluation Radar">
   <br>
-  <em>图 7: MOSS-VL 评测图分析</em>
+  <em>图 7: MOSS-VL 评测分析图。</em>
 </p>
 
 ---
 
 ## 🚀 快速上手
-
-> [!NOTE]
-> 我们目前正在完善 MOSS-VL 的训练方法，即将发布。
 
 ### 环境配置
 
@@ -217,7 +214,7 @@ pip install -i https://pypi.org/simple --no-build-isolation -r requirements.txt
 
 ### 模型推理
 
-更多可直接运行的推理示例、JSON 查询文件和素材，请参阅 [`inference/README.md`](inference/README.md)。
+更多可直接运行的推理示例和 Demo 素材，请参阅 [`inference/README.md`](inference/README.md)。
 推理支持全模态离线查询，包括纯文本、单图、多图、单视频、多视频，以及基于 `messages` 格式的图视频交错输入。
 
 <details>
@@ -356,7 +353,7 @@ print(texts)
 
 ### 微调 (Fine-Tuning)
 
-我们提供了一套基于 HuggingFace `transformers.Trainer` 的轻量级 SFT 微调框架，支持全参数训练、LoRA 及 DeepSpeed，视觉编码器、语言模型、LM Head 可独立控制是否训练。
+我们提供了一套基于 HuggingFace `transformers.Trainer` 的轻量级 SFT 微调框架，支持全参数训练与 LoRA，且可独立控制视觉编码器、语言模型和 LM Head 是否参与训练。
 
 ```bash
 # 全参数 SFT（默认冻结视觉编码器）
