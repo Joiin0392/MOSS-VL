@@ -106,8 +106,8 @@ When using `conversations`, you must explicitly include `<|image|>` or `<|video|
 - Segmented videos: each segment within a video dictionary consumes one `<|video|>` placeholder.
 
 > [!NOTE]
-> If an older sample provides fewer `<|video|>` placeholders than the actual number of video segments, the loader will expand them during preprocessing.
-> After this expansion, the final placement of `<|video|>` placeholders may not exactly match the user's original expectation.
+> If a sample provides fewer `<|video|>` placeholders than the actual number of video segments, the loader will expand them during preprocessing.
+> **After this expansion, the final placement of `<|video|>` placeholders may not exactly match the user's original expectation.**
 
 ### Path Resolution
 
