@@ -55,7 +55,7 @@ Use this format for single-turn supervised fine-tuning data.
 - `prompt`: user input text.
 - `response`: target assistant output text.
 - `images`: optional list of image paths.
-- `videos`: optional list of video entries, with the supported formats described later in `Video Entries`.
+- `videos`: optional list of video entries. See [Video Entries](#video-entries) for the supported formats.
 - `system_prompt`: optional system instruction.
 
 **Automatic Media Placement**
@@ -93,7 +93,7 @@ Use this format for multi-turn chat data.
 - `conversations`: required list of chat messages.
 - Each message should be an object like `{"role": "...", "content": "..."}`.
 - `images`: optional list of image paths.
-- `videos`: optional list of video entries, with the supported formats described later in `Video Entries`.
+- `videos`: optional list of video entries. See [Video Entries](#video-entries) for the supported formats.
 
 Multimodal Placeholder Rules
 
@@ -106,7 +106,8 @@ When using `conversations`, you must explicitly include `<|image|>` or `<|video|
 - Segmented videos: each segment within a video dictionary consumes one `<|video|>` placeholder.
 
 > [!NOTE]
-> For backward compatibility, if older conversation-format data uses one `<|video|>` placeholder per top-level video entry, and a top-level entry is a segmented video dict, the loader will expand that placeholder to one `<|video|>` per segment during pre-tokenization.
+> If an older sample provides fewer `<|video|>` placeholders than the actual number of video segments, the loader will expand them during preprocessing.
+> After this expansion, the final placement of `<|video|>` placeholders may not exactly match the user's original expectation.
 
 ### Path Resolution
 
