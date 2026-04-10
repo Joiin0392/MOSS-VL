@@ -212,7 +212,7 @@ conda activate moss_vl
 pip install -i https://pypi.org/simple --no-build-isolation -r requirements.txt
 ```
 
-### Run fine-tuning
+### Run Inference
 
 For complete runnable examples and demo assets, see [`inference/README.md`](inference/README.md).
 Inference supports full-modality offline queries, including pure text, single/multi-image, single/multi-video, and interleaved image-video inputs in the `messages` format.
@@ -351,7 +351,7 @@ print(texts)
 
 </details>
 
-### Fine-Tuning
+### Run Fine-Tuning
 
 We provide a lightweight SFT framework built on HuggingFace `transformers.Trainer`. It supports full-parameter training, LoRA, with the vision encoder, language model, and LM head independently controllable.
 
