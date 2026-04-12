@@ -1,0 +1,20 @@
+[
+  {
+    "messages": [
+      {
+        "role": "user",
+        "content": "请用三句话解释什么是多模态大模型，并说明图像理解和视频理解的主要区别。"
+      }
+    ],
+    "media_kwargs": {},
+    "generate_kwargs": {
+      "max_new_tokens": 256,
+      "temperature": 1.0,
+      "top_k": 50,
+      "top_p": 1.0,
+      "repetition_penalty": 1.0,
+      "do_sample": false,
+      "vision_chunked_length": 64
+    }
+  }
+]

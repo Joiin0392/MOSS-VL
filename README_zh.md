@@ -8,7 +8,7 @@
     <a href="https://huggingface.co/collections/OpenMOSS-Team/moss-vl"><img src="https://img.shields.io/badge/Huggingface-Download-orange?logo=Huggingface&amp"></a>
     <a href="https://modelscope.cn/collections/openmoss/MOSS-VL"><img src="https://img.shields.io/badge/ModelScope-Download-blue?logo=ModelScope" alt="ModelScope"></a>
     <br>
-    <a href="https://fnlp-vision.github.io/MOSS-VL-Demo/#/"><img src="https://img.shields.io/badge/Website-View-blue?logo=Website&amp"></a>
+    <a href="https://OpenMOSS.github.io/MOSS-VL-Demo/#/"><img src="https://img.shields.io/badge/Website-View-blue?logo=Website&amp"></a>
     <a href="#"><img src="https://img.shields.io/badge/Arxiv-Coming%20Soon-red?logo=Arxiv"></a>
     <a href="./LICENSE"><img src="https://img.shields.io/badge/License-Apache%202.0-blue.svg" alt="license"></a>
         <a href="assets/wechat.jpg"><img src="https://img.shields.io/badge/Wechat-Join-green?logo=wechat&amp"></a>
@@ -35,8 +35,8 @@
 - [🧩 绝对时间戳](#-绝对时间戳)
 - [🧬 交叉注意力旋转位置编码 (XRoPE)](#-交叉注意力旋转位置编码-xrope)
 - [🎬 演示视频](#-演示视频)
-- [🧬 训练策略](#-训练策略)
-- [🏆 评测结果](#-评测结果)
+- [📊 训练策略](#-训练策略)
+- [📊 评测结果](#-评测结果)
 - [🚀 快速上手](#-快速上手)
 - [📥 模型下载](#-模型下载)
 - [📑 路线图与待办事项](#-路线图与待办事项)
@@ -126,7 +126,7 @@ MOSS-VL 采用了专门针对其基于交叉注意力的视觉-语言架构而�
 
 ---
 
-## 🧬 训练策略
+## 📊 训练策略
 MOSS-VL 采用多阶段训练方法，逐步构建多模态能力。
 
 <p align="center">
@@ -146,20 +146,20 @@ MOSS-VL 通过系统性的**四阶段预训练**，从零开始逐步构建多�
 
 * **第四阶段 — 退火与长上下文外推** —— 将模型的视野延伸至长视频理解，同时通过精心设计的退火（Annealing）策略，利用精选的顶级多模态数据进行训练，将模型的最终性能推向巅峰。
 
-| 阶段 | 策略 | 数据占比 |
+| 阶段 | 策略 | 数据组成 |
 | :--- | :--- | :--- |
-| **第一阶段** | **视觉-语言对齐** | <img src="assets/pt-stage1.png" width="400"/> |
-| **第二阶段** | **大规模多模态预训练** | <img src="assets/pt-stage2.png" width="400"/> |
-| **第三阶段** | **高质量多模态预训练** | <img src="assets/pt-stage3.png" width="400"/> |
-| **第四阶段** | **退火训练与长上下文外推** | <img src="assets/pt-stage4.png" width="400"/> |
+| **1** | **视觉-语言对齐** | <img src="assets/pt-stage1.png" width="400"/> |
+| **2** | **大规模多模态预训练** | <img src="assets/pt-stage2.png" width="400"/> |
+| **3** | **高质量多模态预训练** | <img src="assets/pt-stage3.png" width="400"/> |
+| **4** | **退火训练与长上下文外推** | <img src="assets/pt-stage4.png" width="400"/> |
 
 ### 指令微调 (SFT)
 在预训练模型的基础上，**MOSS-VL** 通过**有监督微调 (SFT)** 进行了进一步优化，以对齐人类意图，并全面释放其交互与指令遵循能力。
 
 <p align="center">
-    <img src="assets/SFT.png" alt="SFT 数据占比" width="50%"/>
+    <img src="assets/SFT.png" alt="MOSS-VL SFT 数据组成" width="50%"/>
     <br>
-    <em>图 5：SFT 数据占比图。</em>
+    <em>图 5：MOSS-VL SFT 数据组成图。</em>
 </p>
 
 
@@ -170,7 +170,7 @@ MOSS-VL 通过系统性的**四阶段预训练**，从零开始逐步构建多�
 
 ---
 
-## 🏆 评测结果
+## 📊 评测结果
 
 我们对 MOSS-VL 在四个关键维度上进行了全面评估：多模态感知、多模态推理、文档/OCR、以及视频理解。评估结果表明，MOSS-VL 取得了卓越的性能，尤其在**通用多模态感知**和**复杂视频分析**方面表现出色。
 
@@ -198,15 +198,12 @@ MOSS-VL 通过系统性的**四阶段预训练**，从零开始逐步构建多�
 <p align="center">
   <img src="assets/radar.png" width="600px" alt="MOSS-VL Evaluation Radar">
   <br>
-  <em>图 7: MOSS-VL 评测图分析</em>
+  <em>图 7: MOSS-VL 评测分析图。</em>
 </p>
 
 ---
 
 ## 🚀 快速上手
-
-> [!NOTE]
-> 我们目前正在完善 MOSS-VL 的训练方法，即将发布。
 
 ### 环境配置
 
@@ -218,66 +215,85 @@ pip install -i https://pypi.org/simple --no-build-isolation -r requirements.txt
 
 ### 模型推理
 
+更多可直接运行的推理示例和 Demo 素材，请参阅 [`inference/README.md`](inference/README.md)。
+推理支持全模态离线查询，包括纯文本、单图、多图、单视频、多视频，以及基于 `messages` 格式的图视频交错输入。
+
 <details>
-<summary><strong>单图离线推理 (Python)</strong></summary>
+<summary><strong>使用 <code>offline_generate</code> 做单条推理</strong></summary>
 
 <br>
 
 ```python
+import queue
+import threading
 import torch
 from transformers import AutoModelForCausalLM, AutoProcessor
 
-checkpoint = "path/to/checkpoint"
-image_path = "data/example_image.jpg"
-prompt = "Describe this image."
+checkpoint = "/path/to/dummy-checkpoint"
 
-
-def load_model(checkpoint: str):
-    processor = AutoProcessor.from_pretrained(
-        checkpoint,
-        trust_remote_code=True,
-        frame_extract_num_threads=1,
-    )
-    model = AutoModelForCausalLM.from_pretrained(
-        checkpoint,
-        trust_remote_code=True,
-        device_map="auto",
-        torch_dtype=torch.bfloat16,
-        attn_implementation="flash_attention_2",
-    )
-    return model, processor
-
-
-model, processor = load_model(checkpoint)
-
-text = model.offline_image_generate(
-    processor,
-    prompt=prompt,
-    image=image_path,
-    shortest_edge=4096,
-    longest_edge=16777216,
-    multi_image_max_pixels=201326592,
-    patch_size=16,
-    temporal_patch_size=1,
-    merge_size=2,
-    image_mean=[0.5, 0.5, 0.5],
-    image_std=[0.5, 0.5, 0.5],
-    max_new_tokens=256,
-    temperature=1.0,
-    top_k=50,
-    top_p=1.0,
-    repetition_penalty=1.0,
-    do_sample=False,
-    vision_chunked_length=64,
+processor = AutoProcessor.from_pretrained(
+    checkpoint,
+    trust_remote_code=True,
+    frame_extract_num_threads=1,
+)
+model = AutoModelForCausalLM.from_pretrained(
+    checkpoint,
+    trust_remote_code=True,
+    device_map="auto",
+    torch_dtype=torch.bfloat16,
+    attn_implementation="flash_attention_2",
 )
 
-print(text)
+query = {
+    "messages": [
+        {
+            "role": "user",
+            "content": [
+                {"type": "image", "image": "path/to/example.jpg"},
+                {"type": "text", "text": "描述这张图片。"},
+            ],
+        }
+    ],
+    "media_kwargs": {},
+    "generate_kwargs": {
+        "max_new_tokens": 256,
+        "do_sample": False,
+        "vision_chunked_length": 64,
+    },
+}
+
+input_queue = queue.Queue()
+output_queue = queue.Queue()
+worker = threading.Thread(
+    target=model.offline_generate,
+    args=(processor, input_queue, output_queue),
+    kwargs={"vision_chunked_length": 64},
+    daemon=True,
+)
+worker.start()
+
+input_queue.put(query)
+text_chunks = []
+while True:
+    item = output_queue.get()
+    if item in {"<|round_start|>"}:
+        continue
+    if item == "<|round_end|>":
+        break
+    text_chunks.append(item)
+
+print("".join(text_chunks))
+
+input_queue.put({"stop_offline_generate": True})
+worker.join()
 ```
 
 </details>
 
+如果需要简单的 batch 离线推理，也可以直接使用 `offline_batch_generate`：
+
 <details>
-<summary><strong>单视频离线推理 (Python)</strong></summary>
+<summary><strong>使用 <code>offline_batch_generate</code> 做 batch 推理</strong></summary>
 
 <br>
 
@@ -285,69 +301,8 @@ print(text)
 import torch
 from transformers import AutoModelForCausalLM, AutoProcessor
 
-checkpoint = "path/to/checkpoint"
-video_path = "data/example_video.mp4"
-prompt = "Describe this video."
+checkpoint = "/path/to/dummy-checkpoint"
 
-
-def load_model(checkpoint: str):
-    processor = AutoProcessor.from_pretrained(
-        checkpoint,
-        trust_remote_code=True,
-        frame_extract_num_threads=1,
-    )
-    model = AutoModelForCausalLM.from_pretrained(
-        checkpoint,
-        trust_remote_code=True,
-        device_map="auto",
-        torch_dtype=torch.bfloat16,
-        attn_implementation="flash_attention_2",
-    )
-    return model, processor
-
-
-model, processor = load_model(checkpoint)
-
-text = model.offline_video_generate(
-    processor,
-    prompt=prompt,
-    video=video_path,
-    shortest_edge=4096,
-    longest_edge=16777216,
-    video_max_pixels=201326592,
-    patch_size=16,
-    temporal_patch_size=1,
-    merge_size=2,
-    video_fps=1.0,
-    min_frames=1,
-    max_frames=256,
-    num_extract_threads=4,
-    image_mean=[0.5, 0.5, 0.5],
-    image_std=[0.5, 0.5, 0.5],
-    max_new_tokens=256,
-    temperature=1.0,
-    top_k=50,
-    top_p=1.0,
-    repetition_penalty=1.0,
-    do_sample=False,
-    vision_chunked_length=64,
-)
-
-print(text)
-```
-
-</details>
-
-<details>
-<summary><strong>批量离线推理 (Python)</strong></summary>
-
-<br>
-
-```python
-import torch
-from transformers import AutoModelForCausalLM, AutoProcessor
-
-checkpoint = "path/to/checkpoint"
 processor = AutoProcessor.from_pretrained(
     checkpoint,
     trust_remote_code=True,
@@ -363,42 +318,67 @@ model = AutoModelForCausalLM.from_pretrained(
 
 queries = [
     {
-        "prompt": "Describe sample A.",
-        "images": [],
-        "videos": ["data/sample_a.mp4"],
-        "media_kwargs": {"video_fps": 1.0, "min_frames": 8, "max_frames": 256},
-        "generate_kwargs": {
-            "temperature": 1.0,
-            "top_k": 50,
-            "top_p": 1.0,
-            "max_new_tokens": 256,
-            "repetition_penalty": 1.0,
-            "do_sample": False,
-        },
+        "messages": [
+            {
+                "role": "user",
+                "content": [{"type": "text", "text": "描述样本 A。"}],
+            }
+        ],
+        "media_kwargs": {},
+        "generate_kwargs": {"max_new_tokens": 256, "do_sample": False},
     },
     {
-        "prompt": "Describe sample B.",
-        "images": [],
-        "videos": ["data/sample_b.mp4"],
-        "media_kwargs": {"video_fps": 1.0, "min_frames": 8, "max_frames": 256},
-        "generate_kwargs": {
-            "temperature": 1.0,
-            "top_k": 50,
-            "top_p": 1.0,
-            "max_new_tokens": 256,
-            "repetition_penalty": 1.0,
-            "do_sample": False,
-        },
+        "messages": [
+            {
+                "role": "user",
+                "content": [{"type": "text", "text": "描述样本 B。"}],
+            }
+        ],
+        "media_kwargs": {},
+        "generate_kwargs": {"max_new_tokens": 256, "do_sample": False},
     },
 ]
 
 with torch.no_grad():
-    result = model.offline_batch_generate(processor, queries, vision_chunked_length=64)
+    result = model.offline_batch_generate(
+        processor,
+        queries,
+        vision_chunked_length=64,
+    )
 
 texts = [item["text"] for item in result["results"]]
+print(texts)
 ```
 
 </details>
+
+### 微调 (Fine-Tuning)
+
+我们提供了一套基于 HuggingFace `transformers.Trainer` 的轻量级 SFT 微调框架，支持全参数训练与 LoRA，且可独立控制视觉编码器、语言模型和 LM Head 是否参与训练。
+
+```bash
+# 全参数 SFT（默认冻结视觉编码器）
+bash mossvl_finetune/scripts/run_sft.sh
+
+# LoRA SFT
+pip install -i https://pypi.org/simple peft
+bash mossvl_finetune/scripts/run_sft_lora.sh
+```
+
+训练数据采用与推理查询格式兼容的 JSON 结构，只需额外添加 `response` 字段：
+
+```json
+[
+  {
+    "prompt": "描述这张图片。",
+    "response": "一幅群山环绕的美丽风景画。",
+    "images": ["path/to/image.jpg"],
+    "videos": []
+  }
+]
+```
+
+同时支持多轮对话格式，详细文档请参阅 [`mossvl_finetune/README.md`](mossvl_finetune/README.md)。
 
 ---
 

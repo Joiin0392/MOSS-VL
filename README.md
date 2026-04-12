@@ -207,10 +207,6 @@ The chart below visualizes MOSS-VL's balanced and well-rounded capability profil
 
 ## 🚀 Quick Start
 
-> [!NOTE]
-> We are currently refining the training for MOSS-VL. Stay tuned for further updates.
-
-
 ### Environment Setup
 ```bash
 conda create -n moss_vl python=3.12 pip -y
@@ -220,66 +216,85 @@ pip install -i https://pypi.org/simple --no-build-isolation -r requirements.txt
 
 ### Run Inference
 
+For complete runnable examples and demo assets, see [`inference/README.md`](inference/README.md).
+Inference supports full-modality offline queries, including pure text, single/multi-image, single/multi-video, and interleaved image-video inputs in the `messages` format.
+
 <details>
-<summary><strong>Single-image offline inference (Python)</strong></summary>
+<summary><strong>Single-query inference with <code>offline_generate</code></strong></summary>
 
 <br>
 
 ```python
+import queue
+import threading
 import torch
 from transformers import AutoModelForCausalLM, AutoProcessor
 
-checkpoint = "path/to/checkpoint"
-image_path = "data/example_image.jpg"
-prompt = "Describe this image."
+checkpoint = "/path/to/dummy-checkpoint"
 
-
-def load_model(checkpoint: str):
-    processor = AutoProcessor.from_pretrained(
-        checkpoint,
-        trust_remote_code=True,
-        frame_extract_num_threads=1,
-    )
-    model = AutoModelForCausalLM.from_pretrained(
-        checkpoint,
-        trust_remote_code=True,
-        device_map="auto",
-        torch_dtype=torch.bfloat16,
-        attn_implementation="flash_attention_2",
-    )
-    return model, processor
-
-
-model, processor = load_model(checkpoint)
-
-text = model.offline_image_generate(
-    processor,
-    prompt=prompt,
-    image=image_path,
-    shortest_edge=4096,
-    longest_edge=16777216,
-    multi_image_max_pixels=201326592,
-    patch_size=16,
-    temporal_patch_size=1,
-    merge_size=2,
-    image_mean=[0.5, 0.5, 0.5],
-    image_std=[0.5, 0.5, 0.5],
-    max_new_tokens=256,
-    temperature=1.0,
-    top_k=50,
-    top_p=1.0,
-    repetition_penalty=1.0,
-    do_sample=False,
-    vision_chunked_length=64,
+processor = AutoProcessor.from_pretrained(
+    checkpoint,
+    trust_remote_code=True,
+    frame_extract_num_threads=1,
+)
+model = AutoModelForCausalLM.from_pretrained(
+    checkpoint,
+    trust_remote_code=True,
+    device_map="auto",
+    torch_dtype=torch.bfloat16,
+    attn_implementation="flash_attention_2",
 )
 
-print(text)
+query = {
+    "messages": [
+        {
+            "role": "user",
+            "content": [
+                {"type": "image", "image": "path/to/example.jpg"},
+                {"type": "text", "text": "Describe this image."},
+            ],
+        }
+    ],
+    "media_kwargs": {},
+    "generate_kwargs": {
+        "max_new_tokens": 256,
+        "do_sample": False,
+        "vision_chunked_length": 64,
+    },
+}
+
+input_queue = queue.Queue()
+output_queue = queue.Queue()
+worker = threading.Thread(
+    target=model.offline_generate,
+    args=(processor, input_queue, output_queue),
+    kwargs={"vision_chunked_length": 64},
+    daemon=True,
+)
+worker.start()
+
+input_queue.put(query)
+text_chunks = []
+while True:
+    item = output_queue.get()
+    if item in {"<|round_start|>"}:
+        continue
+    if item == "<|round_end|>":
+        break
+    text_chunks.append(item)
+
+print("".join(text_chunks))
+
+input_queue.put({"stop_offline_generate": True})
+worker.join()
 ```
 
 </details>
 
+For simple batched offline inference, you can also use `offline_batch_generate`:
+
 <details>
-<summary><strong>Single-video offline inference (Python)</strong></summary>
+<summary><strong>Batched inference with <code>offline_batch_generate</code></strong></summary>
 
 <br>
 
@@ -287,69 +302,8 @@ print(text)
 import torch
 from transformers import AutoModelForCausalLM, AutoProcessor
 
-checkpoint = "path/to/checkpoint"
-video_path = "data/example_video.mp4"
-prompt = "Describe this video."
+checkpoint = "/path/to/dummy-checkpoint"
 
-
-def load_model(checkpoint: str):
-    processor = AutoProcessor.from_pretrained(
-        checkpoint,
-        trust_remote_code=True,
-        frame_extract_num_threads=1,
-    )
-    model = AutoModelForCausalLM.from_pretrained(
-        checkpoint,
-        trust_remote_code=True,
-        device_map="auto",
-        torch_dtype=torch.bfloat16,
-        attn_implementation="flash_attention_2",
-    )
-    return model, processor
-
-
-model, processor = load_model(checkpoint)
-
-text = model.offline_video_generate(
-    processor,
-    prompt=prompt,
-    video=video_path,
-    shortest_edge=4096,
-    longest_edge=16777216,
-    video_max_pixels=201326592,
-    patch_size=16,
-    temporal_patch_size=1,
-    merge_size=2,
-    video_fps=1.0,
-    min_frames=1,
-    max_frames=256,
-    num_extract_threads=4,
-    image_mean=[0.5, 0.5, 0.5],
-    image_std=[0.5, 0.5, 0.5],
-    max_new_tokens=256,
-    temperature=1.0,
-    top_k=50,
-    top_p=1.0,
-    repetition_penalty=1.0,
-    do_sample=False,
-    vision_chunked_length=64,
-)
-
-print(text)
-```
-
-</details>
-
-<details>
-<summary><strong>Batched offline inference (Python)</strong></summary>
-
-<br>
-
-```python
-import torch
-from transformers import AutoModelForCausalLM, AutoProcessor
-
-checkpoint = "path/to/checkpoint"
 processor = AutoProcessor.from_pretrained(
     checkpoint,
     trust_remote_code=True,
@@ -365,42 +319,67 @@ model = AutoModelForCausalLM.from_pretrained(
 
 queries = [
     {
-        "prompt": "Describe sample A.",
-        "images": [],
-        "videos": ["data/sample_a.mp4"],
-        "media_kwargs": {"video_fps": 1.0, "min_frames": 8, "max_frames": 256},
-        "generate_kwargs": {
-            "temperature": 1.0,
-            "top_k": 50,
-            "top_p": 1.0,
-            "max_new_tokens": 256,
-            "repetition_penalty": 1.0,
-            "do_sample": False,
-        },
+        "messages": [
+            {
+                "role": "user",
+                "content": [{"type": "text", "text": "Describe sample A."}],
+            }
+        ],
+        "media_kwargs": {},
+        "generate_kwargs": {"max_new_tokens": 256, "do_sample": False},
     },
     {
-        "prompt": "Describe sample B.",
-        "images": [],
-        "videos": ["data/sample_b.mp4"],
-        "media_kwargs": {"video_fps": 1.0, "min_frames": 8, "max_frames": 256},
-        "generate_kwargs": {
-            "temperature": 1.0,
-            "top_k": 50,
-            "top_p": 1.0,
-            "max_new_tokens": 256,
-            "repetition_penalty": 1.0,
-            "do_sample": False,
-        },
+        "messages": [
+            {
+                "role": "user",
+                "content": [{"type": "text", "text": "Describe sample B."}],
+            }
+        ],
+        "media_kwargs": {},
+        "generate_kwargs": {"max_new_tokens": 256, "do_sample": False},
     },
 ]
 
 with torch.no_grad():
-    result = model.offline_batch_generate(processor, queries, vision_chunked_length=64)
+    result = model.offline_batch_generate(
+        processor,
+        queries,
+        vision_chunked_length=64,
+    )
 
 texts = [item["text"] for item in result["results"]]
+print(texts)
 ```
 
 </details>
+
+### Run Fine-Tuning
+
+We provide a lightweight SFT framework built on HuggingFace `transformers.Trainer`. It supports full-parameter training, LoRA, with the vision encoder, language model, and LM head independently controllable.
+
+```bash
+# Full-parameter SFT (vision encoder frozen by default)
+bash mossvl_finetune/scripts/run_sft.sh
+
+# LoRA SFT
+pip install -i https://pypi.org/simple peft
+bash mossvl_finetune/scripts/run_sft_lora.sh
+```
+
+Training data uses a simple JSON format compatible with the inference query structure — just add a `response` field:
+
+```json
+[
+  {
+    "prompt": "Describe this image.",
+    "response": "A beautiful landscape with mountains.",
+    "images": ["path/to/image.jpg"],
+    "videos": []
+  }
+]
+```
+
+**Multi-turn conversations are also supported.** See [`mossvl_finetune/README.md`](mossvl_finetune/README.md) for full documentation.
 
 ---
 
