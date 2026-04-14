@@ -123,7 +123,7 @@ To optimize cross-modal alignment, **XRoPE** is injected into the vision **Key (
 " width="70%" poster="" controls></video>
   <p align="center">
     For more examples, please visit our <a href="https://OpenMOSS.github.io/MOSS-VL-Demo/#/">Interactive Demo Page</a> 🚀<br/>
-    Online experience interface: <a href="https://huggingface.co/spaces/OpenMOSS-Team/MOSS-VL">HuggingFace Space</a>
+    Online experience interface: <a href="https://huggingface.co/spaces/OpenMOSS-Team/MOSS-VL">HuggingFace Space</a> 🌐
   </p>
 </div>
 

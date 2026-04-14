@@ -123,7 +123,7 @@ MOSS-VL 采用了专门针对其基于交叉注意力的视觉-语言架构而�
 " width="70%" poster="" controls></video>
   <p align="center">
     更多示例，请访问我们的 <a href="https://OpenMOSS.github.io/MOSS-VL-Demo/#/">交互式 Demo 页面</a> 🚀<br/>
-    在线体验界面：<a href="https://huggingface.co/spaces/OpenMOSS-Team/MOSS-VL">HuggingFace Space</a>
+    在线体验界面：<a href="https://huggingface.co/spaces/OpenMOSS-Team/MOSS-VL">HuggingFace Space</a> 🌐
   </p>
 </div>
 
