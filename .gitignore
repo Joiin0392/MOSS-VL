@@ -3,3 +3,11 @@ README_bk.md
 README_bak.md
 model/
 assets/benchmark_table.png
+
+# Python cache
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+
+# Training outputs
+checkpoints/

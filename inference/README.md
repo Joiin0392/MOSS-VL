@@ -39,11 +39,23 @@ python inference/run_inference.py \
   --input inference/batch_queries.json
 ```
 
+SFT / validation-set example in training `jsonl` format:
+
+```bash
+python inference/run_inference.py \
+  --checkpoint /path/to/dummy-checkpoint \
+  --mode offline \
+  --input /path/to/valid.jsonl
+```
+
 If `--output` is omitted, the script writes results to `<input_stem>_results.json`.
 
 ## Input Format
 
-The input file must be a JSON list. Each item in the list is one query.
+The input file can be either:
+
+- a JSON list, where each item is one query
+- a JSONL file, where each line is one sample
 
 Each query can use either of the following formats:
 
@@ -51,6 +63,13 @@ Each query can use either of the following formats:
 - `prompt` with optional `images` and `videos`
 
 Optional fields such as `media_kwargs`, `generate_kwargs`, and `system_prompt` are also supported.
+
+For JSONL inputs, the script also accepts the standard SFT training formats documented in `mossvl_finetune/README.md`:
+
+- `messages` or `conversations` with top-level `images` / `videos`
+- `prompt` / `response` with optional `images` / `videos`
+
+When a training sample includes assistant targets, the loader automatically trims trailing assistant turns at inference time and keeps the remaining context up to the last user turn. For conversation-style samples that use `<|image|>` or `<|video|>` placeholders in text, the loader also reconstructs structured multimodal `messages` content before calling `offline_generate`.
 
 The provided examples use the `messages` format. Example:
 

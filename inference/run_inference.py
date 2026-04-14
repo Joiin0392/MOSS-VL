@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import json
 import queue
+import re
 import time
 from pathlib import Path
 from threading import Thread
@@ -49,6 +50,11 @@ GENERATE_DEFAULTS: Dict[str, Any] = {
 }
 
 LEGACY_MODE_ALIASES = ("offline", "image", "video", "batch")
+IMAGE_PLACEHOLDER = "<|image|>"
+VIDEO_PLACEHOLDER = "<|video|>"
+MEDIA_PLACEHOLDER_PATTERN = re.compile(
+    f"({re.escape(IMAGE_PLACEHOLDER)}|{re.escape(VIDEO_PLACEHOLDER)})"
+)
 
 
 def parse_args() -> argparse.Namespace:
@@ -69,7 +75,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--input",
         required=True,
-        help="Path to the input JSON file.",
+        help="Path to the input JSON/JSONL file.",
     )
     parser.add_argument(
         "--output",
@@ -101,12 +107,323 @@ def load_model(checkpoint: str):
     return model, processor
 
 
+def count_video_units(video_entry: Any) -> int:
+    if isinstance(video_entry, dict) and "segments" in video_entry:
+        return len(video_entry.get("segments") or [])
+    return 1
+
+
+def expand_segment_video_entry(video_entry: Any) -> List[Any]:
+    if isinstance(video_entry, dict) and "segments" in video_entry:
+        segments = video_entry.get("segments") or []
+        return [{**video_entry, "segments": [segment]} for segment in segments]
+    return [video_entry]
+
+
+def count_video_placeholders_in_content(content: Any) -> int:
+    if isinstance(content, str):
+        return content.count(VIDEO_PLACEHOLDER)
+    if isinstance(content, list):
+        total = 0
+        for item in content:
+            if isinstance(item, str):
+                total += item.count(VIDEO_PLACEHOLDER)
+            elif isinstance(item, dict) and isinstance(item.get("text"), str):
+                total += item["text"].count(VIDEO_PLACEHOLDER)
+        return total
+    return 0
+
+
+def expand_video_placeholders_in_text(
+    text: str,
+    video_units: List[int],
+    video_index: int,
+) -> tuple[str, int]:
+    if VIDEO_PLACEHOLDER not in text:
+        return text, video_index
+
+    pieces = text.split(VIDEO_PLACEHOLDER)
+    rebuilt = [pieces[0]]
+    next_index = video_index
+    for suffix in pieces[1:]:
+        if next_index < len(video_units):
+            rebuilt.append(VIDEO_PLACEHOLDER * video_units[next_index])
+            next_index += 1
+        else:
+            rebuilt.append(VIDEO_PLACEHOLDER)
+        rebuilt.append(suffix)
+    return "".join(rebuilt), next_index
+
+
+def expand_video_placeholders_in_content(
+    content: Any,
+    video_units: List[int],
+    video_index: int,
+) -> tuple[Any, int]:
+    if isinstance(content, str):
+        return expand_video_placeholders_in_text(content, video_units, video_index)
+    if isinstance(content, list):
+        expanded_content = []
+        next_index = video_index
+        for item in content:
+            if isinstance(item, str):
+                new_item, next_index = expand_video_placeholders_in_text(
+                    item,
+                    video_units,
+                    next_index,
+                )
+                expanded_content.append(new_item)
+            elif isinstance(item, dict) and isinstance(item.get("text"), str):
+                new_item = dict(item)
+                new_item["text"], next_index = expand_video_placeholders_in_text(
+                    item["text"],
+                    video_units,
+                    next_index,
+                )
+                expanded_content.append(new_item)
+            else:
+                expanded_content.append(item)
+        return expanded_content, next_index
+    return content, video_index
+
+
+def expand_segment_video_placeholders(
+    messages: List[Dict[str, Any]],
+    videos: List[Any],
+) -> List[Dict[str, Any]]:
+    video_units = [count_video_units(video) for video in videos]
+    if not video_units:
+        return [dict(message) for message in messages if isinstance(message, dict)]
+
+    raw_video_count = len(video_units)
+    expanded_video_count = sum(video_units)
+    if expanded_video_count == raw_video_count:
+        return [dict(message) for message in messages if isinstance(message, dict)]
+
+    explicit_placeholder_count = sum(
+        count_video_placeholders_in_content(message.get("content", ""))
+        for message in messages
+        if isinstance(message, dict)
+    )
+    if explicit_placeholder_count != raw_video_count:
+        return [dict(message) for message in messages if isinstance(message, dict)]
+
+    expanded_messages: List[Dict[str, Any]] = []
+    next_index = 0
+    for message in messages:
+        if not isinstance(message, dict):
+            continue
+        message_copy = dict(message)
+        message_copy["content"], next_index = expand_video_placeholders_in_content(
+            message_copy.get("content", ""),
+            video_units,
+            next_index,
+        )
+        expanded_messages.append(message_copy)
+    return expanded_messages
+
+
+def trim_messages_for_inference(messages: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    trimmed = [dict(message) for message in messages if isinstance(message, dict)]
+    while trimmed and trimmed[-1].get("role") == "assistant":
+        trimmed.pop()
+    return trimmed
+
+
+def append_text_item(items: List[Dict[str, Any]], text: str) -> None:
+    if not text:
+        return
+    if items and items[-1].get("type") == "text":
+        items[-1]["text"] += text
+    else:
+        items.append({"type": "text", "text": text})
+
+
+def materialize_text_with_media(
+    text: str,
+    images: List[str],
+    videos: List[Any],
+    image_index: int,
+    video_index: int,
+) -> tuple[List[Dict[str, Any]], int, int]:
+    items: List[Dict[str, Any]] = []
+    for part in MEDIA_PLACEHOLDER_PATTERN.split(text):
+        if not part:
+            continue
+        if part == IMAGE_PLACEHOLDER:
+            if image_index >= len(images):
+                raise ValueError("Encountered `<|image|>` placeholder without a matching image.")
+            items.append({"type": "image", "image": images[image_index]})
+            image_index += 1
+        elif part == VIDEO_PLACEHOLDER:
+            if video_index >= len(videos):
+                raise ValueError("Encountered `<|video|>` placeholder without a matching video.")
+            items.append({"type": "video", "video": videos[video_index]})
+            video_index += 1
+        else:
+            append_text_item(items, part)
+    return items, image_index, video_index
+
+
+def materialize_message_content(
+    content: Any,
+    images: List[str],
+    videos: List[Any],
+    image_index: int,
+    video_index: int,
+) -> tuple[Any, int, int]:
+    if isinstance(content, str):
+        items, image_index, video_index = materialize_text_with_media(
+            content,
+            images,
+            videos,
+            image_index,
+            video_index,
+        )
+        return items or [{"type": "text", "text": ""}], image_index, video_index
+
+    if isinstance(content, list):
+        normalized_items: List[Dict[str, Any]] = []
+        for item in content:
+            if isinstance(item, str):
+                text_items, image_index, video_index = materialize_text_with_media(
+                    item,
+                    images,
+                    videos,
+                    image_index,
+                    video_index,
+                )
+                normalized_items.extend(text_items)
+            elif isinstance(item, dict):
+                if item.get("type") == "image" or "image" in item or "image_url" in item:
+                    normalized_items.append(dict(item))
+                elif item.get("type") == "video" or "video" in item:
+                    normalized_items.append(dict(item))
+                elif "text" in item:
+                    text_items, image_index, video_index = materialize_text_with_media(
+                        str(item.get("text", "")),
+                        images,
+                        videos,
+                        image_index,
+                        video_index,
+                    )
+                    normalized_items.extend(text_items)
+                else:
+                    normalized_items.append(dict(item))
+            else:
+                append_text_item(normalized_items, str(item))
+        return normalized_items or [{"type": "text", "text": ""}], image_index, video_index
+
+    return content, image_index, video_index
+
+
+def convert_messages_sample_to_query(sample: Dict[str, Any], raw_messages: Any) -> Dict[str, Any]:
+    if not isinstance(raw_messages, list):
+        raise ValueError("Expected `messages`/`conversations` to be a list.")
+
+    base_query: Dict[str, Any] = dict(sample)
+    base_query.pop("response", None)
+    base_query["media_kwargs"] = dict(sample.get("media_kwargs") or {})
+    base_query["generate_kwargs"] = dict(sample.get("generate_kwargs") or {})
+
+    images = list(sample.get("images") or [])
+    videos = list(sample.get("videos") or [])
+    expanded_videos = [unit for video in videos for unit in expand_segment_video_entry(video)]
+
+    messages = expand_segment_video_placeholders(raw_messages, videos)
+    messages = trim_messages_for_inference(messages)
+    if not messages:
+        raise ValueError("No user-facing messages remain after trimming assistant turns.")
+
+    normalized_messages = []
+    image_index = 0
+    video_index = 0
+    for message in messages:
+        message_copy = dict(message)
+        message_copy["content"], image_index, video_index = materialize_message_content(
+            message_copy.get("content", ""),
+            images,
+            expanded_videos,
+            image_index,
+            video_index,
+        )
+        normalized_messages.append(message_copy)
+
+    if image_index != len(images):
+        raise ValueError(
+            f"Not all images were consumed by placeholders: used {image_index}, total {len(images)}."
+        )
+    if video_index != len(expanded_videos):
+        raise ValueError(
+            f"Not all videos were consumed by placeholders: used {video_index}, total {len(expanded_videos)}."
+        )
+
+    base_query["messages"] = normalized_messages
+    return base_query
+
+
+def convert_prompt_sample_to_query(sample: Dict[str, Any]) -> Dict[str, Any]:
+    base_query: Dict[str, Any] = dict(sample)
+    base_query.pop("response", None)
+    base_query["media_kwargs"] = dict(sample.get("media_kwargs") or {})
+    base_query["generate_kwargs"] = dict(sample.get("generate_kwargs") or {})
+
+    content: List[Dict[str, Any]] = []
+    for image in sample.get("images") or []:
+        content.append({"type": "image", "image": image})
+    for video in sample.get("videos") or []:
+        for video_unit in expand_segment_video_entry(video):
+            content.append({"type": "video", "video": video_unit})
+
+    prompt = str(sample.get("prompt", ""))
+    if prompt or not content:
+        content.append({"type": "text", "text": prompt})
+
+    messages: List[Dict[str, Any]] = []
+    if sample.get("system_prompt") is not None:
+        messages.append({"role": "system", "content": str(sample["system_prompt"])})
+    messages.append({"role": "user", "content": content})
+    base_query["messages"] = messages
+    return base_query
+
+
+def normalize_loaded_query(sample: Dict[str, Any]) -> Dict[str, Any]:
+    if not isinstance(sample, dict):
+        raise ValueError(f"Each query must be a JSON object, but got {type(sample).__name__}.")
+
+    if sample.get("messages") is not None:
+        return convert_messages_sample_to_query(sample, sample.get("messages"))
+    if sample.get("conversations") is not None:
+        return convert_messages_sample_to_query(sample, sample.get("conversations"))
+    if sample.get("prompt") is not None:
+        return convert_prompt_sample_to_query(sample)
+    raise ValueError(
+        "Unsupported query format. Expected one of: `messages`, `conversations`, or `prompt`."
+    )
+
+
 def load_queries(input_path: Path) -> List[Dict[str, Any]]:
+    samples: List[Dict[str, Any]] = []
+    if input_path.suffix.lower() == ".jsonl":
+        with input_path.open("r", encoding="utf-8") as f:
+            for line_number, line in enumerate(f, start=1):
+                line = line.strip()
+                if not line:
+                    continue
+                try:
+                    sample = json.loads(line)
+                except json.JSONDecodeError as exc:
+                    raise ValueError(
+                        f"Failed to parse JSONL line {line_number} in {input_path}: {exc}"
+                    ) from exc
+                samples.append(normalize_loaded_query(sample))
+        return samples
+
     with input_path.open("r", encoding="utf-8") as f:
         data = json.load(f)
     if not isinstance(data, list):
         raise ValueError(f"Expected a JSON list in {input_path}, but got {type(data).__name__}.")
-    return data
+    return [normalize_loaded_query(sample) for sample in data]
 
 
 def resolve_path(base_dir: Path, value: str) -> str:
