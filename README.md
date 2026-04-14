@@ -5,6 +5,7 @@
 <div align="center">
     <a href="https://github.com/OpenMOSS/MOSS-VL"><img src="https://img.shields.io/badge/Github-Star-yellow?logo=Github&amp"></a>
     <a href="https://huggingface.co/collections/OpenMOSS-Team/moss-vl"><img src="https://img.shields.io/badge/Huggingface-Download-orange?logo=Huggingface&amp"></a>
+    <a href="https://huggingface.co/spaces/OpenMOSS-Team/MOSS-VL"><img src="https://img.shields.io/badge/Huggingface-space-orange?logo=Huggingface"" alt="MOSS-VL-space"></a>
     <a href="https://modelscope.cn/collections/openmoss/MOSS-VL"><img src="https://img.shields.io/badge/ModelScope-Download-blue?logo=ModelScope" alt="ModelScope"></a>
     <br>
     <a href="https://OpenMOSS.github.io/MOSS-VL-Demo/#/"><img src="https://img.shields.io/badge/Website-View-blue?logo=Website&amp"></a>
@@ -121,7 +122,8 @@ To optimize cross-modal alignment, **XRoPE** is injected into the vision **Key (
 <video src="https://gist.github.com/user-attachments/assets/d1ccae33-472f-4d92-96c4-fb6253b07189
 " width="70%" poster="" controls></video>
   <p align="center">
-    For more examples, please visit our <a href="https://OpenMOSS.github.io/MOSS-VL-Demo/#/">Interactive Demo Page</a> 🚀
+    For more examples, please visit our <a href="https://OpenMOSS.github.io/MOSS-VL-Demo/#/">Interactive Demo Page</a> 🚀<br/>
+    Online experience interface: <a href="https://huggingface.co/spaces/OpenMOSS-Team/MOSS-VL">HuggingFace Space</a>
   </p>
 </div>
 

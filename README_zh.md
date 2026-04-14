@@ -6,6 +6,7 @@
 <div align="center">
     <a href="https://github.com/OpenMOSS/MOSS-VL"><img src="https://img.shields.io/badge/Github-Star-yellow?logo=Github&amp"></a>
     <a href="https://huggingface.co/collections/OpenMOSS-Team/moss-vl"><img src="https://img.shields.io/badge/Huggingface-Download-orange?logo=Huggingface&amp"></a>
+    <a href="https://huggingface.co/spaces/OpenMOSS-Team/MOSS-VL"><img src="https://img.shields.io/badge/Huggingface-space-orange?logo=Huggingface"" alt="MOSS-VL-space"></a>
     <a href="https://modelscope.cn/collections/openmoss/MOSS-VL"><img src="https://img.shields.io/badge/ModelScope-Download-blue?logo=ModelScope" alt="ModelScope"></a>
     <br>
     <a href="https://OpenMOSS.github.io/MOSS-VL-Demo/#/"><img src="https://img.shields.io/badge/Website-View-blue?logo=Website&amp"></a>
@@ -121,7 +122,8 @@ MOSS-VL 采用了专门针对其基于交叉注意力的视觉-语言架构而�
 <video src="https://gist.github.com/user-attachments/assets/d1ccae33-472f-4d92-96c4-fb6253b07189
 " width="70%" poster="" controls></video>
   <p align="center">
-    更多示例，请访问我们的 <a href="https://OpenMOSS.github.io/MOSS-VL-Demo/#/">交互式 Demo 页面</a> 🚀
+    更多示例，请访问我们的 <a href="https://OpenMOSS.github.io/MOSS-VL-Demo/#/">交互式 Demo 页面</a> 🚀<br/>
+    在线体验界面：<a href="https://huggingface.co/spaces/OpenMOSS-Team/MOSS-VL">HuggingFace Space</a>
   </p>
 </div>
 
