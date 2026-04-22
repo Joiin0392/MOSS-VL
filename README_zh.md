@@ -41,12 +41,14 @@
 - [📊 评测结果](#-评测结果)
 - [🚀 快速上手](#-快速上手)
 - [📥 模型下载](#-模型下载)
+- [🖥️ SGLang](#️-sglang)
 - [📑 路线图与待办事项](#-路线图与待办事项)
 - [📜 引用](#-引用)
 
 ---
 
 ## 🔥 新闻
+- **2026/04/22**: 🚀 推出基于 SGLang 的 MOSS-VL 推理支持。
 - **2026/04/08**: 🚀 MOSS-VL-Base-0408 与 MOSS-VL-Instruct-0408 正式开源。
 - **2026/04/03**: 🏆 完成 MOSS-VL 全阶段训练 (**PT & SFT**)。
 - **2025/10/18**: 🔍 启动了 MOSS-VL 项目。
@@ -391,6 +393,10 @@ bash mossvl_finetune/scripts/run_sft_lora.sh
 | :--- | :--- | :--- |
 | **MOSS-VL-Base-0408** | [HuggingFace](https://huggingface.co/OpenMOSS-Team/MOSS-VL-Base-0408) | [ModelScope](https://modelscope.cn/models/openmoss/MOSS-VL-Base-0408) |
 | **MOSS-VL-Instruct-0408** | [HuggingFace](https://huggingface.co/OpenMOSS-Team/MOSS-VL-Instruct-0408) | [ModelScope](https://modelscope.cn/models/openmoss/MOSS-VL-Instruct-0408) |
+
+## 🖥️ SGLang
+
+如需查看基于 SGLang 的部署与服务化说明，请参考 [`sglang/README_zh.md`](./sglang/README_zh.md)。
 
 
 

@@ -40,12 +40,14 @@
 - [📊 Evaluation Results](#-evaluation-results)
 - [🚀 Quick Start](#-quick-start)
 - [📥 Model Download](#-model-download)
+- [🖥️ SGLang](#️-sglang)
 - [📑 Roadmap & TODO List](#-roadmap--todo-list)
 - [📜 Citation](#-citation)
 
 ---
 
 ## 🔥 News
+- **2026/04/22**: 🚀 Released SGLang-based inference support for MOSS-VL.
 - **2026/04/08**: 🚀 Released MOSS-VL-Base-0408 and MOSS-VL-Instruct-0408.
 - **2026/04/03**: 🏆 Finished both pre-training and SFT for MOSS-VL.
 - **2025/10/18**: 🔍 Kicked off the MOSS-VL project. 
@@ -393,6 +395,10 @@ Training data uses a simple JSON format compatible with the inference query stru
 | **MOSS-VL-Base-0408** | [HuggingFace](https://huggingface.co/OpenMOSS-Team/MOSS-VL-Base-0408) | [ModelScope](https://modelscope.cn/models/openmoss/MOSS-VL-Base-0408) |
 | **MOSS-VL-Instruct-0408** | [HuggingFace](https://huggingface.co/OpenMOSS-Team/MOSS-VL-Instruct-0408) | [ModelScope](https://modelscope.cn/models/openmoss/MOSS-VL-Instruct-0408) |
 
+## 🖥️ SGLang
+
+For SGLang-based deployment and serving instructions, please refer to [`sglang/README.md`](./sglang/README.md).
+
 
 ---
 ## 📑 Roadmap & TODO List
@@ -438,4 +444,3 @@ We would like to express our gratitude to **NVIDIA** for the [Megatron-LM](https
 <p align="center">
 Built with ❤️ by the <b>OpenMOSS Team</b>
 </p>
-
