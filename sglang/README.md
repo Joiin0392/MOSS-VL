@@ -8,7 +8,9 @@
 
 ## 🚀 Overview
 
-`mossvl sglang project` extends SGLang with Moss-VL support for inference and service deployment.
+Official SGLang has already supported Moss-VL. For new deployments, you can pull the latest code from the official SGLang repository directly.
+
+This directory keeps the Moss-VL SGLang usage notes and the code snapshot previously synchronized into this repository.
 
 The current SGLang baseline is:
 
@@ -17,7 +19,7 @@ The current SGLang baseline is:
 - Branch: `moss-vl`
 - Upstream project: `https://github.com/sgl-project/sglang`
 
-This implementation can be understood as: **a Moss-VL adaptation built on top of SGLang `cf9845f8e`**.
+The code in this directory was originally synchronized from the `moss-vl` branch. Going forward, the recommended path is to use the latest official SGLang code.
 
 For the original upstream introduction and general SGLang documentation in this directory, see [README.upstream.md](./README.upstream.md).
 
