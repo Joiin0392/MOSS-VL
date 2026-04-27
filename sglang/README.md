@@ -1,4 +1,10 @@
-[English](./README.md) | [中文](./README_zh.md)
+<div align="center">
+  <img src="../assets/sglang_moss_logo.png" alt="Moss-VL on SGLang" width="360" />
+</div>
+
+<div align="center">
+  <a href="./README.md">English</a> | <a href="./README_zh.md">中文</a>
+</div>
 
 # Moss-VL on SGLang
 
