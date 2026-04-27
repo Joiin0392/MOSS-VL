@@ -41,12 +41,16 @@
 - [📊 评测结果](#-评测结果)
 - [🚀 快速上手](#-快速上手)
 - [📥 模型下载](#-模型下载)
+- [🖥️ SGLang](#️-sglang)
 - [📑 路线图与待办事项](#-路线图与待办事项)
 - [📜 引用](#-引用)
 
 ---
 
 ## 🔥 新闻
+- **2026/04/24**: 🚀 SGLang 官方已正式支持 MOSS-VL，详见 [sgl-project/sglang](https://github.com/sgl-project/sglang)。
+- **2026/04/22**: 🚀 推出基于 SGLang 的 MOSS-VL 推理支持，详见 [`./sglang/`](./sglang/)。
+- **2026/04/22**: 🤗 HuggingFace 推理代码更新至最新版本，详见 [MOSS-VL-Base-0408](https://huggingface.co/OpenMOSS-Team/MOSS-VL-Base-0408) 与 [MOSS-VL-Instruct-0408](https://huggingface.co/OpenMOSS-Team/MOSS-VL-Instruct-0408)。
 - **2026/04/08**: 🚀 MOSS-VL-Base-0408 与 MOSS-VL-Instruct-0408 正式开源。
 - **2026/04/03**: 🏆 完成 MOSS-VL 全阶段训练 (**PT & SFT**)。
 - **2025/10/18**: 🔍 启动了 MOSS-VL 项目。
@@ -392,6 +396,10 @@ bash mossvl_finetune/scripts/run_sft_lora.sh
 | **MOSS-VL-Base-0408** | [HuggingFace](https://huggingface.co/OpenMOSS-Team/MOSS-VL-Base-0408) | [ModelScope](https://modelscope.cn/models/openmoss/MOSS-VL-Base-0408) |
 | **MOSS-VL-Instruct-0408** | [HuggingFace](https://huggingface.co/OpenMOSS-Team/MOSS-VL-Instruct-0408) | [ModelScope](https://modelscope.cn/models/openmoss/MOSS-VL-Instruct-0408) |
 
+## 🖥️ SGLang
+
+如需查看基于 SGLang 的部署与服务化说明，请参考 [`sglang/README_zh.md`](./sglang/README_zh.md)。
+
 
 
 ---
@@ -413,7 +421,7 @@ bash mossvl_finetune/scripts/run_sft_lora.sh
 ---
 
 ## 🤝 致谢
-我们衷心感谢 **NVIDIA** 提供的 [Megatron-LM](https://github.com/NVIDIA/Megatron-LM) 框架，以及 **Qwen 团队** 提供的强大的 [Qwen](https://github.com/QwenLM/Qwen) 系列语言模型。这些优秀的开源工作为我们的训练基础设施和核心语言模型奠定了坚实基础。
+我们衷心感谢 **NVIDIA** 提供的 [Megatron-LM](https://github.com/NVIDIA/Megatron-LM) 框架，以及 **Qwen 团队** 提供的强大的 [Qwen](https://github.com/QwenLM/Qwen) 系列语言模型。这些优秀的开源工作为我们的训练基础设施和核心语言模型奠定了坚实基础。同时，我们也由衷感谢 **SGLang 团队** 提供的高性能 [SGLang](https://github.com/sgl-project/sglang) 推理服务框架，为 MOSS-VL 的高效部署提供了重要支持。
 
 ## 📜 引用
 ```bibtex

@@ -10,6 +10,18 @@ The script supports full-modality offline inference through `model.offline_gener
 - multiple videos
 - interleaved image-video inputs in the `messages` format
 
+## Supported checkpoint versions
+
+`run_inference.py` is compatible with both releases of the MOSS-VL checkpoint:
+
+- `transformers==4.57.1` — uses `MossVLImageProcessorFast` and exposes a `vision_chunked_length` knob inside the vision tower.
+- `transformers==5.5.4` — uses the slow PIL-based `MossVLImageProcessor` and processes the entire vision input in a single forward pass.
+
+The `offline_generate` / `offline_batch_generate` / `offline_image_generate` / `offline_video_generate` API is identical on both versions, so the script requires no changes when switching checkpoints. Empirically the two checkpoints produce **token-identical outputs under `do_sample=false`** on the example queries in this directory.
+
+### Behaviour differences
+- **`vision_chunked_length` is accepted but has no effect on `MOSS-VL-Instruct`.** The new modeling file runs the visual tower over all media in one pass, so the value is silently ignored when using `transformers==5.5.4`. You can keep it in `generate_kwargs` for backward compatibility; it will still shard prefill on the legacy `transformers==4.57.1` checkpoint.
+
 ## Run
 
 Image examples:
