@@ -47,7 +47,9 @@
 ---
 
 ## 🔥 News
-- **2026/04/22**: 🚀 Released SGLang-based inference support for MOSS-VL.
+- **2026/04/24**: 🚀 SGLang officially supports MOSS-VL — see [sgl-project/sglang](https://github.com/sgl-project/sglang).
+- **2026/04/22**: 🚀 Released SGLang-based inference support for MOSS-VL. See [`./sglang/`](./sglang/).
+- **2026/04/22**: 🤗 Updated HuggingFace inference code to the latest version. See [MOSS-VL-Base-0408](https://huggingface.co/OpenMOSS-Team/MOSS-VL-Base-0408) and [MOSS-VL-Instruct-0408](https://huggingface.co/OpenMOSS-Team/MOSS-VL-Instruct-0408).
 - **2026/04/08**: 🚀 Released MOSS-VL-Base-0408 and MOSS-VL-Instruct-0408.
 - **2026/04/03**: 🏆 Finished both pre-training and SFT for MOSS-VL.
 - **2025/10/18**: 🔍 Kicked off the MOSS-VL project. 
@@ -418,7 +420,7 @@ For SGLang-based deployment and serving instructions, please refer to [`sglang/R
 ---
 
 ## 🤝 Acknowledgement
-We would like to express our gratitude to **NVIDIA** for the [Megatron-LM](https://github.com/NVIDIA/Megatron-LM) framework and the **Qwen Team** for their powerful [Qwen](https://github.com/QwenLM/Qwen) series language models, which serve as the foundation of our training infrastructure and core LLM.
+We would like to express our gratitude to **NVIDIA** for the [Megatron-LM](https://github.com/NVIDIA/Megatron-LM) framework and the **Qwen Team** for their powerful [Qwen](https://github.com/QwenLM/Qwen) series language models, which serve as the foundation of our training infrastructure and core LLM. We also thank the **SGLang Team** for their high-performance [SGLang](https://github.com/sgl-project/sglang) serving framework, which powers efficient deployment of MOSS-VL.
 
 ## 📜 Citation
 ```bibtex
