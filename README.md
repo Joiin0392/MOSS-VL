@@ -10,7 +10,7 @@
     <br>
     <a href="https://OpenMOSS.github.io/MOSS-VL-Demo/#/"><img src="https://img.shields.io/badge/Website-View-blue?logo=Website&amp"></a>
     <a href="#"><img src="https://img.shields.io/badge/Arxiv-Coming%20Soon-red?logo=Arxiv"></a>
-    <a href="assets/feishu.jpg"><img src="https://img.shields.io/badge/Feishu-Join-blue?logo=lark&amp"></a>
+    <a href="assets/feishu.jpg"><img src="assets/feishu-badge.svg" alt="Feishu Join"></a>
     <a href="./LICENSE"><img src="https://img.shields.io/badge/License-Apache%202.0-blue.svg" alt="license"></a>
 
 
