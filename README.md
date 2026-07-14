@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-        💻 <a href="https://github.com/OpenMOSS/MOSS-VL"><b>GitHub</b></a>&nbsp&nbsp | &nbsp&nbsp🤗 <a href="https://huggingface.co/collections/OpenMOSS-Team/moss-vl">Hugging Face</a>&nbsp&nbsp | &nbsp&nbsp🤖 <a href="https://modelscope.cn/collections/openmoss/MOSS-VL">ModelScope</a>&nbsp&nbsp | &nbsp&nbsp📑 <a href="docs/blog.md">Blog</a>&nbsp&nbsp | &nbsp&nbsp📚 <a href="https://arxiv.org/abs/2606.07639">Paper</a>
+        💻 <a href="https://github.com/OpenMOSS/MOSS-VL"><b>GitHub</b></a>&nbsp&nbsp | &nbsp&nbsp🤗 <a href="https://huggingface.co/collections/OpenMOSS-Team/moss-vl">Hugging Face</a>&nbsp&nbsp | &nbsp&nbsp🤖 <a href="https://modelscope.cn/collections/openmoss/MOSS-VL">ModelScope</a>&nbsp&nbsp | &nbsp&nbsp📑 <a href="https://openmoss.ai/MOSS-VL/">Blog</a>&nbsp&nbsp | &nbsp&nbsp📚 <a href="https://arxiv.org/abs/2606.07639">Paper</a>
 <br>
 🚀 <a href="https://huggingface.co/spaces/OpenMOSS-Team/MOSS-VL">HF Space</a>&nbsp&nbsp | &nbsp&nbsp💬 <a href="assets/feishu.jpg">Feishu</a>&nbsp&nbsp | &nbsp&nbsp🫨 <a href="https://discord.gg/JBZEkJ4Egj">Discord</a>&nbsp&nbsp | &nbsp&nbsp📜 <a href="./LICENSE">License</a>
 </p>
@@ -73,7 +73,7 @@ We have systematically restructured and deeply optimized our data system, compre
 </div>
 </details>
 
-> For comprehensive benchmark breakdowns, comparison systems, and detailed tables of all objective metrics, please refer to our **[Technical Blog](docs/blog.md)**.
+> For comprehensive benchmark breakdowns, comparison systems, and detailed tables of all objective metrics, please refer to our **[Technical Blog](https://openmoss.ai/MOSS-VL/)**.
 
 ---
 

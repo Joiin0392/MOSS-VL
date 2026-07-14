@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-        💻 <a href="https://github.com/OpenMOSS/MOSS-VL"><b>GitHub</b></a>&nbsp&nbsp | &nbsp&nbsp🤗 <a href="https://huggingface.co/collections/OpenMOSS-Team/moss-vl">Hugging Face</a>&nbsp&nbsp | &nbsp&nbsp🤖 <a href="https://modelscope.cn/collections/openmoss/MOSS-VL">ModelScope</a>&nbsp&nbsp | &nbsp&nbsp📑 <a href="docs/blog.md">Blog</a>&nbsp&nbsp | &nbsp&nbsp📚 <a href="https://arxiv.org/abs/2606.07639">Paper</a>
+        💻 <a href="https://github.com/OpenMOSS/MOSS-VL"><b>GitHub</b></a>&nbsp&nbsp | &nbsp&nbsp🤗 <a href="https://huggingface.co/collections/OpenMOSS-Team/moss-vl">Hugging Face</a>&nbsp&nbsp | &nbsp&nbsp🤖 <a href="https://modelscope.cn/collections/openmoss/MOSS-VL">ModelScope</a>&nbsp&nbsp | &nbsp&nbsp📑 <a href="https://openmoss.ai/MOSS-VL/index_zh.html">Blog</a>&nbsp&nbsp | &nbsp&nbsp📚 <a href="https://arxiv.org/abs/2606.07639">Paper</a>
 <br>
 🚀 <a href="https://huggingface.co/spaces/OpenMOSS-Team/MOSS-VL">HF Space</a>&nbsp&nbsp | &nbsp&nbsp💬 <a href="assets/feishu.jpg">Feishu (飞书)</a>&nbsp&nbsp | &nbsp&nbsp🫨 <a href="https://discord.gg/JBZEkJ4Egj">Discord</a>&nbsp&nbsp | &nbsp&nbsp📜 <a href="./LICENSE">License</a>
 </p>
@@ -75,7 +75,7 @@ MOSS-VL-Realtime 的流式交互能力显著提升，在多项流式视频理解
 </div>
 </details>
 
-> 完整的评测拆解、对比系统、以及所有客观指标的明细表格，请见我们的 [**技术博客**](docs/blog.md)。
+> 完整的评测拆解、对比系统、以及所有客观指标的明细表格，请见我们的 [**技术博客**](https://openmoss.ai/MOSS-VL/index_zh.html)。
 
 ---
 
