@@ -1,0 +1,2043 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MOSS-VL-Realtime · OpenMOSS</title>
+<style>
+:root{
+  --plane:#ffffff;          /* pure white background */
+  --surface:#f4f5f8;        /* cool gray card surface */
+  --ink:#111418;            /* crisp dark text */
+  --ink-2:#4b5563;          /* secondary text */
+  --muted:#9ca3af;
+  --grid:#e5e7eb;
+  --baseline:#d1d5db;
+  --ring:rgba(17,20,24,0.08);
+  --accent:#10B981;         /* crisp tech green */
+  --accent-light:rgba(16, 185, 129, 0.08);
+  --serif: "Inter", system-ui, -apple-system, "Segoe UI", "PingFang SC", "Noto Sans CJK SC", "Source Han Sans SC", "Microsoft YaHei", sans-serif;
+  --sans: "Inter", system-ui, -apple-system, "Segoe UI", "PingFang SC", "Noto Sans CJK SC", "Source Han Sans SC", "Microsoft YaHei", sans-serif;
+  --mono: ui-monospace, "SF Mono", Menlo, Consolas, "Noto Sans Mono CJK SC", monospace;
+  --col:68rem;              
+  --wide:68rem;             
+  --xwide:68rem;            
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--plane);color:var(--ink);font-family:var(--serif);
+     font-size:1.0625rem;line-height:1.78;-webkit-font-smoothing:antialiased}
+
+
+/* ---------- nav ---------- */
+
+
+/* ---------- layout helpers ---------- */
+.col{max-width:var(--col);margin:0 auto;padding:0 1.5rem}
+.wide{max-width:var(--wide);margin:0 auto;padding:0 1.5rem}
+section{padding:3rem 0 1rem}
+.eyebrow{font-family:var(--sans);font-size:.78rem;font-weight:600;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
+.eyebrow .n{color:var(--muted);margin-right:.6em}
+h1{font-size:clamp(2.3rem,5.4vw,3.6rem);line-height:1.12;font-weight:500;
+   letter-spacing:-.015em;margin:.9rem 0 1.4rem}
+h2{font-size:clamp(1.85rem,3.8vw,2.5rem);line-height:1.2;font-weight:700;
+   letter-spacing:-.015em;margin:.7rem 0 1.6rem}
+h3{font-family:var(--sans);font-size:1.3rem;font-weight:650;margin:2.2rem 0 .7rem}
+p{margin:0 0 1.35rem;color:var(--ink)}
+p.lede{font-size:1.22rem;line-height:1.65;color:var(--ink-2)}
+p.lede b{color:var(--ink)}
+.figcap{font-family:var(--sans);font-size:.8rem;color:var(--muted);
+  margin:.8rem auto 0;max-width:var(--col);line-height:1.5}
+hr.rule{border:0;border-top:1px solid var(--grid);max-width:var(--col);
+  margin:2.5rem auto 0}
+code{font-family:var(--mono);font-size:.85em}
+
+/* ---------- placeholder chip & slots ---------- */
+.todo{display:inline-flex;align-items:center;gap:.35em;vertical-align:baseline;
+  font-family:var(--sans);font-size:.72rem;font-weight:650;letter-spacing:.03em;
+  color:#8a6d1a;background:#fdf6e3;border:1px dashed #d8b95c;border-radius:99px;
+  padding:.05rem .55rem;white-space:nowrap}
+.slot{border:1.5px dashed var(--baseline);border-radius:10px;background:
+  repeating-linear-gradient(45deg,transparent,transparent 14px,rgba(11,11,11,.025) 14px,rgba(11,11,11,.025) 28px),var(--surface);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:.5rem;color:var(--muted);font-family:var(--sans);text-align:center;padding:1rem}
+.slot .icon{font-size:1.6rem;opacity:.75}
+.slot .t{font-size:.9rem;font-weight:650;color:var(--ink-2)}
+.slot .d{font-size:.78rem;max-width:34ch;line-height:1.5}
+.slot.video{aspect-ratio:16/9;width:100%}
+
+/* ---------- hero ---------- */
+header.hero{padding:5rem 0 1.5rem}
+#s1{padding-top:3rem}
+.hero .sub{font-size:1.25rem;line-height:1.6;color:var(--ink-2);max-width:40rem}
+.hero .deliv{font-family:var(--sans);font-size:.85rem;color:var(--ink-2);
+  display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1.4rem}
+.hero .deliv .pill{border:1px solid var(--grid);background:var(--surface);
+  border-radius:99px;padding:.22rem .85rem}
+.hero .deliv .pill b{font-weight:650}
+.hero-media{max-width:var(--wide);margin:3.2rem auto 0;padding:0 1.5rem}
+.stream-strip{max-width:var(--wide);margin:0 auto;padding:1rem 1.5rem 0}
+.stream-box{font-family:var(--mono);font-size:.8rem;line-height:1.9;
+  color:var(--ink-2);background:var(--surface);border:1px solid var(--grid);
+  border-radius:10px;padding:.9rem 1.1rem;white-space:nowrap;overflow:hidden}
+.stream-box .tk-time{color:var(--accent)}
+.stream-box .tk-pad{color:var(--muted)}
+.stream-box .caret{display:inline-block;width:.55em;height:1.05em;
+  vertical-align:-.18em;background:var(--accent);animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+
+/* ---------- TOC ---------- */
+
+
+/* ---------- callout ---------- */
+.callout{background:var(--surface);border:1px solid var(--grid);border-left:3px solid var(--accent);
+  border-radius:8px;padding:1.3rem 1.5rem;margin:2.2rem 0;font-size:.98rem}
+.callout .k{font-family:var(--sans);font-size:.75rem;font-weight:700;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--accent);display:block;margin-bottom:.5rem}
+.callout ul{list-style:none;margin:0}
+.callout li{padding:.22rem 0;color:var(--ink-2)}
+.callout li b{color:var(--ink);font-weight:600}
+
+/* ---------- pull quote ---------- */
+.pull{font-size:1.55rem;line-height:1.45;letter-spacing:-.01em;
+  margin:3rem 0;padding-left:1.4rem;border-left:3px solid var(--ink);max-width:34rem}
+
+/* ---------- chart figures (plain HTML/CSS, dataviz spec) ---------- */
+.fig{max-width:var(--wide);margin:2.6rem auto 0;padding:0 1.5rem;font-family:var(--sans)}
+.fig.xw{max-width:var(--xwide)}
+.chart-card{position:relative;background:var(--surface);border:1px solid var(--grid);
+  border-radius:12px;padding:1.6rem 1.8rem 1.4rem;overflow:hidden}
+.chart-card .wm{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  pointer-events:none;font-size:3.2rem;font-weight:800;letter-spacing:.2em;
+  color:rgba(11,11,11,.05);transform:rotate(-12deg);user-select:none;z-index:2}
+.chart-head{display:flex;justify-content:space-between;align-items:baseline;gap:1rem;flex-wrap:wrap}
+.chart-title{font-size:.95rem;font-weight:650}
+.chart-sub{font-size:.78rem;color:var(--muted);margin-top:.15rem}
+.legend{display:flex;gap:1.2rem;font-size:.78rem;color:var(--ink-2);flex-wrap:wrap}
+.legend .sw{display:inline-block;width:10px;height:10px;border-radius:3px;
+  vertical-align:-1px;margin-right:.45em}
+/* grouped ablation columns */
+.gchart{display:grid;grid-template-columns:repeat(4,1fr);gap:2.2rem;
+  align-items:end;height:230px;margin-top:1.6rem;padding-bottom:.2rem;
+  border-bottom:1px solid var(--baseline);position:relative}
+.gchart .gl{position:absolute;left:0;right:0;height:1px;background:var(--grid)}
+.group{display:flex;gap:2px;align-items:flex-end;justify-content:center;height:100%;position:relative;z-index:1}
+.bar{width:22px;border-radius:4px 4px 0 0;transform:scaleY(0);transform-origin:bottom;
+  transition:transform .9s cubic-bezier(.2,.7,.2,1);position:relative}
+.in-view .bar{transform:scaleY(1)}
+.bar .val{position:absolute;top:-1.5rem;left:50%;transform:translateX(-50%);
+  font-size:.72rem;font-weight:650;color:var(--ink-2);white-space:nowrap}
+.bar:hover::after{content:attr(data-tip);position:absolute;bottom:calc(100% + 1.6rem);
+  left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;
+  font-size:.72rem;padding:.25rem .6rem;border-radius:6px;white-space:nowrap;z-index:3}
+.gx{display:grid;grid-template-columns:repeat(4,1fr);gap:2.2rem;margin-top:.6rem}
+.gx .xl{text-align:center;font-size:.78rem;color:var(--muted);line-height:1.4}
+.tablev{margin-top:1.2rem;font-size:.8rem;color:var(--ink-2)}
+.tablev summary{cursor:pointer;color:var(--muted)}
+.tablev table{width:100%;border-collapse:collapse;margin-top:.6rem;font-variant-numeric:tabular-nums}
+.tablev th,.tablev td{text-align:left;padding:.35rem .5rem;border-bottom:1px solid var(--grid);font-weight:400}
+.tablev th{color:var(--muted);font-weight:600}
+/* eval placeholder tables */
+.etbl{width:100%;border-collapse:collapse;font-family:var(--sans);font-size:.85rem;
+  font-variant-numeric:tabular-nums;margin:1.2rem 0 .4rem}
+.etbl th,.etbl td{text-align:left;padding:.55rem .7rem;border-bottom:1px solid var(--grid)}
+.etbl th{font-size:.74rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:650}
+.etbl td{color:var(--ink-2)}
+
+/* ---------- 01 mechanism figure (v2.1 interactive) ---------- */
+.mech-wrap{max-width:var(--xwide);margin:2.6rem auto 0;padding:0 1.5rem;font-family:var(--sans)}
+.mech-card{background:#FAF9F5;border:1px solid var(--grid);border-radius:12px;
+  padding:1.2rem 1.2rem 1rem;overflow-x:auto}
+.mech-card svg{display:block;width:100%;height:auto;min-width:840px}
+.animbar{display:flex;gap:10px;align-items:center;margin:0 0 10px;flex-wrap:wrap;font-family:var(--sans)}
+.animbar button{font:inherit;font-size:.8rem;padding:4px 14px;border-radius:8px;
+  border:1px solid var(--grid);background:var(--surface);color:var(--ink);cursor:pointer}
+.animbar button:hover{border-color:var(--accent);color:var(--accent)}
+.animbar .hint{font-size:.76rem;color:var(--muted)}
+#fig2anim [data-t]{opacity:0;transition:opacity .4s ease,transform .5s cubic-bezier(.2,.8,.3,1.15);transform-box:fill-box;transform-origin:center}
+#fig2anim [data-t].on{opacity:1}
+#fig2anim .pop{transform:scale(.55)}
+#fig2anim .pop.on{transform:scale(1)}
+#fig2anim .walker{opacity:0;transform:translateX(30px);transition:transform .8s ease .25s,opacity .6s ease .25s}
+#fig2anim g.on .walker{opacity:1;transform:translateX(0)}
+#fig2anim [data-link]{cursor:pointer}
+#fig2anim .hl{filter:drop-shadow(0 0 6px rgba(217,119,87,.85))}
+#f2a-ph{transition:opacity .4s}
+#fig2anim.scrubbing [data-t]{transition-duration:.15s}
+#fig2anim.scrubbing .walker{transition-duration:.25s;transition-delay:0s}
+#f2a-scrub{cursor:ew-resize}
+@media (prefers-reduced-motion:reduce){
+  #fig2anim [data-t]{transition:none}
+  .stream-box .caret{animation:none}
+}
+
+/* ---------- demos (calm input/record layout) ---------- */
+.demo{max-width:var(--wide);margin:4.2rem auto 0;padding:0 1.5rem;font-family:var(--sans)}
+.demo .d-tag{font-size:.72rem;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--accent)}
+.demo .d-tag .dn{color:var(--baseline);margin-right:.7em}
+.demo h3{font-family:var(--serif);font-size:1.5rem;font-weight:500;margin:.45rem 0 .55rem;letter-spacing:-.01em}
+.demo .d-desc{font-family:var(--serif);font-size:1rem;color:var(--ink-2);max-width:60rem;margin:0 0 1.5rem;line-height:1.75}
+.demo .d-body{display:grid;grid-template-columns:minmax(0,1.18fr) minmax(0,.82fr);gap:1.6rem;align-items:start}
+.demo .d-media{margin:0}
+.demo .d-media video{width:100%;display:block;border-radius:10px;background:#000;border:1px solid var(--grid)}
+.demo .d-media figcaption{font-size:.78rem;color:var(--muted);margin-top:.6rem;line-height:1.6}
+.d-rec{background:var(--surface);border:1px solid var(--grid);border-radius:10px;padding:1rem 1.15rem;font-size:.85rem}
+.d-rec .rh{font-size:.66rem;font-weight:700;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);margin:1rem 0 .5rem}
+.d-rec .rh:first-child{margin-top:0}
+.bubble{border-radius:10px;padding:.55rem .85rem;line-height:1.7;margin:.4rem 0;white-space:pre-wrap;}
+.bubble.user{background:color-mix(in srgb,var(--accent) 7%,var(--surface));
+  border:1px solid color-mix(in srgb,var(--accent) 22%,var(--grid));color:var(--ink)}
+.bubble.model{background:var(--plane);border:1px solid var(--grid);color:var(--ink-2)}
+.bubble.ghost{border-style:dashed;color:var(--muted)}
+.bubble .ts{font-family:var(--mono);font-size:.72rem;color:var(--accent);margin-right:.55em}
+.bubble.ghost .ts{color:var(--baseline)}
+.d-rec .recnote{font-size:.7rem;color:#8a6d1a;margin-top:.75rem;line-height:1.5}
+/* long-context graphic (no embeddable video) */
+.ctxcard{background:var(--surface);border:1px solid var(--grid);border-radius:10px;padding:1.5rem 1.5rem 1.2rem}
+.ctxcard .ct-t{font-size:.85rem;font-weight:650;margin-bottom:1rem}
+.ctxbar{position:relative;height:14px;border-radius:7px;
+  background:linear-gradient(90deg,color-mix(in srgb,var(--accent) 22%,var(--surface)),color-mix(in srgb,var(--accent) 55%,var(--surface)))}
+.ctxbar .mk{position:absolute;top:50%;transform:translate(-50%,-50%);width:22px;height:22px;border-radius:50%;
+  background:var(--surface);border:1.5px solid var(--accent);color:var(--accent);
+  font-size:.7rem;font-weight:700;display:flex;align-items:center;justify-content:center}
+.ctxbar-x{display:flex;justify-content:space-between;font-family:var(--mono);font-size:.7rem;color:var(--muted);margin-top:.5rem}
+.morecap{max-width:var(--wide);margin:3.4rem auto 0;padding:0 1.5rem;
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(15rem,1fr));gap:1rem;font-family:var(--sans)}
+.morecap .mc{background:var(--surface);border:1px solid var(--grid);border-radius:10px;padding:1.1rem 1.2rem}
+.morecap .mc .mt{font-weight:650;font-size:.92rem;margin-bottom:.35rem}
+.morecap .mc .md{font-size:.8rem;color:var(--muted);line-height:1.55}
+.morecap .mc .ms{font-size:.72rem;color:var(--baseline);margin-top:.5rem;font-family:var(--mono)}
+@media (max-width:860px){.demo .d-body{grid-template-columns:1fr}}
+
+/* ---------- limitations ---------- */
+.limits{max-width:var(--col);margin:1.4rem auto 0;padding:0 1.5rem}
+.limits ul{list-style:none}
+.limits li{padding:.85rem 0;border-top:1px solid var(--grid);color:var(--ink-2);font-size:.98rem}
+.limits li:first-child{border-top:0}
+.limits li b{color:var(--ink);font-weight:600}
+
+/* ---------- closing ---------- */
+.cards{max-width:var(--wide);margin:2.4rem auto 0;padding:0 1.5rem;
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(13rem,1fr));gap:1rem;font-family:var(--sans)}
+.card{background:var(--surface);border:1px solid var(--grid);border-radius:10px;
+  padding:1.2rem 1.3rem;text-decoration:none;color:var(--ink);transition:border-color .2s}
+.card:hover{border-color:var(--baseline)}
+.card .ct{font-weight:650;font-size:.95rem;margin-bottom:.35rem}
+.card .cd{font-size:.8rem;color:var(--muted);line-height:1.5}
+.authors{max-width:var(--col);margin:3rem auto 0;padding:0 1.5rem;font-family:var(--sans);font-size:.9rem;color:var(--ink-2)}
+.authors .k{font-size:.75rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:.5rem}
+.cite{max-width:var(--col);margin:2.5rem auto 0;padding:0 1.5rem}
+.cite pre{font-family:var(--mono);font-size:.75rem;line-height:1.7;color:var(--ink-2);
+  background:var(--surface);border:1px solid var(--grid);border-radius:10px;
+  padding:1.1rem 1.3rem;overflow-x:auto}
+footer{max-width:var(--wide);margin:5rem auto 0;padding:2rem 1.5rem 3rem;
+  border-top:1px solid var(--grid);display:flex;justify-content:space-between;
+  flex-wrap:wrap;gap:1rem;font-family:var(--sans);font-size:.8rem;color:var(--muted)}
+
+/* ---------- reveal on scroll ---------- */
+.fx{opacity:0;transform:translateY(14px);transition:opacity .7s ease,transform .7s ease}
+.fx.in-view{opacity:1;transform:none}
+
+/* ---------- modern sticky nav ---------- */
+.sticky-nav {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--grid);
+  padding: 0.8rem 1.5rem;
+  max-width: none;
+}
+.sticky-nav .nav-content {
+  max-width: var(--wide); margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.sticky-nav .wordmark {
+  font-family: var(--sans); font-weight: 700; letter-spacing: .02em; font-size: 1rem; color: var(--ink);
+}
+.sticky-nav .wordmark span { color: var(--muted); font-weight: 500; }
+.sticky-nav .nav-links { display: flex; gap: 1.5rem; align-items: center; font-family: var(--sans); font-size: 0.85rem; font-weight: 500; }
+.sticky-nav .nav-links a { color: var(--ink-2); text-decoration: none; transition: color 0.2s; }
+.sticky-nav .nav-links a:hover { color: var(--accent); }
+.sticky-nav .lang { color: var(--muted); cursor: not-allowed; font-size: 0.8rem; margin-left: 1rem; padding-left: 1rem; border-left: 1px solid var(--grid); }
+.sticky-nav .lang b { color: var(--ink); }
+
+/* ---------- series switcher (segmented) ---------- */
+.series-nav{border-bottom:1px solid var(--grid);background:var(--plane)}
+.series-nav .si{max-width:var(--wide);margin:0 auto;padding:.55rem 1.5rem;
+  display:flex;align-items:center;gap:.85rem;flex-wrap:wrap;font-family:var(--sans)}
+.series-nav .sk{font-size:.68rem;font-weight:700;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--muted)}
+.series-seg{display:inline-flex;padding:3px;gap:2px;border:1px solid var(--grid);
+  border-radius:99px;background:var(--surface)}
+.series-seg a{display:inline-flex;align-items:center;text-decoration:none;white-space:nowrap;
+  font-size:.82rem;font-weight:550;color:var(--ink-2);padding:.36rem 1.05rem;
+  border-radius:99px;transition:color .2s,background .2s}
+.series-seg a:hover{color:var(--ink)}
+.series-seg a.active{background:var(--accent);color:#fff;box-shadow:0 1px 3px rgba(16,185,129,.35)}
+@media(max-width:560px){.series-seg{display:flex;width:100%}.series-seg a{flex:1;justify-content:center}}
+
+/* ---------- toc pills ---------- */
+.toc-pills { display: flex; gap: 0.6rem; flex-wrap: wrap; margin-top: 1.5rem; align-items: center; }
+.toc-pills.main-capsules { margin-top: 3rem; border-top: 1px solid var(--grid); padding-top: 2rem; }
+.toc-pills a {
+  padding: 0.4rem 1.1rem; border-radius: 99px; border: 1px solid var(--grid);
+  color: var(--ink-2); text-decoration: none; font-size: 0.85rem; font-weight: 500;
+  background: var(--surface); transition: all 0.25s ease;
+  font-family: var(--sans);
+}
+.toc-pills a:hover {
+  background: var(--accent); color: #fff; border-color: var(--accent);
+  box-shadow: 0 4px 12px var(--accent-light);
+  transform: translateY(-1px);
+}
+.toc-pills .k {
+  font-size: 0.75rem; color: var(--muted); font-weight: 700; letter-spacing: 0.1em;
+  text-transform: uppercase; margin-right: 0.5rem;
+}
+
+/* ---------- core features ---------- */
+.core-features {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 4rem; margin-top: 3.5rem;
+}
+.core-feature-block {
+  display: flex; flex-direction: column; align-items: flex-start;
+  position: relative;
+}
+.core-feature-icon {
+  font-size: 2.2rem; margin-bottom: 1rem;
+}
+.core-feature-title {
+  font-size: 1.4rem; font-weight: 650; color: var(--ink); margin-bottom: 1rem; font-family: var(--sans); letter-spacing: -0.02em;
+}
+.core-feature-desc {
+  font-size: 1.05rem; color: var(--ink-2); line-height: 1.6; margin: 0; font-family: var(--sans);
+}
+.core-feature-desc b {
+  display: block; color: var(--accent); margin-bottom: 0.5rem; font-weight: 600;
+}
+@media (max-width: 860px) {
+  .core-features { grid-template-columns: 1fr; gap: 2.5rem; }
+}
+/* ---------- end new styles ---------- */
+
+/* ========== Benchmark Eval Styles ========== */
+.eval-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  margin-top: 32px;
+}
+.eval-card {
+  background: var(--plane);
+  border: 1px solid var(--grid);
+  border-radius: 16px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+}
+.eval-title {
+  font-size: 1.15rem;
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+}
+.eval-desc {
+  font-size: 0.85rem;
+  color: var(--ink-2);
+  margin-bottom: 24px;
+}
+.eval-hero {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+.eval-hero .num {
+  font-size: 3.5rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--ink);
+  letter-spacing: -0.03em;
+}
+.eval-hero .unit {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--ink-2);
+}
+.bar-chart {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: auto;
+}
+.bar-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.bar-label {
+  width: 90px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--ink-2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.bar-track {
+  flex: 1;
+  height: 6px;
+  background: var(--surface);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  background: var(--baseline);
+  transition: width 1s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.bar-fill.ours {
+  background: var(--accent);
+}
+.bar-val {
+  width: 28px;
+  text-align: right;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+/* Full Table Styles */
+.table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  margin: 16px 0;
+  border: 1px solid var(--grid);
+  border-radius: 12px;
+  background: var(--plane);
+}
+.modern-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+.modern-table th, .modern-table td {
+  padding: 10px 14px;
+  text-align: center;
+  border-bottom: 1px solid var(--grid);
+}
+.modern-table th {
+  background: var(--surface);
+  color: var(--ink-2);
+  font-weight: 500;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.modern-table th.col-ours {
+  background: color-mix(in srgb, var(--accent) 10%, var(--plane));
+  color: var(--accent);
+  font-weight: 600;
+}
+.modern-table td.col-ours {
+  background: color-mix(in srgb, var(--accent) 3%, var(--plane));
+  font-weight: 600;
+}
+.modern-table tbody tr:hover td {
+  background: var(--surface);
+}
+.modern-table tbody tr.group-start td {
+  border-top: 2px solid var(--grid);
+}
+.modern-table tbody tr.row-avg td {
+  background: transparent;
+  font-weight: 600;
+}
+.modern-table .col-grp {
+  font-weight: 600;
+  background: var(--plane);
+  color: var(--ink);
+}
+.modern-table .col-met {
+  text-align: left;
+  color: var(--ink-2);
+}
+.val-best { color: #dc2626; font-weight: 700; }
+.val-yellow { color: #ea580c; }
+.val-null { color: var(--muted); }
+.notes-container { font-size: 0.75rem; color: var(--ink-2); line-height: 1.6; margin-top: 16px; }
+
+
+
+
+
+/* ========== Seed 2.1 Tabbed Giant Bar Charts & Sleek Table ========== */
+.seed-chart {
+  margin-top: 40px;
+  margin-bottom: 32px;
+}
+.seed-chart-title {
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+}
+.seed-chart-desc {
+  font-size: 1rem;
+  color: var(--ink-2);
+  margin-bottom: 24px;
+}
+
+/* Tabs */
+.tab-list {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 32px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+.tab-list::-webkit-scrollbar { height: 4px; }
+.tab-list::-webkit-scrollbar-thumb { background: var(--grid); border-radius: 4px; }
+.tab-btn {
+  padding: 8px 18px;
+  border-radius: 20px;
+  border: 1px solid var(--grid);
+  background: transparent;
+  color: var(--ink-2);
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+.tab-btn:hover { background: var(--surface); }
+.tab-btn.active {
+  background: var(--ink);
+  color: #fff;
+  border-color: var(--ink);
+}
+
+.tab-content { display: none; animation: fadeIn 0.4s ease; }
+.tab-content.active { display: block; }
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Bars */
+.seed-bar-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  gap: 24px;
+}
+.seed-bar-label-wrapper {
+  width: 170px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  font-size: 1.05rem;
+}
+.seed-bar-label-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.seed-bar-track {
+  flex: 1;
+  background: transparent;
+  display: flex;
+  align-items: center;
+}
+.seed-bar-fill {
+  height: 36px;
+  border-radius: 6px;
+  background: #E2E8F0;
+  transition: width 1s cubic-bezier(0.2, 0.8, 0.2, 1);
+  min-width: 8px;
+}
+/* EMERALD GREEN HIGHLIGHT FOR OURS */
+.seed-bar-fill.ours {
+  background: #10B981; 
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+}
+.seed-bar-fill.locked { background: #CBD5E1; }
+.seed-bar-val {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-left: 16px;
+  color: var(--ink);
+}
+
+@media (max-width: 600px) {
+  .seed-bar-row { flex-direction: column; align-items: flex-start; gap: 8px; margin-bottom: 28px; }
+  .seed-bar-label-wrapper { width: 100%; justify-content: flex-start; }
+  .seed-bar-track { width: 100%; }
+  .seed-bar-fill { height: 28px; }
+}
+
+/* Toggle Switch */
+.eval-controls {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: -24px;
+  margin-bottom: 24px;
+}
+.score-toggle {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--ink);
+  user-select: none;
+}
+.score-toggle input { display: none; }
+.toggle-track {
+  width: 44px;
+  height: 24px;
+  background: var(--grid);
+  border-radius: 12px;
+  position: relative;
+  transition: 0.3s;
+}
+.toggle-thumb {
+  width: 18px;
+  height: 18px;
+  background: #fff;
+  border-radius: 50%;
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  transition: 0.3s;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.score-toggle input:checked + .toggle-track {
+  background: #10B981; /* EMERALD GREEN */
+}
+.score-toggle input:checked + .toggle-track .toggle-thumb {
+  transform: translateX(20px);
+}
+
+/* ==================================================
+   ULTRA-PREMIUM SAAS DATATABLE CSS
+   ================================================== */
+.table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid #E2E8F0;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.03);
+  margin-top: 24px;
+}
+.modern-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.85rem;
+  white-space: nowrap;
+  color: #334155;
+  font-family: var(--sans);
+}
+.modern-table th, .modern-table td {
+  padding: 14px 20px;
+  text-align: center;
+  border-bottom: 1px solid #F1F5F9;
+  font-variant-numeric: tabular-nums;
+}
+.modern-table thead th {
+  background: #F8FAFC;
+  color: #475569;
+  font-weight: 600;
+  font-size: 0.8rem;
+  letter-spacing: 0.03em;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  border-bottom: 1px solid #E2E8F0;
+  box-shadow: 0 1px 0 #E2E8F0;
+}
+.th-in {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.tier-icon {
+  font-size: 0.9rem;
+  opacity: 0.7;
+}
+
+/* "Ours" Column Highlight - Emerald Green Theme */
+.modern-table th.col-ours {
+  background: #ECFDF5;
+  color: #059669;
+}
+.modern-table td.col-ours {
+  background: #F0FDF4;
+  font-weight: 600;
+  color: #064E3B;
+  border-left: 1px solid #D1FAE5;
+  border-right: 1px solid #D1FAE5;
+}
+
+/* Hover Effects */
+.modern-table tbody tr:hover td {
+  background: #F8FAFC;
+}
+.modern-table tbody tr:hover td.col-ours {
+  background: #ECFDF5;
+}
+
+/* First Column & Row Headers */
+.modern-table .col-grp {
+  font-weight: 600;
+  color: #0F172A;
+  text-align: left;
+  vertical-align: top;
+  padding-top: 16px;
+  background: #fff;
+  border-right: 1px solid #F1F5F9;
+}
+.modern-table .col-met {
+  text-align: left;
+  color: #64748B;
+  font-weight: 500;
+}
+.modern-table tbody tr.group-start td {
+  border-top: 2px solid #E2E8F0;
+}
+.modern-table tbody tr.row-avg td {
+  background: transparent;
+  font-weight: 600;
+}
+
+/* Values Formatting */
+.val-best { color: #E11D48; font-weight: 700; }
+.val-yellow { color: #D97706; }
+.val-null { color: #CBD5E1; }
+
+</style>
+
+</head>
+<body>
+
+
+<nav class="sticky-nav">
+  <div class="nav-content">
+    <div class="wordmark">OpenMOSS <span>/ MOSS-VL-Realtime</span></div>
+    <div class="nav-links">
+      <a href="#s1">机制</a>
+      <a href="#s2">能力演示</a>
+      <a href="#s3">评测</a>
+      <a href="#s5">引用</a>
+      <div style="width: 1px; height: 14px; background: var(--grid); margin: 0 0.5rem;"></div>
+      <a href="https://github.com/OpenMOSS/MOSS-VL">GitHub</a>
+      <span class="lang"><b>中</b> | <a href="index.html">EN</a></span>
+    </div>
+  </div>
+</nav>
+
+<!-- ================= SERIES SWITCHER ================= -->
+<div class="series-nav">
+  <div class="si">
+    <div class="series-seg">
+      <a href="index_zh.html" class="active">MOSS-VL-Realtime</a>
+      <a href="moss-vl_zh.html">MOSS-VL 基座</a>
+    </div>
+  </div>
+</div>
+
+<!-- ================= HERO ================= -->
+<header class="hero">
+  <div class="col">
+    <div class="eyebrow">OpenMOSS Research</div>
+    <h1>MOSS-VL-Realtime</h1>
+  </div>
+  
+  <div class="hero-media fx" style="margin-top: 2rem;">
+    <style>
+      .hero-carousel{position:relative}
+      .hc-track{display:flex;gap:1rem;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;border-radius:12px}
+      .hc-track::-webkit-scrollbar{display:none}
+      .hc-track video{flex:0 0 88%;width:88%;scroll-snap-align:center;display:block;border-radius:12px;background:#000;border:1px solid var(--grid)}
+      .hc-btn{position:absolute;top:50%;transform:translateY(-50%);width:42px;height:42px;border-radius:50%;
+        border:1px solid var(--grid);background:rgba(255,255,255,.92);cursor:pointer;font-size:22px;line-height:1;
+        color:var(--ink-2);display:flex;align-items:center;justify-content:center;box-shadow:0 2px 10px rgba(0,0,0,.10);z-index:2}
+      .hc-btn:hover{color:var(--accent);border-color:var(--accent)}
+      .hc-btn.prev{left:14px}.hc-btn.next{right:14px}
+    </style>
+    <!-- HERO CAROUSEL — 发布前替换下面三个 src 即可 -->
+    <div class="hero-carousel" id="heroCar">
+      <div class="hc-track">
+        <video controls autoplay muted loop playsinline preload="metadata" src="https://huggingface.co/datasets/henrywch2huggingface/MOSS-VL-Realtime-Demo-Videos/resolve/main/%E6%91%94%E5%80%922.0.mp4"></video>
+        <video controls muted loop playsinline preload="metadata" src="https://huggingface.co/datasets/henrywch2huggingface/MOSS-VL-Realtime-Demo-Videos/resolve/main/%E6%B8%B8%E9%BE%992.1.mp4"></video>
+        <video controls muted loop playsinline preload="metadata" src="https://huggingface.co/datasets/henrywch2huggingface/MOSS-VL-Realtime-Demo-Videos/resolve/main/%E6%8A%95%E7%AF%AE%E8%AE%A1%E6%95%B02.0.mp4"></video>
+      </div>
+      <button class="hc-btn prev" type="button" aria-label="previous video" onclick="hcScroll(-1)">&#8249;</button>
+      <button class="hc-btn next" type="button" aria-label="next video" onclick="hcScroll(1)">&#8250;</button>
+    </div>
+    <script>
+      function hcScroll(dir){
+        var t = document.querySelector('#heroCar .hc-track');
+        var v = t.querySelector('video');
+        t.querySelectorAll('video').forEach(function(x){ x.pause(); });
+        t.scrollBy({left: dir * (v.getBoundingClientRect().width + 16), behavior: 'smooth'});
+      }
+    </script>
+  </div>
+
+  <div class="col" style="margin-top: 3.5rem;">
+    <p class="lede"><b>世界没有进度条。</b>它不会暂停，不能回放，也不等任何人看完再继续。</p>
+    <p>然而，视频大模型的默认范式仍是“离线”的：AI 像一个事后看录像的旁观者，面对一个已经结束的世界，先看完、再作答；一旦开始作答，便对眼前正在发生的新画面视而不见。这种“先看后答”的模式在复盘时足够好用，但在分秒必争的真实世界里，却显得迟钝。</p>
+    <p><b>我们认为，当 AI 真正走向物理世界，它必须活在“正在进行时”。</b>我们希望赋予模型一种应对现实流速的能力：它需要自己判断发声的时机，在突发状况时即时开口，在信息不足时安静观察，甚至在话说到一半时，也能随着画面的反转而立刻改口纠正。</p>
+    <p><b>因此，今天我们开源 MOSS-VL-Realtime：</b>一个 11B 规模、开放权重的流式视频理解模型。这不仅是我们的一项新技术发布，更是我们试图打破这道“时间壁垒”的答案。</p>
+    <p>我们的目标很简单：让视频理解彻底从“看录像”走向“看直播”。看与答不再分先后，回答在观看中生成，也在观看中被修正。每个 token 都在开口与沉默之间做选择。我们希望借此让 AI 终于与真实的物理世界“同频”，并以完全开源的方式，邀请整个社区共同探索多模态交互的下一步。</p>
+  </div>
+
+</header>
+
+<!-- ================= 01 PARADIGM & MECHANISM ================= -->
+<section id="s1">
+  <div class="col fx">
+    <h2>核心交互范式</h2>
+    <p class="lede">为了让模型像人一样具备应对真实流速的能力，我们打破了传统的按秒轮询或外部开口调度机制，直接赋予了 MOSS-VL-Realtime 三种核心交互行为：</p>
+    <div class="core-features">
+      <div class="core-feature-block">
+        <div class="core-feature-title">随时应答</div>
+        <p class="core-feature-desc"><b>打破“先看后答”的迟滞。</b>用户可在任意一秒提问，模型即刻基于当前画面给出回应。</p>
+      </div>
+      <div class="core-feature-block">
+        <div class="core-feature-title">主动沉默</div>
+        <p class="core-feature-desc"><b>“让子弹飞一会儿”。</b>信息不足或无关键事件时，自主保持沉默与等待。</p>
+      </div>
+      <div class="core-feature-block">
+        <div class="core-feature-title">及时纠正</div>
+        <p class="core-feature-desc"><b>认知随画面动态更新。</b>随着新画面持续流入，即时调整并修正此前的回答。</p>
+      </div>
+    </div>
+    
+    <p style="margin-top: 2rem;">这三种自然的交互方式，出自同一个底层设计：视频帧、用户提问与模型回答被排进了同一条 token 流。对话发生于持续流入的画面之间，而提问就像看直播时的“弹幕”，可以在时间线的任意位置无缝插入。</p>
+    <p><b>图 1</b> 展示了这种统一且交错的流式输入序列是如何在底层运作的。</p>
+  </div>
+
+  <div class="mech-wrap fx">
+    <div class="mech-card">
+      <div class="animbar">
+        <button id="f2a-replay">&#8635; 重播</button>
+        <button id="f2a-pause">&#10074;&#10074; 暂停</button>
+        <span class="hint">自动循环播放 · <b>把鼠标放在胶片条上左右移动 = 进度条</b>(停住即定格,往回拖即倒带)· 悬停下方元素:A、B 两栏对应物互相高亮</span>
+      </div>
+<svg id="fig2anim" viewBox="0 0 1600 850" xmlns="http://www.w3.org/2000/svg" font-family="Helvetica, Arial, sans-serif">
+  <rect width="1600" height="850" fill="#FAF9F5"/>
+  <text x="60" y="72" font-size="19" letter-spacing="3" font-weight="bold" fill="#D97757" font-family="Georgia, 'Times New Roman', serif">A · 人类视角</text>
+  <text x="230" y="72" font-size="16" fill="#8F8B7E">视觉接收与语言表达同步发生</text>
+  <text x="60" y="98" font-size="12.5" letter-spacing="2" fill="#8F8B7E" font-weight="bold">摄像头 / 现场</text>
+  <rect x="70" y="112" width="1436" height="100" rx="14" fill="#F1EFE7" stroke="#DDD9CC"/>
+  <defs>
+    <g id="personA2">
+      <circle cx="0" cy="-10" r="4.2"/>
+      <path d="M -4.8 -3.4 A 4.8 4.8 0 0 1 4.8 -3.4 L 4.8 8 L -4.8 8 Z"/>
+    </g>
+  </defs>
+  <g fill="#F7F5EE" stroke="#DDD9CC" stroke-width="1">
+    <rect x="197" y="152" width="14" height="10" rx="2"/><rect x="284" y="152" width="14" height="10" rx="2"/><rect x="372" y="152" width="14" height="10" rx="2"/>
+    <rect x="539" y="152" width="14" height="10" rx="2"/><rect x="619" y="152" width="14" height="10" rx="2"/><rect x="699" y="152" width="14" height="10" rx="2"/>
+    <rect x="866" y="152" width="14" height="10" rx="2"/><rect x="954" y="152" width="14" height="10" rx="2"/><rect x="1041" y="152" width="14" height="10" rx="2"/>
+    <rect x="1209" y="152" width="14" height="10" rx="2"/><rect x="1289" y="152" width="14" height="10" rx="2"/><rect x="1369" y="152" width="14" height="10" rx="2"/>
+  </g>
+  <line id="f2a-ph" x1="117" y1="112" x2="117" y2="212" stroke="#D97757" stroke-width="2" opacity="0"/>
+  <g data-t="0.15" class="pop"><rect x="75" y="126" width="84" height="62" rx="6" stroke="#D97757" stroke-width="2" fill="#FFFFFF"/><line x1="87" y1="176" x2="147" y2="176" stroke="#E2DFD4" stroke-width="1.4"/><g fill="#B05730"><use href="#personA2" x="106" y="168"/><use href="#personA2" x="128" y="168"/></g><text x="117" y="232" font-size="13" fill="#B05730" text-anchor="middle">0.0s</text></g>
+  <g data-t="1.2" class="pop"><rect x="424" y="126" width="84" height="62" rx="6" stroke="#D97757" stroke-width="2" fill="#FFFFFF"/><line x1="436" y1="176" x2="496" y2="176" stroke="#E2DFD4" stroke-width="1.4"/><g fill="#B05730"><use href="#personA2" x="455" y="168"/><use href="#personA2" x="477" y="168"/></g><text x="466" y="232" font-size="13" fill="#B05730" text-anchor="middle">1.2s</text></g>
+  <g data-t="2.3" class="pop" data-link="f23"><rect x="744" y="126" width="84" height="62" rx="6" stroke="#D97757" stroke-width="2" fill="#FFFFFF"/><line x1="756" y1="176" x2="816" y2="176" stroke="#E2DFD4" stroke-width="1.4"/><g fill="#B05730"><use href="#personA2" x="775" y="168"/><use href="#personA2" x="797" y="168"/></g><text x="786" y="232" font-size="13" fill="#B05730" text-anchor="middle">2.3s</text><circle cx="744" cy="126" r="11" fill="#D97757"/><text x="744" y="131" font-size="12.5" fill="#FFFFFF" text-anchor="middle" font-weight="bold">1</text></g>
+  <g data-t="2.75" data-link="q"><line x1="873" y1="162" x2="873" y2="246" stroke="#C2842F" stroke-width="1.25" stroke-dasharray="4 3"/><circle cx="873" cy="162" r="2.4" fill="#C2842F"/></g>
+  <g data-t="3.05" data-link="a1"><line x1="961" y1="162" x2="961" y2="308" stroke="#C2842F" stroke-width="1.25" stroke-dasharray="4 3"/><circle cx="961" cy="162" r="2.4" fill="#C2842F"/></g>
+  <g data-t="3.5" class="pop" data-link="f35"><rect x="1094" y="126" width="84" height="62" rx="6" stroke="#D97757" stroke-width="2" fill="#FFFFFF"/><line x1="1106" y1="176" x2="1166" y2="176" stroke="#E2DFD4" stroke-width="1.4"/><g fill="#B05730"><use href="#personA2" x="1120" y="168"/><use href="#personA2" x="1134" y="168"/></g><use class="walker" href="#personA2" x="1160" y="168" fill="#C2842F"/><text x="1136" y="232" font-size="13" fill="#B05730" text-anchor="middle">3.5s</text><circle cx="1094" cy="126" r="11" fill="#C2842F"/><text x="1094" y="131" font-size="12.5" fill="#FFFFFF" text-anchor="middle" font-weight="bold">3</text><text x="1114" y="104" font-size="13.5" fill="#C2842F" font-weight="bold">&#9889; 第三个人进来了</text></g>
+  <g data-t="4.6" class="pop"><rect x="1414" y="126" width="84" height="62" rx="6" stroke="#D97757" stroke-width="2" fill="#FFFFFF"/><line x1="1426" y1="176" x2="1486" y2="176" stroke="#E2DFD4" stroke-width="1.4"/><g fill="#B05730"><use href="#personA2" x="1440" y="168"/><use href="#personA2" x="1456" y="168"/></g><use href="#personA2" x="1472" y="168" fill="#C2842F"/><text x="1456" y="232" font-size="13" fill="#B05730" text-anchor="middle">4.6s</text></g>
+  <text x="60" y="266" font-size="12.5" letter-spacing="2" fill="#8F8B7E" font-weight="bold">用户</text>
+  <g data-t="2.75" class="pop" data-link="q">
+    <rect x="609" y="246" width="300" height="38" rx="19" fill="#FFFFFF" stroke="#5D5A50"/>
+    <text x="759" y="270" font-size="14.5" fill="#1F1E1B" text-anchor="middle" font-weight="bold">"房间里有多少个人?"</text>
+    <circle cx="592" cy="265" r="11" fill="#5D5A50"/>
+    <text x="592" y="270" font-size="12.5" fill="#FFFFFF" text-anchor="middle" font-weight="bold">2</text>
+  </g>
+  <text x="60" y="334" font-size="12.5" letter-spacing="2" fill="#8F8B7E" font-weight="bold">模型</text>
+  <g data-t="3.05" class="pop" data-link="a1">
+    <rect x="769" y="308" width="260" height="36" rx="18" fill="#2D2B26"/>
+    <text x="899" y="331.5" font-size="15" fill="#FAF9F5" text-anchor="middle" font-weight="bold">"两个人"</text>
+  </g>
+  <g data-t="3.55" class="pop" data-link="a2">
+    <rect x="1119" y="308" width="240" height="36" rx="18" fill="#2D2B26" stroke="#C2842F" stroke-width="2.5"/>
+    <text x="1239" y="331.5" font-size="15" fill="#FAF9F5" text-anchor="middle" font-weight="bold">"现在有三个人了"</text>
+  </g>
+  <text data-t="5.3" x="100" y="374" font-size="13.5" fill="#8F8B7E" font-style="italic">回答仍在持续输出、新的画面帧不断到达——场景一旦改变，回答随即改变方向。</text>
+  <line x1="60" y1="406" x2="1540" y2="406" stroke="#E2DFD4" stroke-width="1.5"/>
+  <text x="60" y="440" font-size="19" letter-spacing="3" font-weight="bold" fill="#D97757" font-family="Georgia, 'Times New Roman', serif">B · 模型视角</text>
+  <text x="230" y="440" font-size="16" fill="#8F8B7E">单一的交错 Token 序列</text>
+  <g data-t="0.02"><rect x="60" y="470" width="120" height="40" rx="8" fill="#F7F5EE" stroke="#C9C5B9" stroke-dasharray="5 4"/><text x="120" y="495" font-size="13" fill="#8F8B7E" text-anchor="middle">system &#9656;</text></g>
+  <text data-t="0.06" x="192" y="498" font-size="20" fill="#A8A395">&#183;&#183;&#183;</text>
+  <g data-t="0.1"><rect x="230" y="470" width="180" height="40" rx="8" fill="#EDEBE3" stroke="#C9C5B9"/><text x="320" y="495" font-size="13" font-family="monospace" fill="#57544A" text-anchor="middle">&lt;|im_start|&gt;assistant</text></g>
+  <g data-t="0.2" data-link="sil"><rect x="422" y="470" width="115" height="40" rx="8" fill="#F7EEDD" stroke="#C2842F"/><text x="479.5" y="495" font-size="13" font-family="monospace" fill="#96661F" text-anchor="middle">&lt;|silence|&gt;</text></g>
+  <text data-t="0.4" x="556" y="498" font-size="20" fill="#A8A395">&#183;&#183;&#183;</text>
+  <g data-t="2.35" class="pop" data-link="f23"><rect x="595" y="464" width="640" height="52" rx="10" fill="#FBEFE9" stroke="#E8C4B4"/><rect x="605" y="470" width="150" height="40" rx="6" fill="#FFFFFF" stroke="#D97757"/><text x="680" y="495" font-size="12.5" font-family="monospace" fill="#B05730" text-anchor="middle">&lt;|vision_start|&gt;</text><rect x="767" y="470" width="248" height="40" rx="6" fill="#FFFFFF" stroke="#D97757"/><text x="891" y="495" font-size="12.5" font-family="monospace" fill="#B05730" text-anchor="middle">&lt;|time_start|&gt;2.3 s&lt;|time_end|&gt;</text><rect x="1027" y="470" width="52" height="40" rx="6" fill="#D97757"/><text x="1053" y="496" font-size="17" fill="#FFFFFF" text-anchor="middle" font-weight="bold">&#9638;</text><rect x="1091" y="470" width="130" height="40" rx="6" fill="#FFFFFF" stroke="#D97757"/><text x="1156" y="495" font-size="12.5" font-family="monospace" fill="#B05730" text-anchor="middle">&lt;|vision_end|&gt;</text><circle cx="891" cy="456" r="11" fill="#D97757"/><text x="891" y="461" font-size="12.5" fill="#FFFFFF" text-anchor="middle" font-weight="bold">1</text></g>
+  <g data-t="2.55" data-link="sil"><rect x="1247" y="470" width="115" height="40" rx="8" fill="#F7EEDD" stroke="#C2842F"/><text x="1304.5" y="495" font-size="13" font-family="monospace" fill="#96661F" text-anchor="middle">&lt;|silence|&gt;</text></g>
+  <g data-t="2.8"><rect x="60" y="550" width="105" height="40" rx="8" fill="#EDEBE3" stroke="#C9C5B9"/><text x="112.5" y="575" font-size="13" font-family="monospace" fill="#57544A" text-anchor="middle">&lt;|im_end|&gt;</text></g>
+  <g data-t="2.9"><rect x="177" y="550" width="150" height="40" rx="8" fill="#EDEBE3" stroke="#C9C5B9"/><text x="252.0" y="575" font-size="13" font-family="monospace" fill="#57544A" text-anchor="middle">&lt;|im_start|&gt;user</text></g>
+  <g data-t="3.0" class="pop" data-link="q"><rect x="339" y="550" width="250" height="40" rx="8" fill="#FFFFFF" stroke="#5D5A50"/><text x="464.0" y="575" font-size="13.5" fill="#1F1E1B" text-anchor="middle" font-weight="bold">房间里有多少个人?</text><circle cx="464" cy="536" r="11" fill="#5D5A50"/><text x="464" y="541" font-size="12.5" fill="#FFFFFF" text-anchor="middle" font-weight="bold">2</text></g>
+  <g data-t="3.1"><rect x="601" y="550" width="105" height="40" rx="8" fill="#EDEBE3" stroke="#C9C5B9"/><text x="653.5" y="575" font-size="13" font-family="monospace" fill="#57544A" text-anchor="middle">&lt;|im_end|&gt;</text></g>
+  <g data-t="3.2"><rect x="718" y="550" width="200" height="40" rx="8" fill="#EDEBE3" stroke="#C9C5B9"/><text x="818.0" y="575" font-size="13" font-family="monospace" fill="#57544A" text-anchor="middle">&lt;|im_start|&gt;assistant</text></g>
+  <text data-t="3.35" x="60" y="628" font-size="13.5" fill="#8F8B7E" font-style="italic">提问随时可能发生——当前开放的对话轮次被闭合，一个新的轮次被拼接接入。</text>
+  <g data-t="3.36" class="pop" data-link="a1"><rect x="60" y="670" width="64" height="40" rx="8" fill="#2D2B26"/><text x="92" y="695" font-size="14" fill="#FAF9F5" text-anchor="middle" font-weight="bold">两个</text></g>
+  <g data-t="3.44" class="pop" data-link="a1"><rect x="136" y="670" width="90" height="40" rx="8" fill="#2D2B26"/><text x="181" y="695" font-size="14" fill="#FAF9F5" text-anchor="middle" font-weight="bold">人</text></g>
+  <g data-t="3.55" class="pop" data-link="f35"><rect x="238" y="664" width="640" height="52" rx="10" fill="#FBEFE9" stroke="#E8C4B4"/><rect x="248" y="670" width="150" height="40" rx="6" fill="#FFFFFF" stroke="#D97757"/><text x="323" y="695" font-size="12.5" font-family="monospace" fill="#B05730" text-anchor="middle">&lt;|vision_start|&gt;</text><rect x="410" y="670" width="248" height="40" rx="6" fill="#FFFFFF" stroke="#D97757"/><text x="534" y="695" font-size="12.5" font-family="monospace" fill="#B05730" text-anchor="middle">&lt;|time_start|&gt;3.5 s&lt;|time_end|&gt;</text><rect x="670" y="670" width="52" height="40" rx="6" fill="#D97757"/><text x="696" y="696" font-size="17" fill="#FFFFFF" text-anchor="middle" font-weight="bold">&#9638;</text><rect x="734" y="670" width="130" height="40" rx="6" fill="#FFFFFF" stroke="#D97757"/><text x="799" y="695" font-size="12.5" font-family="monospace" fill="#B05730" text-anchor="middle">&lt;|vision_end|&gt;</text><circle cx="534" cy="656" r="11" fill="#C2842F"/><text x="534" y="661" font-size="12.5" fill="#FFFFFF" text-anchor="middle" font-weight="bold">3</text><text x="552" y="661" font-size="14" fill="#C2842F">&#9889;</text></g>
+  <g data-t="3.75" class="pop" data-link="a2"><rect x="890" y="670" width="70" height="40" rx="8" fill="#2D2B26" stroke="#C2842F" stroke-width="2.5"/><text x="925" y="695" font-size="14" fill="#FAF9F5" text-anchor="middle" font-weight="bold">现在</text></g>
+  <g data-t="3.9" class="pop" data-link="a2"><rect x="972" y="670" width="92" height="40" rx="8" fill="#2D2B26" stroke="#C2842F" stroke-width="2.5"/><text x="1018" y="695" font-size="14" fill="#FAF9F5" text-anchor="middle" font-weight="bold">有三个人了</text></g>
+  <text data-t="4.05" x="1088" y="698" font-size="20" fill="#A8A395">&#183;&#183;&#183;</text>
+  <text data-t="4.45" x="60" y="748" font-size="13.5" fill="#8F8B7E" font-style="italic">新画面帧在作答期间切入——后续 Token 随之改变生成方向。</text>
+  <g font-size="13.5" fill="#57544A">
+    <rect x="60" y="790" width="20" height="20" rx="4" fill="#FFFFFF" stroke="#D97757"/>
+    <text x="90" y="805">视觉 Token &#8212; 帧 + 绝对时间戳</text>
+    <rect x="430" y="790" width="20" height="20" rx="4" fill="#F7EEDD" stroke="#C2842F"/>
+    <text x="460" y="805">&lt;|silence|&gt; &#8212; 显式沉默 Token</text>
+    <rect x="740" y="790" width="20" height="20" rx="4" fill="#2D2B26"/>
+    <text x="770" y="805">生成的回答</text>
+    <rect x="940" y="790" width="20" height="20" rx="4" fill="#EDEBE3" stroke="#C9C5B9"/>
+    <text x="970" y="805">轮次结构</text>
+    <rect x="1120" y="790" width="20" height="20" rx="4" fill="#FFFFFF" stroke="#5D5A50"/>
+    <text x="1150" y="805">用户文本</text>
+  </g>
+  <rect id="f2a-scrub" x="70" y="86" width="1436" height="158" fill="transparent"/>
+</svg>
+    </div>
+    <p class="figcap"><b>图 1：流式输入表示机制。</b>上方（A 栏）表征人类直觉感知：观看与回答处于并行状态，当画面发生突变时，模型能够即时修正回答。下方（B 栏）表征模型的实际序列表示：整个交互被编码为单条交错的 Token 序列，携带绝对时间戳的视频帧嵌入尚未闭合的对话轮次中，用户提问在任意时刻拼接为新轮次，而 <code>&lt;|silence|&gt;</code> 则作为显式的沉默 Token 参与决策。</p>
+  </div>
+
+  <div class="col fx">
+    <h3 style="margin-top: 3.5rem;">架构设计与时空表征</h3>
+    <p>MOSS-VL-Realtime 的基础架构专为长程流式视频理解设计，其核心要素包括：</p>
+    <ul>
+      <li><strong>解耦交叉注意力（Decoupled Cross-Attention）</strong>：将视频特征提取与文本生成阶段的交叉注意力计算解耦，在处理高频视频帧时能够显著降低端到端的吞吐与延迟开销。</li>
+      <li><strong>绝对时间戳（Absolute Timestamps）</strong>：为输入视频序列的每一帧编码绝对时间信息，使模型能感知物理世界的真实流速，不依赖固定的帧速率（FPS）或相对位置。</li>
+      <li><strong>跨维度旋转位置编码（XRoPE）</strong>：构建统一的时空位置表示，将视频特征的空间维度 $(h, w)$ 与时间维度 $t$ 统一映射，从而在长程上下文交互中提供精准的时空定位和特征关联。</li>
+
+    </ul>
+
+    <figure class="d-media" style="margin: 2rem 0;">
+      <img src="assets/mossvl-realtime-architecture.png" alt="MOSS-VL-Realtime Architecture" style="max-width: 100%; height: auto; border: 1px solid var(--line); border-radius: 8px;" />
+      <figcaption class="figcap" style="text-align:left; margin:.8rem 0 0;"><b>图 2：MOSS-VL-Realtime 架构示意图。</b>展示了解耦交叉注意力机制与时空表征模块的连接方式，支持音视频输入在统一的时空特征空间下进行高效交叉计算。</figcaption>
+    </figure>
+
+    <p>这种交互与时空建模能力不仅得益于架构的合理设计，更源于多模态语料的全面重构。我们引入了全新的流式 SFT 交互训练方案，使得模型能够在序列生成的任一时刻精准预测说话时机或主动保持沉默。</p>
+
+  </div>
+
+<hr class="rule">
+
+<!-- ================= 02 DEMOS (main body; sources = _curated DEMO-FORMs) ================= -->
+<section id="s2">
+  <style>
+    .demo-group{max-width:var(--wide);margin:2.6rem auto 0;padding:1.8rem 1.5rem 0;border-top:1px solid var(--grid);font-family:var(--sans)}
+    .demo-group .g-tag{font-size:.72rem;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--muted)}
+    .demo-group h3{font-family:var(--serif);font-size:1.75rem;font-weight:500;margin:.45rem 0 .4rem;letter-spacing:-.01em}
+    .demo-group .g-desc{font-family:var(--serif);color:var(--ink-2);font-size:1rem;margin:0;line-height:1.7}
+    .demo.player{margin-top:1.8rem}
+    .d-tabs{display:flex;gap:.55rem;flex-wrap:wrap;margin:0 0 1.05rem}
+    .d-tab{font-family:var(--sans);font-size:.88rem;font-weight:600;padding:.42rem 1.15rem;border-radius:99px;
+      border:1px solid var(--grid);background:var(--plane);color:var(--ink-2);cursor:pointer;transition:all .15s ease}
+    .d-tab:hover{border-color:var(--accent);color:var(--accent)}
+    .d-tab.active{background:var(--accent);border-color:var(--accent);color:#fff}
+    .d-pane{display:none}
+    .d-pane.active{display:block}
+    .d-pane .d-cap{font-family:var(--sans);font-size:.85rem;color:var(--ink-2);margin:.8rem 0 0;line-height:1.7}
+    .d-pane .d-cap .dn{color:var(--accent);font-weight:700;font-size:.72rem;letter-spacing:.13em;text-transform:uppercase;margin-right:.8em}
+  </style>
+  <div class="col fx">
+    <h2>能力演示</h2>
+    <div class="toc-pills" style="margin-top: 1.5rem; padding-top: 0.5rem;">
+      <span class="k">能力快览</span>
+      <a href="#g1">监控与告警</a>
+      <a href="#g2">实时解说与演讲</a>
+      <a href="#g3">时间与数值感知</a>
+      <a href="#g4">互动解读与点评</a>
+    </div>
+  </div>
+
+
+  <div class="demo-group fx" id="g1">
+    <h3>监控与告警</h3>
+  </div>
+
+  <div class="demo player fx" id="g1-player">
+    <div class="d-tabs" role="tablist">
+      <button class="d-tab active" type="button" onclick="switchDemo(this, 'g1-player', 0)">雪夜摔倒</button>
+      <button class="d-tab" type="button" onclick="switchDemo(this, 'g1-player', 1)">条件触发 · 宠物监测</button>
+    </div>
+      <div class="d-pane active" id="d1">
+        <figure class="d-media">
+          <video controls muted loop preload="metadata" src="https://huggingface.co/datasets/henrywch2huggingface/MOSS-VL-Realtime-Demo-Videos/resolve/main/%E6%91%94%E5%80%922.0.mp4"></video>
+        </figure>
+        <p class="d-cap"><span class="dn">DEMO 01</span>雪夜街头监控。在无事发生时保持真实的静默，而在目标人员摔倒的瞬间即刻发出告警。</p>
+      </div>
+      <div class="d-pane" id="d2">
+        <figure class="d-media">
+          <video controls muted loop preload="metadata" src="https://huggingface.co/datasets/henrywch2huggingface/MOSS-VL-Realtime-Demo-Videos/resolve/main/%E5%A4%A7%E5%BC%80%E9%97%A82.0.mp4"></video>
+        </figure>
+        <p class="d-cap"><span class="dn">DEMO 02</span>只关注约定的目标事件：猫咪触碰萝卜的瞬间即刻输出“真棒”，其余时刻始终保持静默。</p>
+      </div>
+  </div>
+
+  <div class="demo-group fx" id="g2">
+    <h3>实时解说与演讲</h3>
+  </div>
+
+  <div class="demo player fx" id="g2-player">
+    <div class="d-tabs" role="tablist">
+      <button class="d-tab active" type="button" onclick="switchDemo(this, 'g2-player', 0)">实时解说 · 足球</button>
+      <button class="d-tab" type="button" onclick="switchDemo(this, 'g2-player', 1)">实时演讲 · PPT</button>
+    </div>
+      <div class="d-pane active" id="d3">
+        <figure class="d-media">
+          <video controls muted loop preload="metadata" src="https://huggingface.co/datasets/henrywch2huggingface/MOSS-VL-Realtime-Demo-Videos/resolve/main/%E6%B8%B8%E9%BE%992.1.mp4"></video>
+        </figure>
+        <p class="d-cap"><span class="dn">DEMO 03</span>以专业电视解说的口吻实时播报足球比赛，传球、射门与进球等关键动作在发生的当下被即时捕捉并解说。</p>
+      </div>
+      <div class="d-pane" id="d4">
+        <figure class="d-media">
+          <video controls muted loop preload="metadata" src="https://huggingface.co/datasets/henrywch2huggingface/MOSS-VL-Realtime-Demo-Videos/resolve/main/ppt2.0.mp4"></video>
+        </figure>
+        <p class="d-cap"><span class="dn">DEMO 04</span>以演讲者的身份对幻灯片进行即兴演讲，随翻页即时衔接每一页的要点，从开场到收尾一气呵成。</p>
+      </div>
+  </div>
+
+  <div class="demo-group fx" id="g3">
+    <h3>时间与数值感知</h3>
+  </div>
+
+  <div class="demo player fx" id="g3-player">
+    <div class="d-tabs" role="tablist">
+      <button class="d-tab active" type="button" onclick="switchDemo(this, 'g3-player', 0)">实时计数 · 投篮</button>
+      <button class="d-tab" type="button" onclick="switchDemo(this, 'g3-player', 1)">天数定位 · 豌豆延时</button>
+      <button class="d-tab" type="button" onclick="switchDemo(this, 'g3-player', 2)">实时转写 · 手写公式</button>
+    </div>
+      <div class="d-pane active" id="d5">
+        <figure class="d-media">
+          <video controls muted loop preload="metadata" src="https://huggingface.co/datasets/henrywch2huggingface/MOSS-VL-Realtime-Demo-Videos/resolve/main/%E6%8A%95%E7%AF%AE%E8%AE%A1%E6%95%B02.0.mp4"></video>
+        </figure>
+        <p class="d-cap"><span class="dn">DEMO 05</span>逐次捕捉投篮命中的瞬间，实时报出当前的累计次数。</p>
+      </div>
+      <div class="d-pane" id="d6">
+        <figure class="d-media">
+          <video controls muted loop preload="metadata" src="https://huggingface.co/datasets/henrywch2huggingface/MOSS-VL-Realtime-Demo-Videos/resolve/main/%E7%A7%8D%E5%AD%90%E8%90%8C%E5%8F%912.0.mp4"></video>
+        </figure>
+        <p class="d-cap"><span class="dn">DEMO 06</span>观察豌豆发芽的延时摄影，捕捉画面关键变化，并准确报出发生改变的天数。</p>
+      </div>
+      <div class="d-pane" id="d7">
+        <figure class="d-media">
+          <video controls muted loop preload="metadata" src="https://huggingface.co/datasets/henrywch2huggingface/MOSS-VL-Realtime-Demo-Videos/resolve/main/%E5%85%AC%E5%BC%8F2.0.mp4"></video>
+        </figure>
+        <p class="d-cap"><span class="dn">DEMO 07</span>盯着手写解题的过程，每当新一行公式落笔，便即时将其转写输出。</p>
+      </div>
+  </div>
+
+  <div class="demo-group fx" id="g4">
+    <h3>互动解读与点评</h3>
+  </div>
+
+  <div class="demo player fx" id="g4-player">
+    <div class="d-tabs" role="tablist">
+      <button class="d-tab active" type="button" onclick="switchDemo(this, 'g4-player', 0)">互动解读 · 手相</button>
+      <button class="d-tab" type="button" onclick="switchDemo(this, 'g4-player', 1)">穿搭点评 · 换装察觉</button>
+    </div>
+      <div class="d-pane active" id="d8">
+        <figure class="d-media">
+          <video controls muted loop preload="metadata" src="https://huggingface.co/datasets/henrywch2huggingface/MOSS-VL-Realtime-Demo-Videos/resolve/main/%E6%89%8B%E7%9B%B82.0.mp4"></video>
+        </figure>
+        <p class="d-cap"><span class="dn">DEMO 08</span>扮演一位手相大师，待掌纹画面清晰后开口，边观察边逐条解读。</p>
+      </div>
+      <div class="d-pane" id="d9">
+        <figure class="d-media">
+          <video controls muted loop preload="metadata" src="https://huggingface.co/datasets/henrywch2huggingface/MOSS-VL-Realtime-Demo-Videos/resolve/main/%E5%8D%8E%E6%AD%A3%E6%8D%A2%E8%A3%852.3.mp4"></video>
+        </figure>
+        <p class="d-cap"><span class="dn">DEMO 09</span>实时点评镜头前的穿搭；当用户换装归来，即刻察觉画面变化，并针对新造型继续给出建议。</p>
+      </div>
+  </div>
+
+  <script>
+    function switchDemo(btn, pid, idx){
+      const box = document.getElementById(pid);
+      box.querySelectorAll('.d-tab').forEach(b => b.classList.toggle('active', b === btn));
+      box.querySelectorAll('.d-pane').forEach((p, i) => {
+        p.classList.toggle('active', i === idx);
+        if(i !== idx) p.querySelectorAll('video').forEach(v => v.pause());
+      });
+    }
+  </script>
+</section>
+
+<hr class="rule">
+
+<!-- ================= 03 EVALUATION ================= -->
+<section id="s3" class="section">
+  <div class="col fx">
+    <h2>模型能力</h2>
+    <p>MOSS-VL-Realtime 展现出<b>显著增强的流式交互能力</b>，在多项流式视频理解基准（Streaming Benchmarks）中<b>达到开源 SOTA 水平</b>，并在复杂动态任务中提供更可靠、即时的响应。</p>
+    <p>在核心交互层面，模型以领先行业的<b>“主动开口”</b>能力与物理世界“同频”，独立且精准地判断发声时机与主动沉默。</p>
+    <p>同时，流式感知、时空定位与长程上下文能力持续强化，面对突发事件与画面反转，模型总能<b>即时纠正</b>。</p>
+    <p>凭借这些底层突破，该模型在多个流式 Benchmark 中<b>取得了开源 SOTA 成绩</b>，持续拓展无缝流式交互的边界，对时间变化、关键动作以及突发状况的理解变得前所未有地敏锐。</p>
+
+    <p style="margin-top: 1.5rem;">流式视觉语言模型不仅需要理解“画面内容”，更需要精准判断“开口时机”。为全面检验 <b>MOSS-VL-Realtime</b> 的实时推理能力，我们在四个核心评测集上进行了深度评测。下图逐子集展示了各 Benchmark 全部维度的横向对比。</p>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- STREAMING SUBSET GRID: embeds streaming_benchmark_grid_v2_green.html
+     (generated by generate_streaming_grid_v2.py from baseline_streaming_scores.md;
+      height auto-syncs via streamGridHeight postMessage) -->
+    <div style="width:100%; margin-top:20px;">
+      <iframe id="stream-grid-frame" src="streaming_benchmark_grid_v2_green.html" width="100%" height="2780" frameborder="0" scrolling="no" style="border:none; display:block; width:100%; border-radius:12px;"></iframe>
+    </div>
+    <script>
+      window.addEventListener("message", function(ev){
+        if(ev.data && ev.data.type === "streamGridHeight"){
+          var fg = document.getElementById("stream-grid-frame");
+          if(fg) fg.style.height = (ev.data.height + 2) + "px";
+        }
+        if(ev.data && ev.data.type === "offlineBenchHeight"){
+          var f2 = document.getElementById("offline-bench-frame");
+          if(f2) f2.style.height = (ev.data.height + 40) + "px";
+        }
+      });
+    </script>
+  </div>
+  
+</section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- ================= 04 OFFLINE FOUNDATION ================= -->
+<section id="s4">
+  <div class="col fx">
+    <h2>离线基础能力</h2>
+    <p>在此次迭代中，我们对数据体系进行了<b>系统性重构与深度优化</b>，为模型夯实了强大的基础能力底座。得益于此，同代 <b>Instruct 模型</b>不仅在离线能力上保持了极佳的稳健水位，更在细粒度多模态感知（V*Bench 89.0, BLINK 78.0）及高难度时序动作定位任务中<b>取得了显著提升</b>。在长程视频理解（VideoMME, MLVU）与复杂文档表格分析（DocVQA, ChartQA）上，我们依然发挥极其稳定，综合能力<b>全面对齐甚至部分领跑</b>同等规模的顶级开源基线。</p>
+    <div style="width: 100%; margin-top: 2rem; margin-bottom: 2rem;">
+        <iframe id="offline-bench-frame" src="benchmark_table_0714.html" width="100%" height="860px" scrolling="no" frameborder="0" style="border: none;"></iframe>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 05 CLOSING ================= -->
+<section id="s5">
+  <div class="col fx">
+    <h2>引用</h2>
+  </div>
+  <div class="cite fx">
+    <pre>@misc{mossvlrealtime2026,
+  title  = {MOSS-VL-Realtime},
+  author = {OpenMOSS Team},
+  year   = {2026}
+}</pre>
+  </div>
+</section>
+
+<footer>
+  <span>© 2026 OpenMOSS · Apache-2.0</span>
+  </footer>
+
+<script>
+/* ============ reveal-on-scroll & chart grow ============ */
+const io = new IntersectionObserver(es => es.forEach(e => {
+  if (e.isIntersecting) { e.target.classList.add('in-view'); io.unobserve(e.target); }
+}), { threshold: 0, rootMargin: '0px 0px -12% 0px' });
+document.querySelectorAll('.fx, .chart-card').forEach(el => io.observe(el));
+
+/* ============ hero: streaming token strip ============ */
+const heroEl = document.getElementById('heroStream');
+const heroSeq = [];
+for (let t = 0; t < 40; t++) {
+  const sec = (t * 1.2).toFixed(1);
+  heroSeq.push(`<span class="tk-time">&lt;|time_start|&gt;${sec}s&lt;|time_end|&gt;</span><span class="tk-pad">&lt;|image_pad|&gt;</span> `);
+}
+let hp = 0;
+function heroTick() {
+  if (!heroEl) return;
+  hp = (hp + 1) % heroSeq.length;
+  const win = [];
+  for (let i = 0; i < 6; i++) win.push(heroSeq[(hp + i) % heroSeq.length]);
+  heroEl.innerHTML = win.join('') + '<span class="caret"></span>';
+}
+heroTick(); setInterval(heroTick, 900);
+
+/* ============ 01 mechanism figure: story clock + scrubber (v2.1) ============ */
+(function(){
+  var svg = document.getElementById('fig2anim');
+  if(!svg) return;
+  var els = Array.prototype.slice.call(svg.querySelectorAll('[data-t]')).map(function(e){return {e:e, t:parseFloat(e.getAttribute('data-t'))};});
+  var ph = document.getElementById('f2a-ph');
+  var DUR = 7.8, T1 = 4.6, X0 = 117, X1 = 1456;
+  var start = performance.now(), paused = false, pausedAt = 0, scrubbing = false, scrubT = 0;
+  var FRAMES = [{cx:786, link:'f23'}, {cx:1136, link:'f35'}];
+  function setHL(k, on){ svg.querySelectorAll('[data-link="'+k+'"]').forEach(function(x){ x.classList.toggle('hl', on); }); }
+  function setState(t){
+    els.forEach(function(o){ o.e.classList.toggle('on', t >= o.t); });
+    var px = X0 + (Math.min(t, T1)/T1)*(X1 - X0);
+    ph.setAttribute('x1', px); ph.setAttribute('x2', px);
+    ph.style.opacity = (t > 0.05 && (scrubbing || t < 5.2)) ? 0.55 : 0;
+  }
+  function tick(now){
+    if(!paused && !scrubbing){
+      var t = (now - start)/1000;
+      if(t > DUR){ start = now; t = 0; }
+      scrubT = t; setState(t);
+    }
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+  var scrub = document.getElementById('f2a-scrub');
+  var pbtn = document.getElementById('f2a-pause');
+  function svgX(e){ var r = svg.getBoundingClientRect(); return (e.clientX - r.left)*(1600/r.width); }
+  scrub.addEventListener('pointerenter', function(){ scrubbing = true; svg.classList.add('scrubbing'); });
+  scrub.addEventListener('pointermove', function(e){
+    if(!scrubbing) return;
+    var mx = svgX(e);
+    var t = Math.max(0, Math.min(1, (mx - X0)/(X1 - X0)))*T1;
+    if(mx > X1 + 20) t = DUR - 0.01;
+    scrubT = t; setState(t);
+    FRAMES.forEach(function(f){ setHL(f.link, Math.abs(mx - f.cx) <= 48); });
+  });
+  scrub.addEventListener('pointerleave', function(){
+    scrubbing = false; svg.classList.remove('scrubbing');
+    FRAMES.forEach(function(f){ setHL(f.link, false); });
+    start = performance.now() - scrubT*1000;
+    if(paused){ paused = false; pbtn.innerHTML = '&#10074;&#10074; 暂停'; }
+  });
+  document.getElementById('f2a-replay').onclick = function(){
+    scrubT = 0; setState(0); start = performance.now();
+    if(paused){ paused = false; pbtn.innerHTML = '&#10074;&#10074; 暂停'; }
+  };
+  pbtn.onclick = function(){
+    if(!paused){ paused = true; pausedAt = performance.now(); pbtn.innerHTML = '&#9654; 继续'; }
+    else { start += performance.now() - pausedAt; paused = false; pbtn.innerHTML = '&#10074;&#10074; 暂停'; }
+  };
+  svg.addEventListener('mouseover', function(e){
+    var g = e.target.closest ? e.target.closest('[data-link]') : null;
+    if(!g) return;
+    setHL(g.getAttribute('data-link'), true);
+  });
+  svg.addEventListener('mouseout', function(e){
+    if(scrubbing) return;
+    svg.querySelectorAll('.hl').forEach(function(x){ x.classList.remove('hl'); });
+  });
+})();
+
+</script>
+
+<style>
+
+
+.demo.js-sync .d-body {
+  align-items: center; /* Center align video and chat vertically */
+}
+.demo.js-sync .d-out {
+  scroll-behavior: smooth;
+  scrollbar-width: none; /* Hide scrollbar for a cleaner look since it auto-scrolls */
+  position: relative;
+  /* Fade out top and bottom for "前後虛化" effect */
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%);
+  border: none; /* Remove border to make it look like floating text */
+  background: transparent;
+  padding: 0 16px;
+  margin: 0 -16px;
+}
+.demo.js-sync .d-out::-webkit-scrollbar { display: none; }
+
+.demo.js-sync .bubble.model {
+  opacity: 0; /* Default state is future (invisible) */
+  transform: translateY(16px);
+  pointer-events: none;
+  transition: none; /* Instant hide when looping back */
+}
+.demo.js-sync .bubble.model.past {
+  opacity: 0.15; /* Heavily dimmed for past */
+  transform: translateX(-12px) scale(0.96);
+  transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+  filter: grayscale(100%);
+}
+.demo.js-sync .bubble.model.active {
+  opacity: 1;
+  transform: translateX(0) scale(1);
+  border-color: var(--accent);
+  background: var(--plane);
+  box-shadow: 0 4px 16px var(--ring);
+  color: var(--ink);
+  filter: none;
+  transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.demo.js-sync .bubble.model.ghost.active {
+  border-color: var(--baseline);
+  background: transparent;
+  box-shadow: none;
+}
+
+
+/* ========== Benchmark Eval Styles ========== */
+.eval-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  margin-top: 32px;
+}
+.eval-card {
+  background: var(--plane);
+  border: 1px solid var(--grid);
+  border-radius: 16px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+}
+.eval-title {
+  font-size: 1.15rem;
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+}
+.eval-desc {
+  font-size: 0.85rem;
+  color: var(--ink-2);
+  margin-bottom: 24px;
+}
+.eval-hero {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+.eval-hero .num {
+  font-size: 3.5rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--ink);
+  letter-spacing: -0.03em;
+}
+.eval-hero .unit {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--ink-2);
+}
+.bar-chart {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: auto;
+}
+.bar-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.bar-label {
+  width: 90px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--ink-2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.bar-track {
+  flex: 1;
+  height: 6px;
+  background: var(--surface);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  background: var(--baseline);
+  transition: width 1s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.bar-fill.ours {
+  background: var(--accent);
+}
+.bar-val {
+  width: 28px;
+  text-align: right;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+/* Full Table Styles */
+.table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  margin: 16px 0;
+  border: 1px solid var(--grid);
+  border-radius: 12px;
+  background: var(--plane);
+}
+.modern-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+.modern-table th, .modern-table td {
+  padding: 10px 14px;
+  text-align: center;
+  border-bottom: 1px solid var(--grid);
+}
+.modern-table th {
+  background: var(--surface);
+  color: var(--ink-2);
+  font-weight: 500;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.modern-table th.col-ours {
+  background: color-mix(in srgb, var(--accent) 10%, var(--plane));
+  color: var(--accent);
+  font-weight: 600;
+}
+.modern-table td.col-ours {
+  background: color-mix(in srgb, var(--accent) 3%, var(--plane));
+  font-weight: 600;
+}
+.modern-table tbody tr:hover td {
+  background: var(--surface);
+}
+.modern-table tbody tr.group-start td {
+  border-top: 2px solid var(--grid);
+}
+.modern-table tbody tr.row-avg td {
+  background: transparent;
+  font-weight: 600;
+}
+.modern-table .col-grp {
+  font-weight: 600;
+  background: var(--plane);
+  color: var(--ink);
+}
+.modern-table .col-met {
+  text-align: left;
+  color: var(--ink-2);
+}
+.val-best { color: #dc2626; font-weight: 700; }
+.val-yellow { color: #ea580c; }
+.val-null { color: var(--muted); }
+.notes-container { font-size: 0.75rem; color: var(--ink-2); line-height: 1.6; margin-top: 16px; }
+
+
+
+
+
+/* ========== Seed 2.1 Tabbed Giant Bar Charts & Sleek Table ========== */
+.seed-chart {
+  margin-top: 40px;
+  margin-bottom: 32px;
+}
+.seed-chart-title {
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+}
+.seed-chart-desc {
+  font-size: 1rem;
+  color: var(--ink-2);
+  margin-bottom: 24px;
+}
+
+/* Tabs */
+.tab-list {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 32px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+.tab-list::-webkit-scrollbar { height: 4px; }
+.tab-list::-webkit-scrollbar-thumb { background: var(--grid); border-radius: 4px; }
+.tab-btn {
+  padding: 8px 18px;
+  border-radius: 20px;
+  border: 1px solid var(--grid);
+  background: transparent;
+  color: var(--ink-2);
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+.tab-btn:hover { background: var(--surface); }
+.tab-btn.active {
+  background: var(--ink);
+  color: #fff;
+  border-color: var(--ink);
+}
+
+.tab-content { display: none; animation: fadeIn 0.4s ease; }
+.tab-content.active { display: block; }
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Bars */
+.seed-bar-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  gap: 24px;
+}
+.seed-bar-label-wrapper {
+  width: 170px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  font-size: 1.05rem;
+}
+.seed-bar-label-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.seed-bar-track {
+  flex: 1;
+  background: transparent;
+  display: flex;
+  align-items: center;
+}
+.seed-bar-fill {
+  height: 36px;
+  border-radius: 6px;
+  background: #E2E8F0;
+  transition: width 1s cubic-bezier(0.2, 0.8, 0.2, 1);
+  min-width: 8px;
+}
+/* EMERALD GREEN HIGHLIGHT FOR OURS */
+.seed-bar-fill.ours {
+  background: #10B981; 
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+}
+.seed-bar-fill.locked { background: #CBD5E1; }
+.seed-bar-val {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-left: 16px;
+  color: var(--ink);
+}
+
+@media (max-width: 600px) {
+  .seed-bar-row { flex-direction: column; align-items: flex-start; gap: 8px; margin-bottom: 28px; }
+  .seed-bar-label-wrapper { width: 100%; justify-content: flex-start; }
+  .seed-bar-track { width: 100%; }
+  .seed-bar-fill { height: 28px; }
+}
+
+/* Toggle Switch */
+.eval-controls {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: -24px;
+  margin-bottom: 24px;
+}
+.score-toggle {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--ink);
+  user-select: none;
+}
+.score-toggle input { display: none; }
+.toggle-track {
+  width: 44px;
+  height: 24px;
+  background: var(--grid);
+  border-radius: 12px;
+  position: relative;
+  transition: 0.3s;
+}
+.toggle-thumb {
+  width: 18px;
+  height: 18px;
+  background: #fff;
+  border-radius: 50%;
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  transition: 0.3s;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.score-toggle input:checked + .toggle-track {
+  background: #10B981; /* EMERALD GREEN */
+}
+.score-toggle input:checked + .toggle-track .toggle-thumb {
+  transform: translateX(20px);
+}
+
+/* ==================================================
+   ULTRA-PREMIUM SAAS DATATABLE CSS
+   ================================================== */
+.table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid #E2E8F0;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.03);
+  margin-top: 24px;
+}
+.modern-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.85rem;
+  white-space: nowrap;
+  color: #334155;
+  font-family: var(--sans);
+}
+.modern-table th, .modern-table td {
+  padding: 14px 20px;
+  text-align: center;
+  border-bottom: 1px solid #F1F5F9;
+  font-variant-numeric: tabular-nums;
+}
+.modern-table thead th {
+  background: #F8FAFC;
+  color: #475569;
+  font-weight: 600;
+  font-size: 0.8rem;
+  letter-spacing: 0.03em;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  border-bottom: 1px solid #E2E8F0;
+  box-shadow: 0 1px 0 #E2E8F0;
+}
+.th-in {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.tier-icon {
+  font-size: 0.9rem;
+  opacity: 0.7;
+}
+
+/* "Ours" Column Highlight - Emerald Green Theme */
+.modern-table th.col-ours {
+  background: #ECFDF5;
+  color: #059669;
+}
+.modern-table td.col-ours {
+  background: #F0FDF4;
+  font-weight: 600;
+  color: #064E3B;
+  border-left: 1px solid #D1FAE5;
+  border-right: 1px solid #D1FAE5;
+}
+
+/* Hover Effects */
+.modern-table tbody tr:hover td {
+  background: #F8FAFC;
+}
+.modern-table tbody tr:hover td.col-ours {
+  background: #ECFDF5;
+}
+
+/* First Column & Row Headers */
+.modern-table .col-grp {
+  font-weight: 600;
+  color: #0F172A;
+  text-align: left;
+  vertical-align: top;
+  padding-top: 16px;
+  background: #fff;
+  border-right: 1px solid #F1F5F9;
+}
+.modern-table .col-met {
+  text-align: left;
+  color: #64748B;
+  font-weight: 500;
+}
+.modern-table tbody tr.group-start td {
+  border-top: 2px solid #E2E8F0;
+}
+.modern-table tbody tr.row-avg td {
+  background: transparent;
+  font-weight: 600;
+}
+
+/* Values Formatting */
+.val-best { color: #E11D48; font-weight: 700; }
+.val-yellow { color: #D97706; }
+.val-null { color: #CBD5E1; }
+
+
+/* === Unified offline-card look for the streaming big table (overrides earlier copies) === */
+.table-wrap {
+  position: relative;
+  margin: 20px 0;
+  padding: 6px 10px 12px;
+  border: 1px solid #ececf0;
+  border-radius: 16px;
+  background: #ffffff url("media/wm_moss.png") no-repeat center 62% / 440px auto;
+  box-shadow: 0 6px 28px rgba(17,17,17,0.05);
+  scrollbar-width: none;
+}
+.table-wrap::-webkit-scrollbar { display: none; }
+.modern-table { border-collapse: separate; border-spacing: 0; background: transparent; font-family: var(--sans); font-size: 0.8rem; }
+.modern-table th, .modern-table td { padding: 9px 16px; border-bottom: 1px solid #edecf1; }
+.modern-table thead th {
+  background: #ffffff; color: #111; font-weight: 600; font-size: 0.78rem;
+  vertical-align: bottom; border-bottom: 1.5px solid #333; box-shadow: none;
+}
+.modern-table th.col-ours, .modern-table td.col-ours {
+  background: rgba(16,185,129,0.06);
+  border-left: 0; border-right: 0;
+  box-shadow: inset 1px 0 0 rgba(16,185,129,0.5), inset -1px 0 0 rgba(16,185,129,0.5);
+}
+.modern-table thead th.col-ours {
+  color: #059669; background: rgba(16,185,129,0.11);
+  border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-color: var(--accent);
+}
+.modern-table tbody tr:last-child td.col-ours {
+  border-bottom-left-radius: 12px; border-bottom-right-radius: 12px;
+  box-shadow: inset 1px 0 0 rgba(16,185,129,0.5), inset -1px 0 0 rgba(16,185,129,0.5), inset 0 -1px 0 rgba(16,185,129,0.5);
+}
+.modern-table td.col-ours { font-weight: 700; color: #111; }
+.modern-table tbody tr:hover td { background: rgba(0,0,0,0.015); }
+.modern-table tbody tr:hover td.col-ours { background: rgba(16,185,129,0.10); }
+.modern-table tbody tr.group-start td { border-top: 1px solid #dcdae1; }
+.modern-table tbody tr.row-avg td { background: transparent; font-weight: 600; }
+.modern-table tbody tr.row-avg td.col-ours { background: rgba(16,185,129,0.11); }
+.modern-table .col-grp { color: #111; background: transparent; border-right: 1px solid #edecf1; }
+.modern-table .col-met { color: #555; border-right: 1px solid #edecf1; }
+.val-best { color: #c8201c; font-weight: 700; }
+.val-2nd { text-decoration: underline; text-underline-offset: 2px; text-decoration-thickness: 1px; }
+.val-null { color: #c9c9c9; }
+.notes-container { font-size: 0.72rem; color: #888; line-height: 1.6; margin-top: 14px; }
+.notes-container b { color: #555; }
+
+/* custom hover-reveal horizontal drag scrollbar (eval cards + big table) */
+.hbar { position: absolute; height: 14px; z-index: 20; opacity: 0; transition: opacity .22s ease; pointer-events: none; }
+.hbar.show, .hbar.dragging { opacity: 1; }
+.hbar-thumb { position: absolute; top: 4px; left: 0; height: 6px; border-radius: 99px;
+  background: rgba(20,20,25,.22); pointer-events: auto; cursor: grab;
+  transition: background .15s ease, height .15s ease, top .15s ease; }
+.hbar-thumb:hover, .hbar.dragging .hbar-thumb { background: rgba(20,20,25,.42); height: 8px; top: 3px; }
+.hbar.dragging .hbar-thumb { cursor: grabbing; }
+
+</style>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll('.demo').forEach(demo => {
+    const video = demo.querySelector('video');
+    const recContainer = demo.querySelector('.d-out');
+    if (!video || !recContainer) return;
+
+    demo.classList.add('js-sync');
+    recContainer.style.overflowY = 'auto';
+    
+    const setHeight = () => {
+      // Make the gray box (.d-rec) exactly as tall as the video's OUTER box so
+      // their top and bottom edges line up (both are border-box). The transcript
+      // (.d-out) then flexes to fill whatever room is left under the prompt, and
+      // its padding keeps the active bubble centered.
+      const dRec = demo.querySelector('.d-rec');
+      const vh = Math.round(video.getBoundingClientRect().height);
+      if (vh > 100 && dRec) {
+        dRec.style.height = vh + 'px';
+        dRec.style.display = 'flex';
+        dRec.style.flexDirection = 'column';
+        recContainer.style.flex = '1 1 auto';
+        recContainer.style.minHeight = '0';
+        const outHeight = recContainer.clientHeight;
+        if (outHeight > 80) {
+            recContainer.style.paddingTop = (outHeight / 2 - 40) + 'px';
+            recContainer.style.paddingBottom = (outHeight / 2 - 40) + 'px';
+        }
+      }
+    };
+    
+    setHeight();
+    video.addEventListener('loadedmetadata', setHeight);
+    window.addEventListener('resize', setHeight);
+    setTimeout(setHeight, 500);
+    setTimeout(setHeight, 2000);
+
+    const bubbles = Array.from(recContainer.querySelectorAll('.bubble.model'));
+    const parsedBubbles = bubbles.map(b => {
+      const tsSpan = b.querySelector('.ts');
+      let start = 0, end = Infinity;
+      if (tsSpan) {
+        const text = tsSpan.textContent.replace(/[^\d:-]/g, '').trim();
+        const parts = text.split('-');
+        const parseTime = (t) => {
+          if(!t) return 0;
+          const p = t.split(':');
+          return p.length === 2 ? parseInt(p[0], 10)*60 + parseInt(p[1], 10) : 0;
+        };
+        start = parseTime(parts[0]);
+        if (parts.length > 1 && parts[1]) {
+          end = parseTime(parts[1]);
+        } else {
+          end = start;
+        }
+      }
+      return { el: b, start, end };
+    });
+
+    for (let i = 0; i < parsedBubbles.length; i++) {
+      if (parsedBubbles[i].end === parsedBubbles[i].start) {
+        if (i < parsedBubbles.length - 1) {
+          parsedBubbles[i].end = parsedBubbles[i+1].start;
+        } else {
+          parsedBubbles[i].end = 9999;
+        }
+      }
+    }
+
+    let isEndedPause = false;
+    let loopTimeout = null;
+    let endedScrub = false;
+
+    // Highlight + scroll the transcript to the moment at time `t`. Shared by
+    // playback (timeupdate) and manual scrubbing (seeking/seeked) so the right
+    // side tracks the progress bar live while you drag it.
+    const syncBubbles = (t) => {
+      parsedBubbles.forEach((b) => {
+        if (t >= b.start && t < b.end) {
+          if (!b.el.classList.contains('active')) {
+            b.el.classList.add('active');
+            b.el.classList.remove('past');
+            const offsetTop = b.el.offsetTop;
+            const scrollTarget = offsetTop - recContainer.clientHeight / 2 + b.el.clientHeight / 2;
+            recContainer.scrollTo({ top: scrollTarget, behavior: 'smooth' });
+          }
+        } else if (t < b.start) {
+          b.el.classList.remove('active', 'past');
+        } else {
+          b.el.classList.remove('active');
+          b.el.classList.add('past');
+        }
+      });
+    };
+
+    video.addEventListener('timeupdate', () => {
+      if (isEndedPause) return;
+      syncBubbles(video.currentTime);
+    });
+
+    video.removeAttribute('loop');
+
+    // Cancel the pending auto-rewind-to-0. Fires the instant the user touches the
+    // video (pointerdown), starts seeking, or hits play, so dragging the progress
+    // bar near the end is never yanked back to the start.
+    const cancelLoopReset = () => {
+      if (loopTimeout) { clearTimeout(loopTimeout); loopTimeout = null; }
+      isEndedPause = false;
+    };
+
+    video.addEventListener('ended', () => {
+      isEndedPause = true;
+      endedScrub = true;
+
+      if (parsedBubbles.length > 0) {
+         let lastB = parsedBubbles[parsedBubbles.length - 1];
+         if (lastB.el.classList.contains('ghost') && parsedBubbles.length > 1) {
+             lastB = parsedBubbles[parsedBubbles.length - 2];
+         }
+
+         parsedBubbles.forEach(b => {
+             b.el.classList.remove('active');
+             b.el.classList.add('past');
+         });
+         lastB.el.classList.remove('past');
+         lastB.el.classList.add('active');
+
+         const offsetTop = lastB.el.offsetTop;
+         const scrollTarget = offsetTop - recContainer.clientHeight / 2 + lastB.el.clientHeight / 2;
+         recContainer.scrollTo({ top: scrollTarget, behavior: 'smooth' });
+      }
+
+      loopTimeout = setTimeout(() => {
+        loopTimeout = null;
+        if (!video.ended) return;   // user scrubbed away from the end -> leave them there
+        isEndedPause = false;
+        video.currentTime = 0;
+        video.play().catch(e => {});
+      }, 3000);
+    });
+
+    // --- Manual scrubbing: keep the progress bar fully draggable ---
+    video.addEventListener('pointerdown', cancelLoopReset);
+    video.addEventListener('play', () => { cancelLoopReset(); endedScrub = false; });
+    video.addEventListener('seeking', () => {
+      cancelLoopReset();
+      syncBubbles(video.currentTime);
+    });
+    video.addEventListener('seeked', () => {
+      syncBubbles(video.currentTime);
+      // If the user dragged back out of the ended/paused state, resume playing
+      // from the new spot so the drag has a visible effect. Don't override a
+      // pause the user made on purpose mid-video (endedScrub tracks that).
+      if (endedScrub && video.paused && !video.ended) {
+        endedScrub = false;
+        video.play().catch(e => {});
+      }
+    });
+
+  });
+});
+</script>
+
+<script>
+/* Big benchmark table: underline the 2nd-best value per row (offline-card style: red=best, underline=2nd). */
+document.addEventListener('DOMContentLoaded', function(){
+  document.querySelectorAll('.modern-table tbody tr').forEach(function(tr){
+    var cells = Array.prototype.slice.call(tr.querySelectorAll('td')).filter(function(td){
+      return !td.classList.contains('col-grp') && !td.classList.contains('col-met');
+    });
+    var parsed = cells.map(function(td){
+      var span = td.querySelector('span');
+      return { span: span, v: span ? parseFloat(span.textContent) : NaN };
+    }).filter(function(o){ return o.span && !isNaN(o.v); });
+    if (parsed.length < 2) return;
+    var uniq = parsed.map(function(o){ return o.v; })
+      .filter(function(v,i,a){ return a.indexOf(v) === i; })
+      .sort(function(a,b){ return b - a; });
+    if (uniq.length < 2) return;
+    var second = uniq[1];
+    parsed.forEach(function(o){
+      if (o.v === second && !o.span.classList.contains('val-best')) o.span.classList.add('val-2nd');
+    });
+  });
+});
+
+/* Custom hover-reveal horizontal drag scrollbar for the eval cards + big benchmark table. */
+(function(){
+  function attach(el){
+    var parent = el.parentElement;
+    if (!parent) return;
+    if (getComputedStyle(parent).position === 'static') parent.style.position = 'relative';
+    var bar = document.createElement('div'); bar.className = 'hbar';
+    var thumb = document.createElement('div'); thumb.className = 'hbar-thumb';
+    bar.appendChild(thumb); parent.appendChild(bar);
+    function layout(){
+      var overflow = el.scrollWidth - el.clientWidth;
+      if (overflow <= 2){ bar.style.display = 'none'; return; }
+      bar.style.display = 'block';
+      bar.style.left = el.offsetLeft + 'px';
+      bar.style.top = (el.offsetTop + el.offsetHeight - 14) + 'px';
+      bar.style.width = el.clientWidth + 'px';
+      thumb.style.width = Math.max(30, el.clientWidth * (el.clientWidth / el.scrollWidth)) + 'px';
+      updateThumb();
+    }
+    function updateThumb(){
+      var overflow = el.scrollWidth - el.clientWidth;
+      if (overflow <= 0) return;
+      var maxX = el.clientWidth - thumb.offsetWidth;
+      thumb.style.left = (el.scrollLeft / overflow) * maxX + 'px';
+    }
+    el.addEventListener('scroll', updateThumb, { passive: true });
+    window.addEventListener('resize', layout);
+    var show = function(){ bar.classList.add('show'); };
+    var hide = function(){ if (!bar.classList.contains('dragging')) bar.classList.remove('show'); };
+    el.addEventListener('pointerenter', show);
+    el.addEventListener('pointerleave', hide);
+    bar.addEventListener('pointerenter', show);
+    bar.addEventListener('pointerleave', hide);
+    var dragging = false, startX = 0, startScroll = 0;
+    thumb.addEventListener('pointerdown', function(e){
+      dragging = true; startX = e.clientX; startScroll = el.scrollLeft;
+      bar.classList.add('dragging', 'show');
+      try { thumb.setPointerCapture(e.pointerId); } catch(_){}
+      e.preventDefault(); e.stopPropagation();
+    });
+    thumb.addEventListener('pointermove', function(e){
+      if (!dragging) return;
+      var overflow = el.scrollWidth - el.clientWidth;
+      var maxX = el.clientWidth - thumb.offsetWidth;
+      if (maxX <= 0) return;
+      el.scrollLeft = startScroll + ((e.clientX - startX) / maxX) * overflow;
+    });
+    var end = function(){ dragging = false; bar.classList.remove('dragging'); hide(); };
+    thumb.addEventListener('pointerup', end);
+    thumb.addEventListener('pointercancel', end);
+    thumb.addEventListener('lostpointercapture', end);
+    thumb.addEventListener('mousedown', function(e){ e.stopPropagation(); });
+    layout();
+    setTimeout(layout, 300); setTimeout(layout, 1200);
+  }
+  function init(){ document.querySelectorAll('.eval-scroll-wrapper, .table-wrap').forEach(attach); }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+</script>
+
+</body>
+</html>

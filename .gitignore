@@ -11,3 +11,19 @@ __pycache__/
 
 # Training outputs
 checkpoints/
+
+# Conductor control room (session-local state; not shared via git)
+/.conductor/
+
+# Session / tooling state (local only, not part of the release)
+# NOTE: root-anchored so sglang/.claude/ etc. stay tracked
+/.claude/
+/.grill/
+.sii/
+/.vscode/
+/INVARIANTS.md
+
+# Scratch / intermediate drafts (keep locally, don't ship)
+/1.txt
+/image.png
+/streaming_benchmark_grid.png

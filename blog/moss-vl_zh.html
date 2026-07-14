@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MOSS-VL · OpenMOSS [草稿 中文版]</title>
+<style>
+/* ============================================================
+   MOSS-VL 基座模型 blog — 中文版 (CD-006 series)
+   Shares the MOSS-VL-Realtime blog design system so the two
+   posts read as one series. Content adapted from README_zh.md.
+   ============================================================ */
+:root{
+  --plane:#ffffff;
+  --surface:#f4f5f8;
+  --ink:#111418;
+  --ink-2:#4b5563;
+  --muted:#9ca3af;
+  --grid:#e5e7eb;
+  --baseline:#d1d5db;
+  --ring:rgba(17,20,24,0.08);
+  --accent:#10B981;
+  --accent-light:rgba(16, 185, 129, 0.08);
+  --serif: "Inter", system-ui, -apple-system, "Segoe UI", "PingFang SC", "Noto Sans CJK SC", "Source Han Sans SC", "Microsoft YaHei", sans-serif;
+  --sans: "Inter", system-ui, -apple-system, "Segoe UI", "PingFang SC", "Noto Sans CJK SC", "Source Han Sans SC", "Microsoft YaHei", sans-serif;
+  --mono: ui-monospace, "SF Mono", Menlo, Consolas, "Noto Sans Mono CJK SC", monospace;
+  --col:68rem;
+  --wide:68rem;
+  --xwide:68rem;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--plane);color:var(--ink);font-family:var(--serif);
+     font-size:1.0625rem;line-height:1.78;-webkit-font-smoothing:antialiased}
+
+/* ---------- draft ribbon ---------- */
+.draft-ribbon{position:relative;z-index:99;
+  background:repeating-linear-gradient(45deg,#fff8e6,#fff8e6 12px,#fff3d4 12px,#fff3d4 24px);
+  border-bottom:1px dashed #d8b95c;color:#6b5310;font-family:var(--sans);
+  font-size:.78rem;letter-spacing:.02em;text-align:center;padding:.45rem 1rem}
+.draft-ribbon strong{font-weight:700}
+
+/* ---------- layout helpers ---------- */
+.col{max-width:var(--col);margin:0 auto;padding:0 1.5rem}
+.wide{max-width:var(--wide);margin:0 auto;padding:0 1.5rem}
+section{padding:5.5rem 0 1rem}
+.eyebrow{font-family:var(--sans);font-size:.78rem;font-weight:600;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
+.eyebrow .n{color:var(--muted);margin-right:.6em}
+h1{font-size:clamp(2.3rem,5.4vw,3.6rem);line-height:1.12;font-weight:500;
+   letter-spacing:-.015em;margin:.9rem 0 1.4rem}
+h2{font-size:clamp(1.6rem,3.4vw,2.15rem);line-height:1.22;font-weight:500;
+   letter-spacing:-.01em;margin:.7rem 0 1.6rem}
+h3{font-family:var(--sans);font-size:1rem;font-weight:650;margin:2.2rem 0 .6rem}
+p{margin:0 0 1.35rem;color:var(--ink)}
+p.lede{font-size:1.22rem;line-height:1.65;color:var(--ink-2)}
+ul,ol{margin:0 0 1.35rem;padding-left:1.3rem}
+li{margin:.35rem 0;color:var(--ink)}
+strong,b{font-weight:650}
+hr.rule{border:0;border-top:1px solid var(--grid);max-width:var(--col);
+  margin:4.5rem auto 0}
+code{font-family:var(--mono);font-size:.85em;background:var(--surface);
+  border:1px solid var(--grid);border-radius:5px;padding:.05em .35em}
+a.inline{color:var(--accent);text-decoration:none}
+a.inline:hover{text-decoration:underline}
+
+/* ---------- modern sticky nav ---------- */
+.sticky-nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.85);
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--grid);padding:.8rem 1.5rem;max-width:none}
+.sticky-nav .nav-content{max-width:var(--wide);margin:0 auto;display:flex;
+  align-items:center;justify-content:space-between}
+.sticky-nav .wordmark{font-family:var(--sans);font-weight:700;letter-spacing:.02em;
+  font-size:1rem;color:var(--ink)}
+.sticky-nav .wordmark span{color:var(--muted);font-weight:500}
+.sticky-nav .nav-links{display:flex;gap:1.5rem;align-items:center;
+  font-family:var(--sans);font-size:.85rem;font-weight:500}
+.sticky-nav .nav-links a{color:var(--ink-2);text-decoration:none;transition:color .2s}
+.sticky-nav .nav-links a:hover{color:var(--accent)}
+.sticky-nav .lang{color:var(--muted);cursor:not-allowed;font-size:.8rem;
+  margin-left:1rem;padding-left:1rem;border-left:1px solid var(--grid)}
+.sticky-nav .lang b{color:var(--ink)}
+
+/* ---------- series switcher (segmented) ---------- */
+.series-nav{border-bottom:1px solid var(--grid);background:var(--plane)}
+.series-nav .si{max-width:var(--wide);margin:0 auto;padding:.55rem 1.5rem;
+  display:flex;align-items:center;gap:.85rem;flex-wrap:wrap;font-family:var(--sans)}
+.series-nav .sk{font-size:.68rem;font-weight:700;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--muted)}
+.series-seg{display:inline-flex;padding:3px;gap:2px;border:1px solid var(--grid);
+  border-radius:99px;background:var(--surface)}
+.series-seg a{display:inline-flex;align-items:center;text-decoration:none;white-space:nowrap;
+  font-size:.82rem;font-weight:550;color:var(--ink-2);padding:.36rem 1.05rem;
+  border-radius:99px;transition:color .2s,background .2s}
+.series-seg a:hover{color:var(--ink)}
+.series-seg a.active{background:var(--accent);color:#fff;box-shadow:0 1px 3px rgba(16,185,129,.35)}
+@media(max-width:560px){.series-seg{display:flex;width:100%}.series-seg a{flex:1;justify-content:center}}
+
+/* ---------- hero ---------- */
+header.hero{padding:4rem 0 2.5rem}
+.hero .logo-wrap{text-align:center;margin-bottom:1.5rem}
+.hero .logo-wrap img{width:230px;max-width:60%;height:auto}
+.hero .lede b{color:var(--ink)}
+
+/* ---------- toc pills ---------- */
+.toc-pills{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1.8rem;align-items:center}
+.toc-pills a{padding:.4rem 1.1rem;border-radius:99px;border:1px solid var(--grid);
+  color:var(--ink-2);text-decoration:none;font-size:.85rem;font-weight:500;
+  background:var(--surface);transition:all .25s ease;font-family:var(--sans)}
+.toc-pills a:hover{background:var(--accent);color:#fff;border-color:var(--accent);
+  box-shadow:0 4px 12px var(--accent-light);transform:translateY(-1px)}
+.toc-pills .k{font-size:.75rem;color:var(--muted);font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;margin-right:.5rem}
+
+/* ---------- core features ---------- */
+.core-features{display:grid;grid-template-columns:repeat(3,1fr);gap:3rem;margin-top:3rem}
+.core-feature-block{display:flex;flex-direction:column;align-items:flex-start}
+.core-feature-icon{font-size:2rem;margin-bottom:.9rem}
+.core-feature-title{font-size:1.3rem;font-weight:650;color:var(--ink);margin-bottom:.8rem;
+  font-family:var(--sans);letter-spacing:-.02em}
+.core-feature-desc{font-size:1rem;color:var(--ink-2);line-height:1.6;margin:0;font-family:var(--sans)}
+@media(max-width:860px){.core-features{grid-template-columns:1fr;gap:2.2rem}}
+
+/* ---------- callout ---------- */
+.callout{background:var(--surface);border:1px solid var(--grid);border-left:3px solid var(--accent);
+  border-radius:8px;padding:1.3rem 1.5rem;margin:2.2rem auto;font-size:.98rem;max-width:var(--col)}
+.callout .k{font-family:var(--sans);font-size:.75rem;font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--accent);display:block;margin-bottom:.5rem}
+.callout ul{list-style:none;margin:0;padding:0}
+.callout li{padding:.22rem 0;color:var(--ink-2)}
+.callout li b{color:var(--ink);font-weight:600}
+
+/* ---------- figures ---------- */
+figure.fig-img{margin:2.4rem auto;text-align:center;max-width:var(--wide);padding:0 1.5rem}
+figure.fig-img img{max-width:100%;height:auto;border:1px solid var(--grid);
+  border-radius:10px;background:var(--plane)}
+figure.fig-img.plain img{border:0;background:transparent}
+figure.fig-img figcaption{font-family:var(--sans);font-size:.8rem;color:var(--muted);
+  margin:.9rem auto 0;line-height:1.55;max-width:52rem}
+figure.fig-img figcaption b{color:var(--ink-2)}
+
+/* ---------- code ---------- */
+pre.code{font-family:var(--mono);font-size:.8rem;line-height:1.7;color:var(--ink);
+  background:var(--surface);border:1px solid var(--grid);border-radius:10px;
+  padding:1.1rem 1.3rem;overflow-x:auto;margin:1.4rem auto;max-width:var(--col);white-space:pre}
+pre.code .tok{color:var(--accent);font-weight:600}
+pre.code .cmt{color:var(--muted)}
+details.code-details{margin:1.4rem auto;max-width:var(--col);border:1px solid var(--grid);
+  border-radius:10px;background:var(--surface);overflow:hidden}
+details.code-details summary{cursor:pointer;padding:.85rem 1.2rem;font-family:var(--sans);
+  font-size:.9rem;font-weight:600;color:var(--ink);list-style:none}
+details.code-details summary::-webkit-details-marker{display:none}
+details.code-details summary::before{content:"▸ ";color:var(--accent)}
+details.code-details[open] summary::before{content:"▾ "}
+details.code-details pre.code{margin:0;border:0;border-top:1px solid var(--grid);border-radius:0}
+
+/* ---------- tables ---------- */
+.tbl-wrap{max-width:var(--col);margin:1.4rem auto;overflow-x:auto}
+.dtable{width:100%;border-collapse:collapse;font-family:var(--sans);font-size:.9rem}
+.dtable th,.dtable td{text-align:left;padding:.7rem .9rem;border-bottom:1px solid var(--grid)}
+.dtable th{font-size:.74rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:650}
+.dtable td{color:var(--ink-2)}
+.dtable td b{color:var(--ink)}
+.dtable a{color:var(--accent);text-decoration:none;font-weight:600}
+.dtable a:hover{text-decoration:underline}
+
+/* ---------- training stage grid ---------- */
+.stage-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1.4rem;margin:2rem auto;max-width:var(--col)}
+.stage-card{background:var(--surface);border:1px solid var(--grid);border-radius:12px;padding:1.4rem 1.5rem}
+.stage-card .st-n{font-family:var(--sans);font-size:.72rem;font-weight:700;letter-spacing:.1em;color:var(--accent)}
+.stage-card .st-t{font-family:var(--sans);font-size:1.05rem;font-weight:650;margin:.3rem 0 .6rem}
+.stage-card p{font-size:.92rem;color:var(--ink-2);margin:0}
+@media(max-width:760px){.stage-grid{grid-template-columns:1fr}}
+
+/* ---------- eval highlight cards ---------- */
+.hl-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1.2rem;margin:2rem auto;max-width:var(--col)}
+.hl-card{background:var(--surface);border:1px solid var(--grid);border-radius:12px;padding:1.4rem 1.5rem}
+.hl-card .hl-t{font-family:var(--sans);font-size:1rem;font-weight:650;color:var(--ink);margin-bottom:.5rem}
+.hl-card .hl-d{font-size:.92rem;color:var(--ink-2);line-height:1.6;font-family:var(--sans)}
+.hl-card .hl-d b{color:var(--accent);font-weight:700}
+@media(max-width:760px){.hl-grid{grid-template-columns:1fr}}
+
+/* ---------- cards (download / links) ---------- */
+.cards{max-width:var(--wide);margin:2rem auto 0;padding:0 1.5rem;
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(15rem,1fr));gap:1rem;font-family:var(--sans)}
+.card{background:var(--surface);border:1px solid var(--grid);border-radius:10px;
+  padding:1.2rem 1.3rem;text-decoration:none;color:var(--ink);transition:border-color .2s}
+.card:hover{border-color:var(--accent)}
+.card .ct{font-weight:650;font-size:.95rem;margin-bottom:.35rem}
+.card .cd{font-size:.8rem;color:var(--muted);line-height:1.5}
+
+/* ---------- news ---------- */
+.news{max-width:var(--col);margin:1.4rem auto 0;list-style:none;padding:0;font-family:var(--sans);font-size:.92rem}
+.news li{padding:.5rem 0;border-top:1px solid var(--grid);color:var(--ink-2);display:flex;gap:1rem}
+.news li:first-child{border-top:0}
+.news li .dt{font-variant-numeric:tabular-nums;color:var(--muted);white-space:nowrap;font-weight:600;min-width:6.5rem}
+
+/* ---------- roadmap ---------- */
+.roadmap{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin:1.6rem auto 0;max-width:var(--col);font-family:var(--sans)}
+.roadmap h3{margin-top:0}
+.roadmap ul{list-style:none;padding:0;margin:0}
+.roadmap li{padding:.4rem 0;color:var(--ink-2);font-size:.95rem}
+.roadmap li b{color:var(--ink);font-weight:600}
+@media(max-width:760px){.roadmap{grid-template-columns:1fr;gap:1rem}}
+
+/* ---------- demo videos ---------- */
+.demo-videos{max-width:var(--wide);margin:2rem auto 0;padding:0 1.5rem;
+  display:grid;grid-template-columns:1fr 1fr;gap:1.4rem}
+.demo-videos video{width:100%;display:block;border-radius:10px;background:#000;border:1px solid var(--grid)}
+@media(max-width:760px){.demo-videos{grid-template-columns:1fr}}
+
+/* ---------- citation ---------- */
+.cite{max-width:var(--col);margin:1.6rem auto 0;padding:0 1.5rem}
+.cite pre{font-family:var(--mono);font-size:.75rem;line-height:1.7;color:var(--ink-2);
+  background:var(--surface);border:1px solid var(--grid);border-radius:10px;
+  padding:1.1rem 1.3rem;overflow-x:auto;white-space:pre}
+
+/* ---------- footer ---------- */
+footer{max-width:var(--wide);margin:5rem auto 0;padding:2rem 1.5rem 3rem;
+  border-top:1px solid var(--grid);display:flex;justify-content:space-between;
+  flex-wrap:wrap;gap:1rem;font-family:var(--sans);font-size:.8rem;color:var(--muted)}
+
+/* ---------- reveal on scroll ---------- */
+.fx{opacity:0;transform:translateY(14px);transition:opacity .7s ease,transform .7s ease}
+.fx.in-view{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){.fx{opacity:1;transform:none;transition:none}}
+</style>
+</head>
+<body>
+
+<div class="draft-ribbon"><strong>内部草稿 · 中文版</strong> — MOSS-VL 基座模型博客，内容整理自 <strong>README_zh.md</strong>，与 MOSS-VL-Realtime 同属一个系列。发布前请复核图表与链接。</div>
+
+<nav class="sticky-nav">
+  <div class="nav-content">
+    <div class="wordmark">OpenMOSS <span>/ MOSS-VL</span></div>
+    <div class="nav-links">
+      <a href="#s-arch">架构</a>
+      <a href="#s-train">训练</a>
+      <a href="#s-eval">评测</a>
+      <a href="#s-start">开始使用</a>
+      <div style="width:1px;height:14px;background:var(--grid);margin:0 .5rem;"></div>
+      <a href="https://github.com/OpenMOSS/MOSS-VL">GitHub</a>
+      <a href="https://OpenMOSS.github.io/MOSS-VL-Demo/#/">Demo</a>
+      <span class="lang" title="双语策略待定"><b>中</b> | EN</span>
+    </div>
+  </div>
+</nav>
+
+<!-- ================= SERIES SWITCHER ================= -->
+<div class="series-nav">
+  <div class="si">
+    <div class="series-seg">
+      <a href="index_zh.html">MOSS-VL-Realtime</a>
+      <a href="moss-vl_zh.html" class="active">MOSS-VL 基座</a>
+    </div>
+  </div>
+</div>
+
+<!-- ================= HERO ================= -->
+<header class="hero">
+  <div class="col fx">
+    <div class="logo-wrap"><img src="assets/logo.png" alt="MOSS-VL"></div>
+    <h1>MOSS-VL：面向视频理解的多模态基座</h1>
+    <p class="lede"><b>MOSS-VL</b> 是 OpenMOSS 生态系统中核心的多模态模型系列，致力于推动视觉理解技术的前沿发展。针对视频理解中固有的复杂挑战，我们的技术路线图在三个关键维度上实施了系统性的扩展（Scaling）策略。</p>
+
+    <div class="core-features">
+      <div class="core-feature-block">
+        <div class="core-feature-title">数据扩展</div>
+        <p class="core-feature-desc">通过构建大规模、高质量的多模态数据集，驱动模型实现强大的泛化能力。</p>
+      </div>
+      <div class="core-feature-block">
+        <div class="core-feature-title">参数扩展</div>
+        <p class="core-feature-desc">提升模型参数规模，以精准捕捉复杂的视觉—语言关联。</p>
+      </div>
+      <div class="core-feature-block">
+        <div class="core-feature-title">上下文扩展</div>
+        <p class="core-feature-desc">延伸时间跨度，实现对长视频内容的深度推理。</p>
+      </div>
+    </div>
+
+    <div class="toc-pills">
+      <span class="k">目录</span>
+      <a href="#s-arch">模型架构</a>
+      <a href="#s-timestamp">绝对时间戳</a>
+      <a href="#s-xrope">XRoPE</a>
+      <a href="#s-demo">演示视频</a>
+      <a href="#s-train">训练策略</a>
+      <a href="#s-eval">评测结果</a>
+      <a href="#s-start">快速上手</a>
+      <a href="#s-download">模型下载</a>
+      <a href="#s-roadmap">路线图</a>
+    </div>
+  </div>
+</header>
+
+<!-- ================= 01 ARCHITECTURE ================= -->
+<section id="s-arch">
+  <div class="col fx">
+    <div class="eyebrow"><span class="n">01</span> 模型架构</div>
+    <h2>解耦视觉编码与认知推理</h2>
+    <p><b>MOSS-VL</b> 采用基于交叉注意力（Cross-attention）的架构，实现了<b>视觉编码与认知推理的解耦</b>。该设计极大地降低了延迟，能够对动态视频流做出即时响应。由于<b>原生支持模态交错</b>，模型可在统一的流水线中处理复杂的图像与视频序列，无需繁重的预处理流程。</p>
+  </div>
+  <figure class="fig-img fx">
+    <img src="assets/mossvl-framework.png" alt="MOSS-VL 整体架构图" style="width:100%">
+    <figcaption><b>图 1：</b>MOSS-VL 整体架构图。</figcaption>
+  </figure>
+</section>
+
+<hr class="rule">
+
+<!-- ================= TIMESTAMP ================= -->
+<section id="s-timestamp">
+  <div class="col fx">
+    <div class="eyebrow"><span class="n">02</span> 绝对时间戳</div>
+    <h2>把推理锚定在精确的时间基准上</h2>
+    <p>为了确保模型能够精准感知事件的节奏与时长，<b>MOSS-VL</b> 在每一采样帧中均注入了<b>绝对时间戳</b>，从而将推理过程锚定在<b>精确的时间参考基准</b>之上。</p>
+    <h3>输入表示</h3>
+  </div>
+  <figure class="fig-img fx">
+    <img src="assets/timestamp_input.gif" alt="时戳序列输入示意图" style="width:90%">
+    <figcaption><b>图 2：</b>带有时间戳的视频序列输入示意图。</figcaption>
+  </figure>
+  <div class="col fx">
+    <p>每段视频中都交织插入了<b>精确的时间标记</b>。每个时间戳均由<b>专用特殊 Token</b>（<code>&lt;|time_start|&gt;</code> … <code>&lt;|time_end|&gt;</code>）封装，从而明确地锚定了每一帧视觉图像的<b>时间位置</b>：</p>
+  </div>
+<pre class="code"><span class="tok">&lt;|im_start|&gt;&lt;|vision_start|&gt;</span>
+<span class="tok">&lt;|time_start|&gt;</span>0.0 seconds<span class="tok">&lt;|time_end|&gt;&lt;|image_pad|&gt;</span>
+<span class="tok">&lt;|time_start|&gt;</span>1.2 seconds<span class="tok">&lt;|time_end|&gt;&lt;|image_pad|&gt;</span>
+<span class="tok">&lt;|time_start|&gt;</span>2.3 seconds<span class="tok">&lt;|time_end|&gt;&lt;|image_pad|&gt;</span>
+...
+<span class="tok">&lt;|vision_end|&gt;</span>视频显示了一个具有连续动作的动态场景...<span class="tok">&lt;|im_end|&gt;</span></pre>
+  <div class="callout fx">
+    <span class="k">设计初衷</span>
+    <ul>
+      <li><b>可变帧率适配：</b>使用显式时间戳使模型能够处理非均匀采样率，而不丢失时序上下文。</li>
+      <li><b>精准动作定位：</b>引入绝对时间维度，实现细粒度的动作定位，使每一项响应都能精准锚定在特定的时间坐标上。</li>
+      <li><b>运动动力学分析：</b>通过引入时间间隔（<code>dt</code>），模型能够对运动物理规律进行推理，从而实现对速度、加速度和运动轨迹的精确估算。</li>
+    </ul>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ================= XROPE ================= -->
+<section id="s-xrope">
+  <div class="col fx">
+    <div class="eyebrow"><span class="n">03</span> 交叉注意力旋转位置编码</div>
+    <h2>XRoPE：统一的 3D 时空坐标</h2>
+    <p>MOSS-VL 采用了专门针对其基于交叉注意力的视觉—语言架构而定制的<b>交叉注意力旋转位置编码（Cross-attention Rotary Position Embedding, XRoPE）</b>。该机制将文本 Token 和视频 Patch 映射到一个由时间（t）、高度（h）和宽度（w）定义的统一 3D 坐标空间中。</p>
+  </div>
+  <figure class="fig-img fx">
+    <img src="assets/3d-rope.png" alt="MOSS-VL XRoPE 架构示意图" style="width:80%">
+    <figcaption><b>图 3：</b>配备交叉注意力 RoPE（XRoPE）的 MOSS-VL 架构示意图。</figcaption>
+  </figure>
+  <div class="col fx">
+    <p>为了优化跨模态对齐，<b>XRoPE</b> 被注入到视觉部分的 <b>Key（K）</b> 中以增强位置感知能力，同时保持 <b>Value（V）</b> 不变，从而确保特征的保真度。与此同时，XRoPE 被应用于文本部分的 <b>Query（Q）</b>，使模型能够通过直接的坐标对齐，精准地检索任意时空区域的信息。</p>
+  </div>
+  <div class="callout fx">
+    <span class="k">核心价值</span>
+    <ul>
+      <li><b>统一模态建模</b> —— 通过将时间表达为语言和视频共享的维度，XRoPE 实现了在单一坐标系下无缝、连贯的视频—文本推理。</li>
+      <li><b>精准时空锚定</b> —— 对齐的 (t, h, w) 坐标赋予了模型在 3D 视频空间中定位细小物体和瞬时动作的能力，其精度可细化至每一个 patch 和每一个瞬间。</li>
+      <li><b>动态输入支持</b> —— 3D 网格原生适配任意宽高比和分辨率，无需进行固定长度的填充（padding）或遵循严格的输入限制。</li>
+    </ul>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ================= DEMO ================= -->
+<section id="s-demo">
+  <div class="col fx">
+    <div class="eyebrow"><span class="n">04</span> 演示视频</div>
+    <h2>能力速览</h2>
+    <p>以下为 MOSS-VL 在真实视频输入上的推理示例。更多示例请访问我们的<a class="inline" href="https://OpenMOSS.github.io/MOSS-VL-Demo/#/">交互式 Demo 页面</a>，或在 <a class="inline" href="https://huggingface.co/spaces/OpenMOSS-Team/MOSS-VL">HuggingFace Space</a> 在线体验。</p>
+  </div>
+  <div class="demo-videos fx">
+    <video src="https://gist.github.com/user-attachments/assets/66406aaa-f09f-412c-87b1-97753895ef1f" controls playsinline></video>
+    <video src="https://gist.github.com/user-attachments/assets/d1ccae33-472f-4d92-96c4-fb6253b07189" controls playsinline></video>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ================= TRAINING ================= -->
+<section id="s-train">
+  <div class="col fx">
+    <div class="eyebrow"><span class="n">05</span> 训练策略</div>
+    <h2>逐步构建多模态能力</h2>
+    <p>MOSS-VL 采用多阶段训练方法，逐步构建多模态能力。</p>
+  </div>
+  <figure class="fig-img fx">
+    <img src="assets/total_data_distribution.png" alt="MOSS-VL 训练数据总分布" style="width:80%">
+    <figcaption><b>图 4：</b>MOSS-VL 训练数据总分布图。</figcaption>
+  </figure>
+
+  <div class="col fx">
+    <h3>预训练阶段（PT）</h3>
+    <p>MOSS-VL 通过系统性的<b>四阶段预训练</b>，从零开始逐步构建多模态能力：</p>
+  </div>
+  <div class="stage-grid fx">
+    <div class="stage-card">
+      <div class="st-n">STAGE 1</div>
+      <div class="st-t">视觉—语言对齐</div>
+      <p>建立视觉特征与语言空间之间的初步桥梁。通过在大规模图文对上进行训练，模型学习将视觉概念与其对应的文本描述联系起来，同时培养基础的 OCR 能力，以理解图像中的文字。</p>
+    </div>
+    <div class="stage-card">
+      <div class="st-n">STAGE 2</div>
+      <div class="st-t">大规模多模态预训练</div>
+      <p>扩大模型对海量、多样化多模态语料库的接触面，拓宽模型对世界知识和复杂场景的掌握，为通用智能和高分辨率感知奠定坚实基础。此阶段还引入了短视频片段，以初步培养视频理解能力。</p>
+    </div>
+    <div class="stage-card">
+      <div class="st-n">STAGE 3</div>
+      <div class="st-t">高质量多模态预训练</div>
+      <p>通过在大量高质量的感知、理解和推理数据上进行训练，全面提升模型质量。此阶段结合了细粒度的图像感知、复杂的跨多图理解以及高保真视频推理，强化模型捕捉复杂视觉细节与时序关系的能力。</p>
+    </div>
+    <div class="stage-card">
+      <div class="st-n">STAGE 4</div>
+      <div class="st-t">退火与长上下文外推</div>
+      <p>将模型的视野延伸至长视频理解，同时通过精心设计的退火（Annealing）策略，利用精选的顶级多模态数据进行训练，将模型的最终性能推向巅峰。</p>
+    </div>
+  </div>
+
+  <div class="col fx">
+    <h3>指令微调（SFT）</h3>
+    <p>在预训练模型的基础上，<b>MOSS-VL</b> 通过<b>有监督微调（SFT）</b>进行了进一步优化，以对齐人类意图，并全面释放其交互与指令遵循能力。</p>
+  </div>
+  <figure class="fig-img fx">
+    <img src="assets/SFT.png" alt="MOSS-VL SFT 数据组成" style="width:52%">
+    <figcaption><b>图 5：</b>MOSS-VL SFT 数据组成图。</figcaption>
+  </figure>
+
+  <div class="callout fx">
+    <span class="k">人类反馈强化学习（RLHF）</span>
+    <ul>
+      <li>MOSS-VL 目前正处于 RLHF 训练阶段。敬请期待后续更新。</li>
+    </ul>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ================= EVAL ================= -->
+<section id="s-eval">
+  <div class="col fx">
+    <div class="eyebrow"><span class="n">06</span> 评测结果</div>
+    <h2>均衡而全面的能力画像</h2>
+    <p>我们对 MOSS-VL 在四个关键维度上进行了全面评估：多模态感知、多模态推理、文档 / OCR、以及视频理解。评估结果表明，MOSS-VL 取得了卓越的性能，尤其在<b>通用多模态感知</b>和<b>复杂视频分析</b>方面表现出色。</p>
+    <h3>综合表现</h3>
+    <p>下图汇总了 0—100 分制的基准测试评分。总体而言，与 Qwen2.5-VL 和 Qwen3-VL 等行业领先的基准模型相比，<b>MOSS-VL</b> 始终稳居第一或第二。</p>
+  </div>
+  <figure class="fig-img fx">
+    <img src="assets/MOSS-VL-Benchmark.png" alt="MOSS-VL Benchmark 对比" style="width:90%">
+    <figcaption><b>图 6：</b>MOSS-VL 与 Qwen 系列在各 Benchmark 上的详细对比。</figcaption>
+  </figure>
+
+  <div class="col fx"><h3>核心亮点</h3></div>
+  <div class="hl-grid fx">
+    <div class="hl-card">
+      <div class="hl-t">领先的视频智能</div>
+      <div class="hl-d">在视频理解维度取得 <b>65.8</b> 的高分，显著超越 Qwen3-VL（+2pts）。在 VideoMME、MLVU、EgoSchema 以及 VSI-bench（<b>领先 Qwen3-VL-8B-Instruct 达 8.3 个百分点</b>）等基准上展现出色的时序一致性与动作识别能力。</div>
+    </div>
+    <div class="hl-card">
+      <div class="hl-t">卓越的多模态感知</div>
+      <div class="hl-d">展现出色的通用图文理解能力，在 BLINK 和 MMBench 等评测中，其细粒度物体识别与空间推理表现突出。</div>
+    </div>
+    <div class="hl-card">
+      <div class="hl-t">稳健的视觉推理</div>
+      <div class="hl-d">在 CVBench 和 VisuLogic 等复杂推理任务中，与 Qwen 系列的最新版本保持高度竞争力。</div>
+    </div>
+    <div class="hl-card">
+      <div class="hl-t">可靠的文档理解</div>
+      <div class="hl-d">虽然模型主要针对通用感知和视频能力优化，但在 OCR 与文档分析方面依然取得 <b>83.9</b> 的成绩，确保文本提取与结构化信息处理的可靠性。</div>
+    </div>
+  </div>
+
+  <div class="col fx">
+    <h3>评测分析</h3>
+    <p>下图直观展示了 MOSS-VL 在 30 多个专业基准测试中平衡且全面的能力画像。如蓝色实心区域所示，MOSS-VL 实现了最广泛的综合覆盖，尤其在<b>视频理解</b>与<b>多模态感知</b>象限中展现出卓越的性能优势。</p>
+  </div>
+  <figure class="fig-img fx">
+    <img src="assets/radar.png" alt="MOSS-VL 评测雷达图" style="width:600px">
+    <figcaption><b>图 7：</b>MOSS-VL 评测分析图。</figcaption>
+  </figure>
+</section>
+
+<hr class="rule">
+
+<!-- ================= QUICK START ================= -->
+<section id="s-start">
+  <div class="col fx">
+    <div class="eyebrow"><span class="n">07</span> 快速上手</div>
+    <h2>环境配置与推理</h2>
+    <h3>环境配置</h3>
+  </div>
+<pre class="code">conda create -n moss_vl python=3.12 pip -y
+conda activate moss_vl
+pip install -i https://pypi.org/simple --no-build-isolation -r requirements.txt</pre>
+
+  <div class="col fx">
+    <h3>模型推理</h3>
+    <p>更多可直接运行的推理示例和 Demo 素材，请参阅 <code>inference/README.md</code>。推理支持全模态离线查询，包括纯文本、单图、多图、单视频、多视频，以及基于 <code>messages</code> 格式的图视频交错输入。</p>
+  </div>
+
+  <details class="code-details">
+    <summary>使用 <code>offline_generate</code> 做单条推理</summary>
+<pre class="code">import queue
+import threading
+import torch
+from transformers import AutoModelForCausalLM, AutoProcessor
+
+checkpoint = "/path/to/dummy-checkpoint"
+
+processor = AutoProcessor.from_pretrained(
+    checkpoint,
+    trust_remote_code=True,
+    frame_extract_num_threads=1,
+)
+model = AutoModelForCausalLM.from_pretrained(
+    checkpoint,
+    trust_remote_code=True,
+    device_map="auto",
+    torch_dtype=torch.bfloat16,
+    attn_implementation="flash_attention_2",
+)
+
+query = {
+    "messages": [
+        {
+            "role": "user",
+            "content": [
+                {"type": "image", "image": "path/to/example.jpg"},
+                {"type": "text", "text": "描述这张图片。"},
+            ],
+        }
+    ],
+    "media_kwargs": {},
+    "generate_kwargs": {
+        "max_new_tokens": 256,
+        "do_sample": False,
+        "vision_chunked_length": 64,
+    },
+}
+
+input_queue = queue.Queue()
+output_queue = queue.Queue()
+worker = threading.Thread(
+    target=model.offline_generate,
+    args=(processor, input_queue, output_queue),
+    kwargs={"vision_chunked_length": 64},
+    daemon=True,
+)
+worker.start()
+
+input_queue.put(query)
+text_chunks = []
+while True:
+    item = output_queue.get()
+    if item in {"&lt;|round_start|&gt;"}:
+        continue
+    if item == "&lt;|round_end|&gt;":
+        break
+    text_chunks.append(item)
+
+print("".join(text_chunks))
+
+input_queue.put({"stop_offline_generate": True})
+worker.join()</pre>
+  </details>
+
+  <div class="col fx">
+    <p>如果需要简单的 batch 离线推理，也可以直接使用 <code>offline_batch_generate</code>：</p>
+  </div>
+
+  <details class="code-details">
+    <summary>使用 <code>offline_batch_generate</code> 做 batch 推理</summary>
+<pre class="code">import torch
+from transformers import AutoModelForCausalLM, AutoProcessor
+
+checkpoint = "/path/to/dummy-checkpoint"
+
+processor = AutoProcessor.from_pretrained(
+    checkpoint,
+    trust_remote_code=True,
+    frame_extract_num_threads=1,
+)
+model = AutoModelForCausalLM.from_pretrained(
+    checkpoint,
+    trust_remote_code=True,
+    device_map="auto",
+    torch_dtype=torch.bfloat16,
+    attn_implementation="flash_attention_2",
+)
+
+queries = [
+    {
+        "messages": [
+            {
+                "role": "user",
+                "content": [{"type": "text", "text": "描述样本 A。"}],
+            }
+        ],
+        "media_kwargs": {},
+        "generate_kwargs": {"max_new_tokens": 256, "do_sample": False},
+    },
+    {
+        "messages": [
+            {
+                "role": "user",
+                "content": [{"type": "text", "text": "描述样本 B。"}],
+            }
+        ],
+        "media_kwargs": {},
+        "generate_kwargs": {"max_new_tokens": 256, "do_sample": False},
+    },
+]
+
+with torch.no_grad():
+    result = model.offline_batch_generate(
+        processor,
+        queries,
+        vision_chunked_length=64,
+    )
+
+texts = [item["text"] for item in result["results"]]
+print(texts)</pre>
+  </details>
+
+  <div class="col fx">
+    <h3>微调（Fine-Tuning）</h3>
+    <p>我们提供了一套基于 HuggingFace <code>transformers.Trainer</code> 的轻量级 SFT 微调框架，支持全参数训练与 LoRA，且可独立控制视觉编码器、语言模型和 LM Head 是否参与训练。</p>
+  </div>
+<pre class="code"><span class="cmt"># 全参数 SFT（默认冻结视觉编码器）</span>
+bash mossvl_finetune/scripts/run_sft.sh
+
+<span class="cmt"># LoRA SFT</span>
+pip install -i https://pypi.org/simple peft
+bash mossvl_finetune/scripts/run_sft_lora.sh</pre>
+  <div class="col fx">
+    <p>训练数据采用与推理查询格式兼容的 JSON 结构，只需额外添加 <code>response</code> 字段：</p>
+  </div>
+<pre class="code">[
+  {
+    "prompt": "描述这张图片。",
+    "response": "一幅群山环绕的美丽风景画。",
+    "images": ["path/to/image.jpg"],
+    "videos": []
+  }
+]</pre>
+  <div class="col fx">
+    <p>同时支持多轮对话格式，详细文档请参阅 <code>mossvl_finetune/README.md</code>。</p>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ================= DOWNLOAD ================= -->
+<section id="s-download">
+  <div class="col fx">
+    <div class="eyebrow"><span class="n">08</span> 模型下载与部署</div>
+    <h2>开放权重</h2>
+  </div>
+  <div class="tbl-wrap fx">
+    <table class="dtable">
+      <thead>
+        <tr><th>模型</th><th>🤗 Download</th><th>🤖 ModelScope</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><b>MOSS-VL-Base-0408</b></td>
+          <td><a href="https://huggingface.co/OpenMOSS-Team/MOSS-VL-Base-0408">HuggingFace</a></td>
+          <td><a href="https://modelscope.cn/models/openmoss/MOSS-VL-Base-0408">ModelScope</a></td>
+        </tr>
+        <tr>
+          <td><b>MOSS-VL-Instruct-0408</b></td>
+          <td><a href="https://huggingface.co/OpenMOSS-Team/MOSS-VL-Instruct-0408">HuggingFace</a></td>
+          <td><a href="https://modelscope.cn/models/openmoss/MOSS-VL-Instruct-0408">ModelScope</a></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="col fx">
+    <h3>SGLang</h3>
+    <p>SGLang 官方已正式支持 MOSS-VL。如需查看基于 SGLang 的部署与服务化说明，请参考 <code>sglang/README_zh.md</code>。</p>
+  </div>
+  <div class="cards fx">
+    <a class="card" href="https://github.com/OpenMOSS/MOSS-VL">
+      <div class="ct">GitHub 仓库</div>
+      <div class="cd">源码、推理与微调脚本，以及完整文档。</div>
+    </a>
+    <a class="card" href="https://OpenMOSS.github.io/MOSS-VL-Demo/#/">
+      <div class="ct">交互式 Demo</div>
+      <div class="cd">在线体验 MOSS-VL 的图像与视频理解能力。</div>
+    </a>
+    <a class="card" href="https://huggingface.co/spaces/OpenMOSS-Team/MOSS-VL">
+      <div class="ct">HuggingFace Space</div>
+      <div class="cd">无需本地部署，直接在浏览器中试用。</div>
+    </a>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ================= ROADMAP ================= -->
+<section id="s-roadmap">
+  <div class="col fx">
+    <div class="eyebrow"><span class="n">09</span> 路线图与待办</div>
+    <h2>已达成 &amp; 即将到来</h2>
+  </div>
+  <div class="roadmap fx">
+    <div>
+      <h3>✅ 已达成里程碑</h3>
+      <ul>
+        <li>✅ <b>核心架构：</b>实现了交叉注意力旋转位置编码（XRoPE）。</li>
+        <li>✅ <b>高性能基础设施：</b>集成了 Megatron-LM 与 CUDA Flash Attention 3。</li>
+        <li>✅ <b>模型发布：</b>已开源 MOSS-VL-Base 与 MOSS-VL-Instruct 模型。</li>
+        <li>✅ <b>模型推理：</b>已发布支持图像与视频理解的推理代码。</li>
+      </ul>
+    </div>
+    <div>
+      <h3>🚀 即将到来</h3>
+      <ul>
+        <li>⬜ <b>训练引擎：</b>MOSS-VL 的完整训练代码。</li>
+        <li>⬜ <b>实时能力：</b>专用的实时视频理解模型。</li>
+        <li>⬜ <b>RL 后训练：</b>MOSS-VL 系列的人类反馈强化学习（RLHF）。</li>
+        <li>⬜ <b>技术报告：</b>详尽的技术报告与实验分析。</li>
+      </ul>
+    </div>
+  </div>
+  <div class="col fx" style="margin-top:2rem">
+    <div class="callout" style="margin-left:0;margin-right:0">
+      <span class="k">下一篇</span>
+      <ul>
+        <li>本系列的第二篇 <a class="inline" href="index_zh.html"><b>MOSS-VL-Realtime</b></a> 已在路上——让视频理解从「看录像」走向「看直播」。</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ================= NEWS ================= -->
+<section id="s-news">
+  <div class="col fx">
+    <div class="eyebrow"><span class="n">10</span> 新闻</div>
+    <h2>项目动态</h2>
+    <ul class="news">
+      <li><span class="dt">2026/04/24</span><span>🚀 SGLang 官方已正式支持 MOSS-VL，详见 sgl-project/sglang。</span></li>
+      <li><span class="dt">2026/04/22</span><span>🚀 推出基于 SGLang 的 MOSS-VL 推理支持；🤗 HuggingFace 推理代码更新至最新版本。</span></li>
+      <li><span class="dt">2026/04/08</span><span>🚀 MOSS-VL-Base-0408 与 MOSS-VL-Instruct-0408 正式开源。</span></li>
+      <li><span class="dt">2026/04/03</span><span>🏆 完成 MOSS-VL 全阶段训练（PT &amp; SFT）。</span></li>
+      <li><span class="dt">2025/10/18</span><span>🔍 启动了 MOSS-VL 项目。</span></li>
+      <li><span class="dt">2025/09/30</span><span>✨ MOSS-Video-Preview 训练完成。</span></li>
+    </ul>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ================= ACK & CITE ================= -->
+<section id="s-cite">
+  <div class="col fx">
+    <div class="eyebrow">致谢与引用</div>
+    <h2>致谢</h2>
+    <p>我们衷心感谢 <b>NVIDIA</b> 提供的 Megatron-LM 框架，以及 <b>Qwen 团队</b> 提供的强大的 Qwen 系列语言模型；这些优秀的开源工作为我们的训练基础设施和核心语言模型奠定了坚实基础。同时，我们也由衷感谢 <b>SGLang 团队</b> 提供的高性能 SGLang 推理服务框架，为 MOSS-VL 的高效部署提供了重要支持。</p>
+    <h3>引用</h3>
+  </div>
+  <div class="cite fx">
+<pre>@misc{moss_vl_2026,
+  title         = {{MOSS-VL Technical Report}},
+  author        = {OpenMOSS Team},
+  year          = {2026},
+  howpublished  = {\url{https://github.com/OpenMOSS/MOSS-VL}},
+  note          = {GitHub repository}
+}</pre>
+  </div>
+</section>
+
+<footer>
+  <span>© 2026 OpenMOSS · Apache-2.0</span>
+  <span>CD-006 blog · MOSS-VL 系列 · 第一篇（基座模型）· 中文版草稿</span>
+</footer>
+
+<script>
+/* reveal-on-scroll */
+const io = new IntersectionObserver(es => es.forEach(e => {
+  if (e.isIntersecting) { e.target.classList.add('in-view'); io.unobserve(e.target); }
+}), { threshold: 0, rootMargin: '0px 0px -10% 0px' });
+document.querySelectorAll('.fx').forEach(el => io.observe(el));
+</script>
+</body>
+</html>
