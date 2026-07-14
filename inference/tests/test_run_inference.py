@@ -1,0 +1,80 @@
+import importlib.util
+import sys
+import types
+import unittest
+from pathlib import Path
+from unittest.mock import patch
+
+
+torch = types.ModuleType("torch")
+torch.bfloat16 = object()
+transformers = types.ModuleType("transformers")
+transformers.AutoModelForCausalLM = object()
+transformers.AutoProcessor = object()
+
+module_path = Path(__file__).resolve().parents[1] / "run_inference.py"
+module_spec = importlib.util.spec_from_file_location("run_inference", module_path)
+run_inference = importlib.util.module_from_spec(module_spec)
+with patch.dict(sys.modules, {"torch": torch, "transformers": transformers}):
+    module_spec.loader.exec_module(run_inference)
+resolve_query_media_paths = run_inference.resolve_query_media_paths
+
+
+class ResolveQueryMediaPathsTest(unittest.TestCase):
+    def test_preserves_remote_image_references(self):
+        image_url = "https://example.com/images/sample.jpg?size=large"
+        query = {
+            "images": [image_url],
+            "messages": [
+                {
+                    "role": "user",
+                    "content": [
+                        {"type": "image", "image": image_url},
+                        {"type": "image", "image_url": image_url},
+                    ],
+                }
+            ],
+        }
+
+        resolved = resolve_query_media_paths(query, Path("/tmp/queries"))
+
+        self.assertEqual(resolved["images"], [image_url])
+        self.assertEqual(resolved["messages"][0]["content"][0]["image"], image_url)
+        self.assertEqual(
+            resolved["messages"][0]["content"][1]["image_url"], image_url
+        )
+
+    def test_resolves_local_image_references(self):
+        base_dir = Path("/tmp/queries")
+        absolute_image = "/data/images/absolute.jpg"
+        query = {
+            "images": ["images/relative.jpg", absolute_image],
+            "messages": [
+                {
+                    "role": "user",
+                    "content": [
+                        {"type": "image", "image": "images/inline.jpg"},
+                        {"type": "image", "image_url": "images/url-field.jpg"},
+                    ],
+                }
+            ],
+        }
+
+        resolved = resolve_query_media_paths(query, base_dir)
+
+        self.assertEqual(
+            resolved["images"],
+            [str((base_dir / "images/relative.jpg").resolve()), absolute_image],
+        )
+        self.assertEqual(
+            resolved["messages"][0]["content"][0]["image"],
+            str((base_dir / "images/inline.jpg").resolve()),
+        )
+        self.assertEqual(
+            resolved["messages"][0]["content"][1]["image_url"],
+            str((base_dir / "images/url-field.jpg").resolve()),
+        )
+
+
+if __name__ == "__main__":
+    unittest.main()

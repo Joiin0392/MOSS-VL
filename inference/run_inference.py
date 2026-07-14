@@ -8,6 +8,7 @@ import time
 from pathlib import Path
 from threading import Thread
 from typing import Any, Dict, Iterable, List
+from urllib.parse import urlparse
 
 import torch
 from transformers import AutoModelForCausalLM, AutoProcessor
@@ -433,6 +434,12 @@ def resolve_path(base_dir: Path, value: str) -> str:
     return str(path)
 
 
+def resolve_image_reference(base_dir: Path, value: str) -> str:
+    if urlparse(value).scheme.lower() in {"http", "https"}:
+        return value
+    return resolve_path(base_dir, value)
+
+
 def resolve_video_entry(base_dir: Path, value: Any) -> Any:
     if isinstance(value, str):
         return resolve_path(base_dir, value)
@@ -458,9 +465,9 @@ def resolve_message_content_media_paths(content: Any, base_dir: Path) -> Any:
         item_copy = dict(item)
         if item_copy.get("type") == "image" or "image" in item_copy or "image_url" in item_copy:
             if item_copy.get("image") is not None:
-                item_copy["image"] = resolve_path(base_dir, item_copy["image"])
+                item_copy["image"] = resolve_image_reference(base_dir, item_copy["image"])
             if item_copy.get("image_url") is not None:
-                item_copy["image_url"] = resolve_path(base_dir, item_copy["image_url"])
+                item_copy["image_url"] = resolve_image_reference(base_dir, item_copy["image_url"])
         elif item_copy.get("type") == "video" or "video" in item_copy:
             if item_copy.get("video") is not None:
                 item_copy["video"] = resolve_video_entry(base_dir, item_copy["video"])
@@ -470,7 +477,9 @@ def resolve_message_content_media_paths(content: Any, base_dir: Path) -> Any:
 
 def resolve_query_media_paths(query: Dict[str, Any], base_dir: Path) -> Dict[str, Any]:
     resolved = dict(query)
-    resolved["images"] = [resolve_path(base_dir, image) for image in query.get("images", [])]
+    resolved["images"] = [
+        resolve_image_reference(base_dir, image) for image in query.get("images", [])
+    ]
     resolved["videos"] = [resolve_video_entry(base_dir, video) for video in query.get("videos", [])]
     resolved["media_kwargs"] = dict(query.get("media_kwargs") or {})
     resolved["generate_kwargs"] = dict(query.get("generate_kwargs") or {})
