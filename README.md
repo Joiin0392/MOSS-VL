@@ -1,216 +1,81 @@
 <p align="center">
-    <img src="assets/logo.png" width="300"/>
+    <img src="assets/logo.png" width="300" alt="MOSS-VL"/>
 </p>
 
-<div align="center">
-    <a href="https://github.com/OpenMOSS/MOSS-VL"><img src="https://img.shields.io/badge/Github-Star-yellow?logo=Github&amp"></a>
-    <a href="https://huggingface.co/collections/OpenMOSS-Team/moss-vl"><img src="https://img.shields.io/badge/Huggingface-Download-orange?logo=Huggingface&amp"></a>
-    <a href="https://huggingface.co/spaces/OpenMOSS-Team/MOSS-VL"><img src="https://img.shields.io/badge/Huggingface-space-orange?logo=Huggingface"" alt="MOSS-VL-space"></a>
-    <a href="https://modelscope.cn/collections/openmoss/MOSS-VL"><img src="https://img.shields.io/badge/ModelScope-Download-blue?logo=ModelScope" alt="ModelScope"></a>
-    <br>
-    <a href="https://OpenMOSS.github.io/MOSS-VL-Demo/#/"><img src="https://img.shields.io/badge/Website-View-blue?logo=Website&amp"></a>
-    <a href="#"><img src="https://img.shields.io/badge/Arxiv-Coming%20Soon-red?logo=Arxiv"></a>
-    <a href="assets/feishu.jpg"><img src="assets/feishu-badge.svg" alt="Feishu Join"></a>
-    <a href="./LICENSE"><img src="https://img.shields.io/badge/License-Apache%202.0-blue.svg" alt="license"></a>
-
-
-</div>
+<p align="center">
+        💻 <a href="https://github.com/OpenMOSS/MOSS-VL"><b>GitHub</b></a>&nbsp&nbsp | &nbsp&nbsp🤗 <a href="https://huggingface.co/collections/OpenMOSS-Team/moss-vl">Hugging Face</a>&nbsp&nbsp | &nbsp&nbsp🤖 <a href="https://modelscope.cn/collections/openmoss/MOSS-VL">ModelScope</a>&nbsp&nbsp | &nbsp&nbsp📑 <a href="docs/blog.md">Blog</a>&nbsp&nbsp | &nbsp&nbsp📚 <a href="https://arxiv.org/abs/2606.07639">Paper</a>
+<br>
+🚀 <a href="https://huggingface.co/spaces/OpenMOSS-Team/MOSS-VL">HF Space</a>&nbsp&nbsp | &nbsp&nbsp💬 <a href="assets/feishu.jpg">Feishu</a>&nbsp&nbsp | &nbsp&nbsp🫨 <a href="https://discord.gg/JBZEkJ4Egj">Discord</a>&nbsp&nbsp | &nbsp&nbsp📜 <a href="./LICENSE">License</a>
+</p>
 
 <p align="center">
     <a href="./README.md"><b>English</b></a> | <a href="./README_zh.md"><b>中文</b></a>
 </p>
 
-## MOSS-VL
+# MOSS-VL
 
-**MOSS-VL** is the core multimodal model series within the OpenMOSS ecosystem, dedicated to advancing visual understanding. To tackle the inherent complexities of video comprehension, our roadmap pursues a systematic scaling strategy along three key dimensions:     
+**MOSS-VL** is an open-weight model series for long-form, real-time video understanding, built on a unified **cross-attention** architecture. All three models are 11B-parameter and open-weight.
 
-- 📈 **Data Scaling**: Curating massive-scale, high-quality multimodal datasets to drive robust generalization.
-- 🧠 **Parameter Scaling**: Expanding model capacity to capture intricate vision-language correlations.
-- ⏳ **Context Scaling**: Extending temporal horizons to enable reasoning over long-form video content.
+*   **`MOSS-VL-Realtime`**: real-time interaction over continuous video streams — interruptible at any moment, answering on the fly, and deciding on its own when to respond and when to keep watching.
+*   **`MOSS-VL-Instruct`**: built for offline use, with particular strength in complex long-video understanding and in-depth dialogue.
+*   **`MOSS-VL-Base`**: an open pre-trained foundation offering strong video–language representations for continued pre-training and downstream fine-tuning.
+
+Unlike the default paradigm of offline video models ("watch first, answer after"), **MOSS-VL-Realtime** is designed for real-time interaction on continuous video streams: it runs multimodal perception and text generation in parallel on a continuously arriving stream, natively supporting multi-turn real-time dialogue and dynamic scene understanding, autonomously deciding when to speak, achieving fine-grained temporal grounding, and streaming its responses.
+
+<!-- Demo video placeholder: embed the final asset here when it lands -->
 
 ---
 
-## 📌 Table of Contents
-- [🔥 News](#-news)
-- [🏗️ Model Architecture](#️-model-architecture)
-- [🧩 Absolute Timestamps](#-absolute-timestamps)
-- [🧬 Cross-attention RoPE (XRoPE)](#-cross-attention-rope-xrope)
-- [🎬 Demo](#-demo)
-- [📊 Training Strategy](#-training-strategy)
-- [📊 Evaluation Results](#-evaluation-results)
-- [🚀 Quick Start](#-quick-start)
-- [📥 Model Download](#-model-download)
-- [🖥️ SGLang](#️-sglang)
-- [📑 Roadmap & TODO List](#-roadmap--todo-list)
-- [📜 Citation](#-citation)
+### Key Enhancements
+
+* **Interruptible & Real-time**: Breaking the limits of offline processing, users can ask questions at any timestamp in the video stream. The model instantly responds based on the currently received frames, achieving open-source SOTA latency in streaming interaction.
+* **Proactive Silence**: Equipped with dynamic judgment capabilities, the model autonomously stays silent and continues observing when contextual information is insufficient or no key events have occurred.
+* **Dynamic Correction**: Cognition updates dynamically with the visual feed. As new frames continue to stream in, the model can instantly capture state changes and correct its previous outputs.
+
+### Core Architecture
+
+<div align="center">
+    <img src="assets/architecture.png" alt="MOSS-VL Architecture" width="100%"/>
+</div>
+
+At the architectural level, **MOSS-VL-Realtime** adopts the following core designs:
+- **Cross-Attention Architecture**: Decouples visual encoding from language reasoning, significantly reducing response latency on dynamic video streams, with native support for interleaved image, video, and text inputs.
+- **Absolute Timestamps**: Every sampled frame is anchored to a precise time marker via dedicated special tokens. The model uses this to reason about pacing, duration, and motion dynamics, and it natively adapts to variable frame rates.
+- **XRoPE (Cross-Attention Rotary Position Embedding)**: Maps text tokens and video patches into a unified 3D `(t, h, w)` coordinate space, enabling patch-level and moment-level grounding across the entire video.
 
 ---
 
 ## 🔥 News
-- **2026/04/24**: 🚀 SGLang officially supports MOSS-VL — see [sgl-project/sglang](https://github.com/sgl-project/sglang).
+- **2026/07/14**: 🚀 Released **MOSS-VL-Realtime** for real-time video understanding on continuous streams, together with the new **MOSS-VL-Instruct-0708** and **MOSS-VL-Base-0708**.
+- **2026/04/24**: 🚀 SGLang officially supports MOSS-VL; see [sgl-project/sglang](https://github.com/sgl-project/sglang).
 - **2026/04/22**: 🚀 Released SGLang-based inference support for MOSS-VL. See [`./sglang/`](./sglang/).
-- **2026/04/22**: 🤗 Updated HuggingFace inference code to the latest version. See [MOSS-VL-Base-0408](https://huggingface.co/OpenMOSS-Team/MOSS-VL-Base-0408) and [MOSS-VL-Instruct-0408](https://huggingface.co/OpenMOSS-Team/MOSS-VL-Instruct-0408).
+- **2026/04/22**: 🤗 Updated HuggingFace inference code to the latest version.
 - **2026/04/08**: 🚀 Released MOSS-VL-Base-0408 and MOSS-VL-Instruct-0408.
-- **2026/04/03**: 🏆 Finished both pre-training and SFT for MOSS-VL.
-- **2025/10/18**: 🔍 Kicked off the MOSS-VL project. 
-- **2025/09/30**: ✨ Finished training [MOSS-Video-Preview](https://github.com/fnlp-vision/MOSS-Video-Preview) .
-
-## 🏗️ Model Architecture
-**MOSS-VL** adopts a cross-attention-based architecture that decouples visual encoding from cognitive reasoning. This design significantly reduces latency, enabling instantaneous responses to dynamic video streams. Natively supporting **interleaved modalities**, it processes complex sequences of images and videos within a unified pipeline — eliminating the need for heavy pre-processing.
-    
-<p align="center">
-    <img src="assets/structure.png" alt="MOSS-VL Architecture" width="90%"/>
-    <br>
-    <em>Figure 1: Overall architecture of MOSS-VL.</em>
-</p>
 
 ---
 
-## 🧩 Absolute Timestamps
+## 📊 Performance
 
-To ensure the model accurately perceives the pacing and duration of events, **MOSS-VL** injects **absolute timestamps** alongside each sampled frame, grounding the reasoning process in a **precise temporal reference**.
+MOSS-VL-Realtime delivers significantly stronger streaming interaction capabilities, achieving open-source SOTA results on multiple streaming video understanding benchmarks. Its "proactive speaking" ability stands out in particular: the model leads on all three proactivity evaluations — Proactive Alerting in OmniMMI, Proactive Output in StreamingBench, and ProactiveVideoQA.
 
-### 📥 Input Representation
-
-<p align="center">
-    <img src="assets/timestamp_input.svg" alt="Timestamped Sequence Input Illustration" width="90%"/>
-    <br>
-    <em>Figure 2: Illustration of timestamped video sequence input.</em>
-</p>
-
-Each video is interleaved with **precise time markers**, where each timestamp is wrapped by **dedicated special tokens** (`<|time_start|>` … `<|time_end|>`) that explicitly anchor the **temporal location** of every visual frame:
-
-```text
-<|im_start|><|vision_start|>
-<|time_start|>0.0 seconds<|time_end|><|image_pad|>
-<|time_start|>1.2 seconds<|time_end|><|image_pad|>
-<|time_start|>2.3 seconds<|time_end|><|image_pad|>
-...
-<|vision_end|>The video shows a dynamic scene with continuous actions...<|im_end|>
-```
-
-**🌟 Why this matters:**
-- **Adaptability to Variable FPS:** The use of explicit timestamps allows the model to handle non-uniform sampling rates without loss of temporal context.
-- **Precise Temporal Analysis:** Absolute time unlocks fine-grained action localization, grounding every response in exact temporal coordinates. 
-- **Motion Dynamics:** By exposing time intervals ($dt$), the model can reason about movement physics, enabling accurate estimation of velocity, acceleration, and trajectory.
-
----
-
-## 🧬 Cross-attention RoPE (XRoPE)
-
-MOSS-VL utilizes Cross-attention Rotary Position Embedding (XRoPE), tailored to its cross-attention based vision–language architecture. This mechanism maps text tokens and video patches into a unified 3D coordinate space defined by Time (t), Height (h), and Width (w).
-
-
-<p align="center">
-    <img src="assets/3d-rope.png" alt="MOSS-VL mRoPE Architecture Illustration" width="80%"/>
-    <br>
-    <em> Figure 3: MOSS-VL with Cross-attention RoPE (XRoPE).</em>
-</p>
-
-To optimize cross-modal alignment, **XRoPE** is injected into the vision **Key (K)** for position-awareness while leaving the **Value (V)** untouched to preserve feature fidelity. In parallel, it is applied to the text **Query (Q)**, allowing the model to probe arbitrary spatio-temporal regions through direct coordinate alignment.
-
-**🌟 Why this matters**
-
-- **Unified Modality Modeling** — By expressing time as a shared dimension across both language and video, **XRoPE** enables seamless, cohesive video-text reasoning within a single coordinate system.
-- **Precise Grounding** — Aligned ($t, h, w$) coordinates empower the model to localize small objects and transient actions anywhere in the 3D video volume — down to the patch and the moment.
-- **Dynamic Input Support** — The 3D grid natively accommodates arbitrary aspect ratios and resolutions, eliminating the need for fixed-length padding or rigid input constraints.
-
-
----
-
-## 🎬 Demo
-
+### Streaming Benchmark
 <div align="center">
-  <video src="https://gist.github.com/user-attachments/assets/66406aaa-f09f-412c-87b1-97753895ef1f
-" width="70%" poster="" controls></video>
-<video src="https://gist.github.com/user-attachments/assets/d1ccae33-472f-4d92-96c4-fb6253b07189
-" width="70%" poster="" controls></video>
-  <p align="center">
-    For more examples, please visit our <a href="https://OpenMOSS.github.io/MOSS-VL-Demo/#/">Interactive Demo Page</a> 🚀<br/>
-    HuggingFace Demo: <a href="https://huggingface.co/spaces/OpenMOSS-Team/MOSS-VL">HuggingFace Space</a> 🌐
-  </p>
+    <img src="assets/benchmark-streaming.png" alt="MOSS-VL Streaming Benchmark" width="100%"/>
 </div>
 
-## 📊 Training Strategy
-MOSS-VL is trained using a multi-stage approach to progressively build multimodal capabilities.
+We have systematically restructured and deeply optimized our data system, comprehensively strengthening the model's foundational capabilities and instruction-interaction experience, while maintaining a high level of stability across offline evaluations.
 
-<p align="center">
-    <img src="assets/total_data_distribution.png" alt="MOSS-VL Training Data Distribution" width="80%"/>
-    <br>
-    <em>Figure 4: Overall training data distribution of MOSS-VL.</em>
-</p>
+<details>
+<summary><b>Offline Multimodal Benchmark — Click to Expand</b></summary>
+<br>
+<div align="center">
+    <img src="assets/benchmark-offline.png" alt="MOSS-VL Offline Benchmark" width="100%"/>
+</div>
+</details>
 
-### Pre-training（PT）
-MOSS-VL is pre-trained via a systematic four-stage curriculum that progressively builds up multimodal capabilities from the ground up:
-
-* **Stage 1 — Vision-Language Alignment** — Establishes the initial bridge between visual features and the language space. Training on large-scale image-text pairs, the model learns to associate visual concepts with their textual counterparts while developing foundational OCR skills for text-in-image understanding.
-
-* **Stage 2 — Large-Scale Multimodal Pre-training** — Scales up exposure to massive, diverse multimodal corpora, broadening the model's grasp of world knowledge and complex scenes — laying a robust foundation for general-purpose intelligence and high-resolution perception. In addition, short video clips are introduced at this stage to seed preliminary video understanding.
-
-* **Stage 3 — High-Quality Multimodal Pre-training** — Elevates overall model quality by training on large volumes of high-quality perception, understanding, and reasoning data. This phase combines fine-grained image perception, complex multi-image comprehension, and high-fidelity video reasoning to sharpen the model's ability to capture intricate visual details and master temporal relationships across rich multimodal inputs.
-
-* **Stage 4 — Annealing & Long-Context Extrapolation** — Stretches the model's horizon toward long-form video understanding, while a carefully designed annealing schedule trains on curated, top-tier multimodal data to push final performance to its peak.
-
-| Stage | Strategy | Data Composition |
-| :--- | :--- | :--- |
-| **1** | **Vision-Language Alignment** | <img src="assets/pt-stage1.png" width="400"/> |
-| **2** | **Large-Scale Multimodal Pre-training** | <img src="assets/pt-stage2.png" width="400"/> |
-| **3** | **High-Quality Multimodal Pre-training** | <img src="assets/pt-stage3.png" width="400"/> |
-| **4** | **Annealing & Long-Context Extrapolation** | <img src="assets/pt-stage4.png" width="400"/> |
-
-
-### Supervised Fine-Tuning (SFT)
-Building on the pre-trained foundation, **MOSS-VL** is further refined through **Supervised Fine-Tuning (SFT)** to align with human intent and unlock its full interactive and instruction-following capabilities.
-
-<p align="center">
-    <img src="assets/SFT.png" alt="MOSS-VL SFT Data Composition" width="50%"/>
-    <br>
-    <em>Figure 5: Data composition of MOSS-VL SFT.</em>
-</p>
-
-
-### Reinforcement Learning from Human Feedback (RLHF)
-
-> [!NOTE]
-> MOSS-VL is currently undergoing RLHF training. Stay tuned for updates.
-
+> For comprehensive benchmark breakdowns, comparison systems, and detailed tables of all objective metrics, please refer to our **[Technical Blog](docs/blog.md)**.
 
 ---
-
-
-## 📊 Evaluation Results
-We conducted a comprehensive evaluation of MOSS-VL across four key dimensions: Multimodal Perception, Multimodal Reasoning,Document/OCR, and Video Understanding. The results demonstrate that MOSS-VL achieves outstanding performance, particularly excelling in **general multimodal perception** and **complex video analysis**.
-
-### Overall Performance
-
-The table below reports benchmark scores on a 0–100 scale. Across the board, MOSS-VL consistently ranks first or second when compared against industry-leading baselines such as Qwen2.5-VL and Qwen3-VL. 
-
-
-<p align="center">
-    <img src="assets/MOSS-VL-Benchmark.png" alt="MOSS-VL Benchmark Comparison" width="90%"/>
-    <br>
-    <em>Figure 6: Detailed benchmark comparison between MOSS-VL and Qwen series.</em>
-</p>
-
-### Key Highlights
-
-*   **🚀 Leading Video Intelligence**: MOSS-VL achieves a score of **65.8** in Video Understanding, significantly outperforming Qwen3-VL (+2pts). It shows exceptional temporal consistency and action recognition capabilities across benchmarks like `VideoMME`, `MLVU`, `EgoSchema`, and `VSI-bench` (where it outperforms **Qwen3-VL-8B-Instruct** by **8.3 points**).
-*   **👁️ Outstanding Multimodal Perception**: MOSS-VL delivers excellent general image-text understanding, shining in fine-grained object recognition and spatial reasoning on benchmarks like `BLINK` and `MMBench`.
-*   **🧠 Robust Multimodal Reasoning**: MOSS-VL demonstrates solid logical inference, staying highly competitive with the latest Qwen series on challenging reasoning suites such as `CVBench` and `VisuLogic`.
-*   **📄 Reliable Document Understanding**: While the model is primarily optimized for general perception and video, MOSS-VL still delivers **83.9** on OCR and document analysis, ensuring dependable extraction of text and structured information.
-
-### Benchmark Analysis
-
-The chart below visualizes MOSS-VL's balanced and well-rounded capability profile across 30+ specialized benchmarks. Represented by the solid blue region, MOSS-VL achieves the broadest overall coverage, with particularly strong showings in the Video Understanding and Multimodal Perception quadrants.
-
-<p align="center">
-  <img src="assets/radar.png" width="600px" alt="MOSS-VL Evaluation Radar">
-  <br>
-  <em>Figure 7: Benchmark analysis of MOSS-VL.</em>
-</p>
-
----
-
 
 ## 🚀 Quick Start
 
@@ -221,148 +86,49 @@ conda activate moss_vl
 pip install -i https://pypi.org/simple --no-build-isolation -r requirements.txt
 ```
 
-### Run Inference
+### Real-time Inference
 
-For complete runnable examples and demo assets, see [`inference/README.md`](inference/README.md).
-Inference supports full-modality offline queries, including pure text, single/multi-image, single/multi-video, and interleaved image-video inputs in the `messages` format.
+In real-time mode, questions can be asked at any moment on a continuously arriving video stream, and the model keeps perceiving the feed while it answers. For detailed real-time inference usage, please refer to the model files in the HuggingFace repository: [MOSS-VL-Realtime](https://huggingface.co/OpenMOSS-Team/MOSS-VL-Realtime).
 
-<details>
-<summary><strong>Single-query inference with <code>offline_generate</code></strong></summary>
+### Offline Inference
 
-<br>
-
-```python
-import queue
-import threading
-import torch
-from transformers import AutoModelForCausalLM, AutoProcessor
-
-checkpoint = "/path/to/dummy-checkpoint"
-
-processor = AutoProcessor.from_pretrained(
-    checkpoint,
-    trust_remote_code=True,
-    frame_extract_num_threads=1,
-)
-model = AutoModelForCausalLM.from_pretrained(
-    checkpoint,
-    trust_remote_code=True,
-    device_map="auto",
-    torch_dtype=torch.bfloat16,
-    attn_implementation="flash_attention_2",
-)
-
-query = {
-    "messages": [
-        {
-            "role": "user",
-            "content": [
-                {"type": "image", "image": "path/to/example.jpg"},
-                {"type": "text", "text": "Describe this image."},
-            ],
-        }
-    ],
-    "media_kwargs": {},
-    "generate_kwargs": {
-        "max_new_tokens": 256,
-        "do_sample": False,
-        "vision_chunked_length": 64,
-    },
-}
-
-input_queue = queue.Queue()
-output_queue = queue.Queue()
-worker = threading.Thread(
-    target=model.offline_generate,
-    args=(processor, input_queue, output_queue),
-    kwargs={"vision_chunked_length": 64},
-    daemon=True,
-)
-worker.start()
-
-input_queue.put(query)
-text_chunks = []
-while True:
-    item = output_queue.get()
-    if item in {"<|round_start|>"}:
-        continue
-    if item == "<|round_end|>":
-        break
-    text_chunks.append(item)
-
-print("".join(text_chunks))
-
-input_queue.put({"stop_offline_generate": True})
-worker.join()
-```
-
-</details>
-
-For simple batched offline inference, you can also use `offline_batch_generate`:
-
-<details>
-<summary><strong>Batched inference with <code>offline_batch_generate</code></strong></summary>
-
-<br>
+Offline inference supports full-modality queries (interleaved text, image, and video inputs). The fastest way to get a first result is `offline_batch_generate`:
 
 ```python
 import torch
 from transformers import AutoModelForCausalLM, AutoProcessor
 
-checkpoint = "/path/to/dummy-checkpoint"
+checkpoint = "OpenMOSS-Team/MOSS-VL-Realtime"
 
-processor = AutoProcessor.from_pretrained(
-    checkpoint,
-    trust_remote_code=True,
-    frame_extract_num_threads=1,
-)
+processor = AutoProcessor.from_pretrained(checkpoint, trust_remote_code=True)
 model = AutoModelForCausalLM.from_pretrained(
-    checkpoint,
-    trust_remote_code=True,
-    device_map="auto",
-    torch_dtype=torch.bfloat16,
-    attn_implementation="flash_attention_2",
+    checkpoint, trust_remote_code=True, device_map="auto", torch_dtype=torch.bfloat16
 )
 
-queries = [
-    {
-        "messages": [
-            {
-                "role": "user",
-                "content": [{"type": "text", "text": "Describe sample A."}],
-            }
-        ],
-        "media_kwargs": {},
-        "generate_kwargs": {"max_new_tokens": 256, "do_sample": False},
-    },
-    {
-        "messages": [
-            {
-                "role": "user",
-                "content": [{"type": "text", "text": "Describe sample B."}],
-            }
-        ],
-        "media_kwargs": {},
-        "generate_kwargs": {"max_new_tokens": 256, "do_sample": False},
-    },
-]
+queries = [{
+    "messages": [{"role": "user", "content": [
+        {"type": "image", "image": "path/to/example.jpg"},
+        {"type": "text", "text": "Describe this image."}
+    ]}],
+    "generate_kwargs": {"max_new_tokens": 256, "do_sample": False},
+}]
 
 with torch.no_grad():
-    result = model.offline_batch_generate(
-        processor,
-        queries,
-        vision_chunked_length=64,
-    )
+    result = model.offline_batch_generate(processor, queries)
 
-texts = [item["text"] for item in result["results"]]
-print(texts)
+print([item["text"] for item in result["results"]])
 ```
 
-</details>
+---
 
-### Run Fine-Tuning
+## 🛠️ Advanced Resources & Ecosystem
 
-We provide a lightweight SFT framework built on HuggingFace `transformers.Trainer`. It supports full-parameter training, LoRA, with the vision encoder, language model, and LM head independently controllable.
+### Deployment & Inference Engines
+MOSS-VL can also be efficiently deployed with the following inference backends:
+- **SGLang**: see [`sglang/README.md`](./sglang/README.md)
+
+### Fine-Tuning
+We provide a lightweight SFT framework built on HuggingFace `transformers.Trainer`. It supports full-parameter training and LoRA, with the vision encoder, language model, and LM head independently controllable.
 
 ```bash
 # Full-parameter SFT (vision encoder frozen by default)
@@ -372,37 +138,27 @@ bash mossvl_finetune/scripts/run_sft.sh
 pip install -i https://pypi.org/simple peft
 bash mossvl_finetune/scripts/run_sft_lora.sh
 ```
+See [`mossvl_finetune/README.md`](mossvl_finetune/README.md) for full documentation.
 
-Training data uses a simple JSON format compatible with the inference query structure — just add a `response` field:
+### Model Download
 
-```json
-[
-  {
-    "prompt": "Describe this image.",
-    "response": "A beautiful landscape with mountains.",
-    "images": ["path/to/image.jpg"],
-    "videos": []
-  }
-]
-```
+This generation ships three models from the same rebuilt data: **MOSS-VL-Realtime** for continuous video streams, **Instruct** for offline tasks, and **Base** for continued pre-training and fine-tuning.
 
-**Multi-turn conversations are also supported.** See [`mossvl_finetune/README.md`](mossvl_finetune/README.md) for full documentation.
+| Model | Params | Context | Best for | 🤗 HuggingFace | 🤖 ModelScope |
+| :--- | :---: | :---: | :--- | :--- | :--- |
+| **MOSS-VL-Realtime** | `11B` | `256K` | Real-time interaction on continuous video streams | [Link](https://huggingface.co/OpenMOSS-Team/MOSS-VL-Realtime) | [Link](https://www.modelscope.cn/models/openmoss/MOSS-VL-Realtime-0708) |
+| **MOSS-VL-Instruct-0708** | `11B` | `256K` | Offline chat / inference / downstream tasks | [Link](https://huggingface.co/OpenMOSS-Team/MOSS-VL-Instruct-0708) | [Link](https://www.modelscope.cn/models/openmoss/MOSS-VL-Instruct-0708) |
+| **MOSS-VL-Base-0708** | `11B` | `256K` | Continued pre-training / fine-tuning | [Link](https://huggingface.co/OpenMOSS-Team/MOSS-VL-Base-0708) | [Link](https://www.modelscope.cn/models/openmoss/MOSS-VL-Base-0708) |
 
----
+**Previous generation:**
 
-## 📥 Model Download 
-
-| Model | 🤗Download Link | 🤖ModelScope Link |
-| :--- | :--- | :--- |
-| **MOSS-VL-Base-0408** | [HuggingFace](https://huggingface.co/OpenMOSS-Team/MOSS-VL-Base-0408) | [ModelScope](https://modelscope.cn/models/openmoss/MOSS-VL-Base-0408) |
-| **MOSS-VL-Instruct-0408** | [HuggingFace](https://huggingface.co/OpenMOSS-Team/MOSS-VL-Instruct-0408) | [ModelScope](https://modelscope.cn/models/openmoss/MOSS-VL-Instruct-0408) |
-
-## 🖥️ SGLang
-
-For SGLang-based deployment and serving instructions, please refer to [`sglang/README.md`](./sglang/README.md).
-
+| Model | Params | Context | Best for | 🤗 HuggingFace | 🤖 ModelScope |
+| :--- | :---: | :---: | :--- | :--- | :--- |
+| **MOSS-VL-Base-0408** | `11B` | `256K` | Continued pre-training / fine-tuning | [Link](https://huggingface.co/OpenMOSS-Team/MOSS-VL-Base-0408) | [Link](https://modelscope.cn/models/openmoss/MOSS-VL-Base-0408) |
+| **MOSS-VL-Instruct-0408** | `11B` | `256K` | Chat / inference / downstream tasks | [Link](https://huggingface.co/OpenMOSS-Team/MOSS-VL-Instruct-0408) | [Link](https://modelscope.cn/models/openmoss/MOSS-VL-Instruct-0408) |
 
 ---
+
 ## 📑 Roadmap & TODO List
 
 ### ✅ Milestones
@@ -410,12 +166,13 @@ For SGLang-based deployment and serving instructions, please refer to [`sglang/R
 - [x] **High-performance Infra:** Integrated Megatron-LM + CUDA Flash Attention 3.
 - [x] **Model Release:** Open-sourced `MOSS-VL-Base` and `MOSS-VL-Instruct`.
 - [x] **Inference:** Inference code for both image and video understanding.
+- [x] **Real-time Capabilities:** Released **MOSS-VL-Realtime** — real-time video understanding on continuous streams.
 
 ### 🚀 Upcoming
 - [ ] **Training Engine:** Full training code for MOSS-VL.
-- [ ] **Real-time Capabilities:** Specialized Real-time Video Understanding Model.
 - [ ] **RL Post-training:** Reinforcement Learning for MOSS-VL series.
 - [ ] **Documentation:** Comprehensive Technical Report.
+- [ ] **Cookbooks:** Task-level runnable notebooks.
 
 ---
 
@@ -430,6 +187,16 @@ We would like to express our gratitude to **NVIDIA** for the [Megatron-LM](https
   year          = {2026},
   howpublished  = {\url{https://github.com/OpenMOSS/MOSS-VL}},
   note          = {GitHub repository}
+}
+
+@misc{mossvideopreview2026,
+  title         = {{MOSS-Video-Preview: Toward Real-Time Video Understanding via Cross-Attention}},
+  author        = {Pengyu Wang and Chenkun Tan and Shaojun Zhou and Wei Huang and Qirui Zhou and Zhan Huang and Zhen Ye and Jijun Cheng and Xiaomeng Qian and Yanxin Chen and Xingyang He and Huazheng Zeng and Chenghao Wang and Pengfei Wang and Hongkai Wang and Shanqing Gao and Yixian Tian and Chenghao Liu and Xinghao Wang and Botian Jiang and Xipeng Qiu},
+  year          = {2026},
+  eprint        = {2606.07639},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.CV},
+  url           = {https://arxiv.org/abs/2606.07639}
 }
 ```
 
