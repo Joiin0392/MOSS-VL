@@ -68,7 +68,7 @@ code{font-family:var(--mono);font-size:.85em}
 .slot.video{aspect-ratio:16/9;width:100%}
 
 /* ---------- hero ---------- */
-header.hero{padding:5rem 0 1.5rem}
+header.hero{padding:1.5rem 0 1.5rem}
 #s1{padding-top:3rem}
 .hero .sub{font-size:1.25rem;line-height:1.6;color:var(--ink-2);max-width:40rem}
 .hero .deliv{font-family:var(--sans);font-size:.85rem;color:var(--ink-2);
@@ -747,16 +747,18 @@ footer{max-width:var(--wide);margin:5rem auto 0;padding:2rem 1.5rem 3rem;
       .hc-track video{flex:0 0 88%;width:88%;scroll-snap-align:center;display:block;border-radius:12px;background:#000;border:1px solid var(--grid)}
       .hc-btn{position:absolute;top:50%;transform:translateY(-50%);width:42px;height:42px;border-radius:50%;
         border:1px solid var(--grid);background:rgba(255,255,255,.92);cursor:pointer;font-size:22px;line-height:1;
-        color:var(--ink-2);display:flex;align-items:center;justify-content:center;box-shadow:0 2px 10px rgba(0,0,0,.10);z-index:2}
+        color:var(--ink-2);display:flex;align-items:center;justify-content:center;box-shadow:0 2px 10px rgba(0,0,0,.10);z-index:2;
+        opacity:0;pointer-events:none;transition:opacity .25s}
+      .hero-carousel:hover .hc-btn,.hero-carousel:focus-within .hc-btn{opacity:1;pointer-events:auto}
       .hc-btn:hover{color:var(--accent);border-color:var(--accent)}
       .hc-btn.prev{left:14px}.hc-btn.next{right:14px}
     </style>
     <!-- HERO CAROUSEL — 发布前替换下面三个 src 即可 -->
     <div class="hero-carousel" id="heroCar">
       <div class="hc-track">
-        <video controls autoplay muted loop playsinline preload="metadata" src="https://huggingface.co/datasets/henrywch2huggingface/MOSS-VL-Realtime-Demo-Videos/resolve/main/MOSS-VL-Realtime_Concepts.mp4"></video>
-        <video controls muted loop playsinline preload="metadata" src="https://huggingface.co/datasets/henrywch2huggingface/MOSS-VL-Realtime-Demo-Videos/resolve/main/MOSS_VL_1.mp4"></video>
-        <video controls muted loop playsinline preload="metadata" src="https://huggingface.co/datasets/henrywch2huggingface/MOSS-VL-Realtime-Demo-Videos/resolve/main/MOSS_VL_2.mp4"></video>
+        <video controls autoplay loop playsinline preload="metadata" src="https://huggingface.co/datasets/henrywch2huggingface/MOSS-VL-Realtime-Demo-Videos/resolve/main/MOSS-VL-Realtime_Concepts.mp4"></video>
+        <video controls loop playsinline preload="metadata" src="https://huggingface.co/datasets/henrywch2huggingface/MOSS-VL-Realtime-Demo-Videos/resolve/main/MOSS_VL_1.mp4"></video>
+        <video controls loop playsinline preload="metadata" src="https://huggingface.co/datasets/henrywch2huggingface/MOSS-VL-Realtime-Demo-Videos/resolve/main/MOSS_VL_2.mp4"></video>
       </div>
       <button class="hc-btn prev" type="button" aria-label="previous video" onclick="hcScroll(-1)">&#8249;</button>
       <button class="hc-btn next" type="button" aria-label="next video" onclick="hcScroll(1)">&#8250;</button>
