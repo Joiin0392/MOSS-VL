@@ -27,3 +27,6 @@ checkpoints/
 /1.txt
 /image.png
 /streaming_benchmark_grid.png
+
+# Local realtime inference media (not distributed)
+/realtime_inference/data/BV1qo4y1872f_aerial-xinjiang_1080P.mp4

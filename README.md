@@ -88,7 +88,25 @@ pip install -i https://pypi.org/simple --no-build-isolation -r requirements.txt
 
 ### Real-time Inference
 
-In real-time mode, questions can be asked at any moment on a continuously arriving video stream, and the model keeps perceiving the feed while it answers. For detailed real-time inference usage, please refer to the model files in the HuggingFace repository: [MOSS-VL-Realtime](https://huggingface.co/OpenMOSS-Team/MOSS-VL-Realtime).
+Real-time inference consumes timestamped frames incrementally, so the model can keep perceiving a live video stream while it answers and can accept new questions at any time. The fastest way to replay a local video against its media clock is:
+
+```bash
+CUDA_VISIBLE_DEVICES=0 python realtime_inference/run_online_inference.py \
+  --checkpoint OpenMOSS-Team/MOSS-VL-Realtime \
+  --source video \
+  --video path/to/example.mp4 \
+  --sample-fps 1 \
+  --playback-speed 1 \
+  --max-frames 256
+```
+
+Keep `--playback-speed 1` for model inference so frames arrive on the original timeline. The runtime provides three integration levels:
+
+- `model.create_realtime_session(...)` for direct frame, prompt, and output control
+- `model.online_generate(...)` for queue-based inference workers
+- `--serve` for a FastAPI WebSocket service that accepts external JPEG/PNG frames or replays server-local videos
+
+It also supports streaming JSONL samples, cameras, screen capture, and synthetic sources. See [`realtime_inference/README.md`](./realtime_inference/README.md) for the complete CLI, input format, and WebSocket protocol.
 
 ### Offline Inference
 

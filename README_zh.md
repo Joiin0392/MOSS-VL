@@ -90,7 +90,25 @@ pip install -i https://pypi.org/simple --no-build-isolation -r requirements.txt
 
 ### 实时推理
 
-实时模式下，问题可以在持续到来的视频流上的任意时刻提出，模型在作答的同时继续感知画面。实时推理的具体用法请参考 HuggingFace 模型仓库中的模型文件：[MOSS-VL-Realtime](https://huggingface.co/OpenMOSS-Team/MOSS-VL-Realtime)。
+实时推理会增量接收带时间戳的视频帧，因此模型可以在持续感知视频流的同时作答，并随时接收新的问题。最快的本地视频回放方式是：
+
+```bash
+CUDA_VISIBLE_DEVICES=0 python realtime_inference/run_online_inference.py \
+  --checkpoint OpenMOSS-Team/MOSS-VL-Realtime \
+  --source video \
+  --video path/to/example.mp4 \
+  --sample-fps 1 \
+  --playback-speed 1 \
+  --max-frames 256
+```
+
+模型推理时请保持 `--playback-speed 1`，使视频帧按原始时间轴到达。运行时提供三种集成层级：
+
+- `model.create_realtime_session(...)`：直接控制视频帧、动态问题和增量输出
+- `model.online_generate(...)`：用于基于队列的推理工作线程
+- `--serve`：启动 FastAPI WebSocket 服务，接收外部 JPEG/PNG 帧或回放服务端本地视频
+
+此外还支持流式 JSONL 样例、摄像头、屏幕采集和合成视频源。完整 CLI、输入格式和 WebSocket 协议请参阅 [`realtime_inference/README.md`](./realtime_inference/README.md)。
 
 ### 离线推理
 
