@@ -463,6 +463,8 @@ def resolve_message_content_media_paths(content: Any, base_dir: Path) -> Any:
             continue
 
         item_copy = dict(item)
+        if item_copy.get("type") == "image_url":
+            item_copy["type"] = "image"
         if item_copy.get("type") == "image" or "image" in item_copy or "image_url" in item_copy:
             if item_copy.get("image") is not None:
                 item_copy["image"] = resolve_image_reference(base_dir, item_copy["image"])
