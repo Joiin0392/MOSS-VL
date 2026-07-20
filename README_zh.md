@@ -48,11 +48,11 @@
 ---
 
 ## 🔥 新闻
-- **2026/07/14**: 🚀 发布 **MOSS-VL-Realtime**，面向持续视频流的实时视频理解；同时发布全新的 **MOSS-VL-Instruct-0708** 与 **MOSS-VL-Base-0708**。
+- **2026/07/14**: 🚀 发布 **[MOSS-VL-Realtime](https://huggingface.co/OpenMOSS-Team/MOSS-VL-Realtime)**，面向持续视频流的实时视频理解；同时发布全新的 **[MOSS-VL-Instruct-0708](https://huggingface.co/OpenMOSS-Team/MOSS-VL-Instruct-0708)** 与 **[MOSS-VL-Base-0708](https://huggingface.co/OpenMOSS-Team/MOSS-VL-Base-0708)**。
 - **2026/04/24**: 🚀 SGLang 官方已正式支持 MOSS-VL,详见 [sgl-project/sglang](https://github.com/sgl-project/sglang)。
 - **2026/04/22**: 🚀 推出基于 SGLang 的 MOSS-VL 推理支持,详见 [`./sglang/`](./sglang/)。
 - **2026/04/22**: 🤗 HuggingFace 推理代码更新至最新版本。
-- **2026/04/08**: 🚀 MOSS-VL-Base-0408 与 MOSS-VL-Instruct-0408 正式开源。
+- **2026/04/08**: 🚀 [MOSS-VL-Base-0408](https://huggingface.co/OpenMOSS-Team/MOSS-VL-Base-0408) 与 [MOSS-VL-Instruct-0408](https://huggingface.co/OpenMOSS-Team/MOSS-VL-Instruct-0408) 正式开源。
 
 ---
 
