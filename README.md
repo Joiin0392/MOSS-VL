@@ -46,11 +46,11 @@ At the architectural level, **MOSS-VL-Realtime** adopts the following core desig
 ---
 
 ## 🔥 News
-- **2026/07/14**: 🚀 Released **MOSS-VL-Realtime** for real-time video understanding on continuous streams, together with the new **MOSS-VL-Instruct-0708** and **MOSS-VL-Base-0708**.
+- **2026/07/14**: 🚀 Released **[MOSS-VL-Realtime](https://huggingface.co/OpenMOSS-Team/MOSS-VL-Realtime)** for real-time video understanding on continuous streams, together with the new **[MOSS-VL-Instruct-0708](https://huggingface.co/OpenMOSS-Team/MOSS-VL-Instruct-0708)** and **[MOSS-VL-Base-0708](https://huggingface.co/OpenMOSS-Team/MOSS-VL-Base-0708)**.
 - **2026/04/24**: 🚀 SGLang officially supports MOSS-VL; see [sgl-project/sglang](https://github.com/sgl-project/sglang).
 - **2026/04/22**: 🚀 Released SGLang-based inference support for MOSS-VL. See [`./sglang/`](./sglang/).
 - **2026/04/22**: 🤗 Updated HuggingFace inference code to the latest version.
-- **2026/04/08**: 🚀 Released MOSS-VL-Base-0408 and MOSS-VL-Instruct-0408.
+- **2026/04/08**: 🚀 Released [MOSS-VL-Base-0408](https://huggingface.co/OpenMOSS-Team/MOSS-VL-Base-0408) and [MOSS-VL-Instruct-0408](https://huggingface.co/OpenMOSS-Team/MOSS-VL-Instruct-0408).
 
 ---
 
