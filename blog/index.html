@@ -49,6 +49,11 @@ p.lede{font-size:1.22rem;line-height:1.65;color:var(--ink-2)}
 p.lede b{color:var(--ink)}
 .figcap{font-family:var(--sans);font-size:.8rem;color:var(--muted);
   margin:.8rem auto 0;max-width:var(--col);line-height:1.5}
+.bench-scroll-hint{display:none}
+@media (max-width:600px){
+  .bench-scroll-hint{display:block;margin:.75rem 0 0;font-family:var(--sans);
+    font-size:.78rem;line-height:1.45;color:var(--muted);text-align:center}
+}
 hr.rule{border:0;border-top:1px solid var(--grid);max-width:var(--col);
   margin:2.5rem auto 0}
 code{font-family:var(--mono);font-size:.85em}
@@ -246,22 +251,78 @@ footer{max-width:var(--wide);margin:5rem auto 0;padding:2rem 1.5rem 3rem;
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border-bottom: 1px solid var(--grid);
-  padding: 0.8rem 1.5rem;
+  padding: .8rem 1.5rem;
   max-width: none;
 }
 .sticky-nav .nav-content {
   max-width: var(--wide); margin: 0 auto;
   display: flex; align-items: center; justify-content: space-between;
+  gap: 1.1rem; min-width: 0;
 }
-.sticky-nav .wordmark {
-  font-family: var(--sans); font-weight: 700; letter-spacing: .02em; font-size: 1rem; color: var(--ink);
+.brand-cluster {
+  display: flex; align-items: center; gap: .65rem;
+  min-width: 0; flex: 0 1 auto;
+}
+.sticky-nav .wordmark,
+.sticky-nav .wordmark:hover {
+  display: inline-flex; align-items: center;
+  font-family: var(--sans); font-weight: 700; letter-spacing: .02em;
+  font-size: 1rem; color: var(--ink); text-decoration: none;
+  white-space: nowrap;
 }
 .sticky-nav .wordmark span { color: var(--muted); font-weight: 500; }
-.sticky-nav .nav-links { display: flex; gap: 1.5rem; align-items: center; font-family: var(--sans); font-size: 0.85rem; font-weight: 500; }
-.sticky-nav .nav-links a { color: var(--ink-2); text-decoration: none; transition: color 0.2s; }
+.model-switcher {
+  display: inline-flex; align-items: center; gap: 2px;
+  padding: 3px; border: 1px solid var(--grid); border-radius: 999px;
+  background: var(--surface); font: 500 .76rem/1 var(--sans);
+  min-width: 0;
+}
+.model-tab {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-height: 28px; padding: .35rem .72rem; border-radius: 999px;
+  color: var(--ink-2); text-decoration: none; white-space: nowrap;
+  transition: color .2s, background .2s;
+}
+.model-tab:hover { color: var(--ink); }
+.model-tab[aria-current="page"] {
+  background: var(--accent); color: #fff;
+  box-shadow: 0 1px 3px rgba(16, 185, 129, .35);
+}
+.model-tab:focus-visible {
+  outline: 2px solid var(--accent); outline-offset: 2px;
+}
+.sticky-nav .nav-links {
+  display: flex; flex: 1 1 auto; min-width: 0;
+  justify-content: flex-end; gap: 1.5rem; align-items: center;
+  font-family: var(--sans); font-size: .85rem; font-weight: 500;
+  flex-wrap: nowrap;
+}
+.sticky-nav .nav-links > * { flex: 0 0 auto; }
+.sticky-nav .nav-links a { color: var(--ink-2); text-decoration: none; transition: color .2s; }
 .sticky-nav .nav-links a:hover { color: var(--accent); }
-.sticky-nav .lang { color: var(--muted); cursor: not-allowed; font-size: 0.8rem; margin-left: 1rem; padding-left: 1rem; border-left: 1px solid var(--grid); }
+.sticky-nav .lang {
+  display: inline-flex; align-items: center; gap: .25rem;
+  color: var(--muted); font-size: .8rem;
+  margin-left: .2rem; padding-left: 1rem; border-left: 1px solid var(--grid);
+}
 .sticky-nav .lang b { color: var(--ink); }
+@media (max-width: 1100px) {
+  .sticky-nav .nav-content { display: block; }
+  .sticky-nav .nav-links {
+    width: 100%; margin-top: .65rem; justify-content: flex-start;
+    overflow-x: auto; overflow-y: hidden; white-space: nowrap;
+    padding-bottom: .15rem; scrollbar-width: none;
+  }
+  .sticky-nav .nav-links::-webkit-scrollbar { display: none; }
+}
+@media (max-width: 440px) {
+  .brand-cluster { display: grid; grid-template-columns: minmax(0, 1fr); gap: .45rem; }
+  .sticky-nav .wordmark { font-size: .9rem; }
+  .model-switcher { width: 100%; }
+  .model-tab { flex: 1; min-width: 0; }
+  .sticky-nav .nav-links { gap: .9rem; }
+  .sticky-nav .nav-links a { white-space: nowrap; }
+}
 
 /* ---------- toc pills ---------- */
 .toc-pills { display: flex; gap: 0.6rem; flex-wrap: wrap; margin-top: 1.5rem; align-items: center; }
@@ -719,7 +780,13 @@ footer{max-width:var(--wide);margin:5rem auto 0;padding:2rem 1.5rem 3rem;
 
 <nav class="sticky-nav">
   <div class="nav-content">
-    <div class="wordmark">OpenMOSS <span>/ MOSS-VL-Realtime</span></div>
+    <div class="brand-cluster">
+      <a class="wordmark" href="index.html">OpenMOSS <span>/ MOSS-VL</span></a>
+      <div class="model-switcher" role="group" aria-label="MOSS-VL model family">
+        <a class="model-tab" href="index.html" aria-current="page" title="MOSS-VL-Realtime">Realtime</a>
+        <a class="model-tab" href="moss-vl.html" title="MOSS-VL Foundation">MOSS-VL</a>
+      </div>
+    </div>
     <div class="nav-links">
       <a href="#s1">Mechanism</a>
       <a href="#s2">Demo</a>
@@ -904,18 +971,19 @@ footer{max-width:var(--wide);margin:5rem auto 0;padding:2rem 1.5rem 3rem;
     <ul>
       <li><strong>Decoupled Cross-Attention</strong>: Decouples cross-attention computation between video feature extraction and text generation, significantly reducing end-to-end throughput and latency overhead on high-frequency frames.</li>
       <li><strong>Absolute Timestamps</strong>: Encodes absolute time info for each frame of the input video sequence, allowing the model to perceive physical flow, independent of fixed FPS or relative position.</li>
-      <li><strong>Cross-dimensional Rotary Positional Encoding (XRoPE)</strong>: Constructs a unified spatiotemporal representation, uniformly mapping the spatial dimensions $(h, w)$ and temporal dimension $t$ of video features, providing precise spatiotemporal localization in long-context interactions.</li>
+      <li><strong>Cross-attention Rotary Position Embedding (XRoPE)</strong>: Constructs a unified spatiotemporal representation, uniformly mapping the spatial dimensions <code>(h, w)</code> and temporal dimension <code>t</code> of video features, providing precise spatiotemporal localization in long-context interactions.</li>
 
     </ul>
 
     <figure class="d-media" style="margin: 2rem 0;">
-      <img src="assets/mossvl-realtime-architecture.png" alt="MOSS-VL-Realtime Architecture" style="max-width: 100%; height: auto; border: 1px solid var(--line); border-radius: 8px;" />
+      <img src="assets/mossvl-realtime-architecture.png" alt="MOSS-VL-Realtime Architecture" style="max-width: 100%; height: auto; border: 1px solid var(--grid); border-radius: 8px;" />
       <figcaption class="figcap" style="text-align:left; margin:.8rem 0 0;"><b>Figure 2: MOSS-VL-Realtime architecture.</b> Shows the decoupled cross-attention and spatiotemporal representations, supporting audio-visual inputs in a unified feature space.</figcaption>
     </figure>
 
     <p>This interaction and spatiotemporal modeling capability stems not only from a rational architecture but from a comprehensive rebuild of multimodal corpora. We introduced a new streaming SFT interaction training paradigm, enabling the model to precisely predict when to speak or proactively stay silent at any moment of sequence generation.</p>
 
   </div>
+</section>
 
 <hr class="rule">
 
@@ -1094,7 +1162,8 @@ footer{max-width:var(--wide);margin:5rem auto 0;padding:2rem 1.5rem 3rem;
      (generated by generate_streaming_grid_v2.py from baseline_streaming_scores.md;
       height auto-syncs via streamGridHeight postMessage) -->
     <div style="width:100%; margin-top:20px;">
-      <iframe id="stream-grid-frame" src="streaming_benchmark_grid_v2_green_en.html" width="100%" height="2780" frameborder="0" scrolling="no" style="border:none; display:block; width:100%; border-radius:12px;"></iframe>
+      <p class="bench-scroll-hint" role="note">Swipe horizontally inside the chart to view the full benchmark.</p>
+      <iframe id="stream-grid-frame" title="Streaming benchmark subset chart" src="streaming_benchmark_grid_v2_green_en.html" width="100%" height="2780" frameborder="0" scrolling="auto" style="border:none; display:block; width:100%; border-radius:12px;"></iframe>
     </div>
     <script>
       window.addEventListener("message", function(ev){
@@ -1148,7 +1217,8 @@ footer{max-width:var(--wide);margin:5rem auto 0;padding:2rem 1.5rem 3rem;
     <h2>Offline Foundation</h2>
     <p>During this iteration, <b>we</b> systematically refactored and deeply optimized the data system, solidifying a powerful foundation of fundamental capabilities. Thanks to this, the co-generation <b>Instruct model</b> not only maintains a highly robust benchmark profile in offline capabilities, but also achieves significant improvements in fine-grained multimodal perception (V*Bench 89.0, BLINK 78.0) and high-difficulty temporal action grounding tasks. It continues to deliver remarkably stable performance in long-context video understanding (VideoMME, MLVU) and complex document and chart analysis (DocVQA, ChartQA), comprehensively aligning with or even leading top-tier open-source baselines of comparable scale.</p>
     <div style="width: 100%; margin-top: 2rem; margin-bottom: 2rem;">
-        <iframe id="offline-bench-frame" src="benchmark_table_0714.html" width="100%" height="800px" scrolling="no" frameborder="0" style="border: none;"></iframe>
+        <p class="bench-scroll-hint" role="note">Swipe horizontally inside the chart to view the full benchmark.</p>
+        <iframe id="offline-bench-frame" title="Offline benchmark comparison" src="benchmark_table_0714_en.html" width="100%" height="800px" scrolling="auto" frameborder="0" style="border: none;"></iframe>
     </div>
   </div>
 </section>
@@ -1243,7 +1313,7 @@ heroTick(); setInterval(heroTick, 900);
     if(paused){ paused = false; pbtn.innerHTML = '&#10074;&#10074; Pause'; }
   };
   pbtn.onclick = function(){
-    if(!paused){ paused = true; pausedAt = performance.now(); pbtn.innerHTML = '&#9654; 继续'; }
+    if(!paused){ paused = true; pausedAt = performance.now(); pbtn.innerHTML = '&#9654; Resume'; }
     else { start += performance.now() - pausedAt; paused = false; pbtn.innerHTML = '&#10074;&#10074; Pause'; }
   };
   svg.addEventListener('mouseover', function(e){

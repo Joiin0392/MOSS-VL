@@ -62,32 +62,30 @@ a.inline:hover{text-decoration:underline}
   backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
   border-bottom:1px solid var(--grid);padding:.8rem 1.5rem;max-width:none}
 .sticky-nav .nav-content{max-width:var(--wide);margin:0 auto;display:flex;
-  align-items:center;justify-content:space-between}
-.sticky-nav .wordmark{font-family:var(--sans);font-weight:700;letter-spacing:.02em;
-  font-size:1rem;color:var(--ink)}
+  align-items:center;justify-content:space-between;gap:1.1rem;min-width:0}
+.brand-cluster{display:flex;align-items:center;gap:.65rem;min-width:0;flex:0 1 auto}
+.sticky-nav .wordmark,.sticky-nav .wordmark:hover{display:inline-flex;align-items:center;
+  font-family:var(--sans);font-weight:700;letter-spacing:.02em;font-size:1rem;
+  color:var(--ink);text-decoration:none;white-space:nowrap}
 .sticky-nav .wordmark span{color:var(--muted);font-weight:500}
-.sticky-nav .nav-links{display:flex;gap:1.5rem;align-items:center;
-  font-family:var(--sans);font-size:.85rem;font-weight:500}
+.model-switcher{display:inline-flex;align-items:center;gap:2px;padding:3px;border:1px solid var(--grid);
+  border-radius:999px;background:var(--surface);font:500 .76rem/1 var(--sans);min-width:0}
+.model-tab{display:inline-flex;align-items:center;justify-content:center;min-height:28px;padding:.35rem .72rem;
+  border-radius:999px;color:var(--ink-2);text-decoration:none;white-space:nowrap;transition:color .2s,background .2s}
+.model-tab:hover{color:var(--ink)}
+.model-tab[aria-current="page"]{background:var(--accent);color:#fff;box-shadow:0 1px 3px rgba(16,185,129,.35)}
+.model-tab:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.sticky-nav .nav-links{display:flex;flex:1 1 auto;min-width:0;justify-content:flex-end;gap:1.5rem;align-items:center;
+  font-family:var(--sans);font-size:.85rem;font-weight:500;flex-wrap:nowrap}
+.sticky-nav .nav-links>*{flex:0 0 auto}
 .sticky-nav .nav-links a{color:var(--ink-2);text-decoration:none;transition:color .2s}
 .sticky-nav .nav-links a:hover{color:var(--accent)}
-.sticky-nav .lang{color:var(--muted);cursor:not-allowed;font-size:.8rem;
-  margin-left:1rem;padding-left:1rem;border-left:1px solid var(--grid)}
+.sticky-nav .lang{display:inline-flex;align-items:center;gap:.25rem;color:var(--muted);font-size:.8rem;
+  margin-left:.2rem;padding-left:1rem;border-left:1px solid var(--grid)}
 .sticky-nav .lang b{color:var(--ink)}
-
-/* ---------- series switcher (segmented) ---------- */
-.series-nav{border-bottom:1px solid var(--grid);background:var(--plane)}
-.series-nav .si{max-width:var(--wide);margin:0 auto;padding:.55rem 1.5rem;
-  display:flex;align-items:center;gap:.85rem;flex-wrap:wrap;font-family:var(--sans)}
-.series-nav .sk{font-size:.68rem;font-weight:700;letter-spacing:.14em;
-  text-transform:uppercase;color:var(--muted)}
-.series-seg{display:inline-flex;padding:3px;gap:2px;border:1px solid var(--grid);
-  border-radius:99px;background:var(--surface)}
-.series-seg a{display:inline-flex;align-items:center;text-decoration:none;white-space:nowrap;
-  font-size:.82rem;font-weight:550;color:var(--ink-2);padding:.36rem 1.05rem;
-  border-radius:99px;transition:color .2s,background .2s}
-.series-seg a:hover{color:var(--ink)}
-.series-seg a.active{background:var(--accent);color:#fff;box-shadow:0 1px 3px rgba(16,185,129,.35)}
-@media(max-width:560px){.series-seg{display:flex;width:100%}.series-seg a{flex:1;justify-content:center}}
+@media(max-width:1100px){.sticky-nav .nav-content{display:block}.sticky-nav .nav-links{width:100%;margin-top:.65rem;justify-content:flex-start;
+  overflow-x:auto;overflow-y:hidden;white-space:nowrap;padding-bottom:.15rem;scrollbar-width:none}.sticky-nav .nav-links::-webkit-scrollbar{display:none}}
+@media(max-width:440px){.brand-cluster{display:grid;grid-template-columns:minmax(0,1fr);gap:.45rem}.sticky-nav .wordmark{font-size:.9rem}.model-switcher{width:100%}.model-tab{flex:1;min-width:0}.sticky-nav .nav-links{gap:.9rem}.sticky-nav .nav-links a{white-space:nowrap}}
 
 /* ---------- hero ---------- */
 header.hero{padding:4rem 0 2.5rem}
@@ -131,6 +129,9 @@ figure.fig-img.plain img{border:0;background:transparent}
 figure.fig-img figcaption{font-family:var(--sans);font-size:.8rem;color:var(--muted);
   margin:.9rem auto 0;line-height:1.55;max-width:52rem}
 figure.fig-img figcaption b{color:var(--ink-2)}
+.benchmark-frame{width:100%;height:1460px;border:0;border-radius:10px;background:var(--plane);display:block}
+.bench-scroll-hint{display:none;font-family:var(--sans);font-size:.8rem;color:var(--muted);margin:0 0 .65rem}
+@media(max-width:760px){.bench-scroll-hint{display:block}}
 
 /* ---------- code ---------- */
 pre.code{font-family:var(--mono);font-size:.8rem;line-height:1.7;color:var(--ink);
@@ -223,7 +224,13 @@ footer{max-width:var(--wide);margin:5rem auto 0;padding:2rem 1.5rem 3rem;
 
 <nav class="sticky-nav">
   <div class="nav-content">
-    <div class="wordmark">OpenMOSS <span>/ MOSS-VL</span></div>
+    <div class="brand-cluster">
+      <a class="wordmark" href="moss-vl_zh.html">OpenMOSS <span>/ MOSS-VL</span></a>
+      <div class="model-switcher" role="group" aria-label="MOSS-VL 模型系列">
+        <a class="model-tab" href="index_zh.html" title="MOSS-VL-Realtime">实时</a>
+        <a class="model-tab" href="moss-vl_zh.html" aria-current="page" title="MOSS-VL 基座模型">MOSS-VL</a>
+      </div>
+    </div>
     <div class="nav-links">
       <a href="#s-arch">架构</a>
       <a href="#s-train">训练</a>
@@ -236,16 +243,6 @@ footer{max-width:var(--wide);margin:5rem auto 0;padding:2rem 1.5rem 3rem;
     </div>
   </div>
 </nav>
-
-<!-- ================= SERIES SWITCHER ================= -->
-<div class="series-nav">
-  <div class="si">
-    <div class="series-seg">
-      <a href="index_zh.html">MOSS-VL-Realtime</a>
-      <a href="moss-vl_zh.html" class="active">MOSS-VL 基座</a>
-    </div>
-  </div>
-</div>
 
 <!-- ================= HERO ================= -->
 <header class="hero">
@@ -289,7 +286,7 @@ footer{max-width:var(--wide);margin:5rem auto 0;padding:2rem 1.5rem 3rem;
   <div class="col fx">
     <div class="eyebrow"><span class="n">01</span> 模型架构</div>
     <h2>解耦视觉编码与认知推理</h2>
-    <p><b>MOSS-VL</b> 采用基于交叉注意力（Cross-attention）的架构，实现了<b>视觉编码与认知推理的解耦</b>。该设计极大地降低了延迟，能够对动态视频流做出即时响应。由于<b>原生支持模态交错</b>，模型可在统一的流水线中处理复杂的图像与视频序列，无需繁重的预处理流程。</p>
+    <p><b>MOSS-VL</b> 采用基于交叉注意力（Cross-attention）的架构，实现了<b>视觉编码与认知推理的解耦</b>。该架构为离线图像与视频理解提供了统一基座。由于<b>原生支持模态交错</b>，模型可在统一的流水线中处理复杂的图像与视频序列，无需繁重的预处理流程。持续视频流上的实时交互由独立的 <a class="inline" href="index_zh.html">MOSS-VL-Realtime</a> 提供。</p>
   </div>
   <figure class="fig-img fx">
     <img src="assets/mossvl-framework.png" alt="MOSS-VL 整体架构图" style="width:100%">
@@ -436,43 +433,36 @@ footer{max-width:var(--wide);margin:5rem auto 0;padding:2rem 1.5rem 3rem;
   <div class="col fx">
     <div class="eyebrow"><span class="n">06</span> 评测结果</div>
     <h2>均衡而全面的能力画像</h2>
-    <p>我们对 MOSS-VL 在四个关键维度上进行了全面评估：多模态感知、多模态推理、文档 / OCR、以及视频理解。评估结果表明，MOSS-VL 取得了卓越的性能，尤其在<b>通用多模态感知</b>和<b>复杂视频分析</b>方面表现出色。</p>
+    <p>我们对 <b>MOSS-VL-Instruct-0708</b> 在离线多模态理解上进行了系统评估，覆盖感知、视频理解、定位、文档 / OCR 与推理。下表同时列出 0708 版本、上一版 MOSS-VL-0408 及开源基线。</p>
     <h3>综合表现</h3>
-    <p>下图汇总了 0—100 分制的基准测试评分。总体而言，与 Qwen2.5-VL 和 Qwen3-VL 等行业领先的基准模型相比，<b>MOSS-VL</b> 始终稳居第一或第二。</p>
+    <p>评分按各项基准分别展示，不合并为单一综合分。粗体红色表示该行已报告结果中的最优分数，下划线表示第二名。</p>
   </div>
   <figure class="fig-img fx">
-    <img src="assets/MOSS-VL-Benchmark.png" alt="MOSS-VL Benchmark 对比" style="width:90%">
-    <figcaption><b>图 6：</b>MOSS-VL 与 Qwen 系列在各 Benchmark 上的详细对比。</figcaption>
+    <p class="bench-scroll-hint" role="note">可在图表内左右滑动查看完整评测。</p>
+    <iframe class="benchmark-frame" title="MOSS-VL-0708 离线基准评测对比" src="benchmark_table_0714.html" scrolling="auto"></iframe>
+    <figcaption><b>图 6：</b>MOSS-VL-0708、MOSS-VL-0408 与开源基线的离线评测对比。</figcaption>
   </figure>
 
   <div class="col fx"><h3>核心亮点</h3></div>
   <div class="hl-grid fx">
     <div class="hl-card">
-      <div class="hl-t">领先的视频智能</div>
-      <div class="hl-d">在视频理解维度取得 <b>65.8</b> 的高分，显著超越 Qwen3-VL（+2pts）。在 VideoMME、MLVU、EgoSchema 以及 VSI-bench（<b>领先 Qwen3-VL-8B-Instruct 达 8.3 个百分点</b>）等基准上展现出色的时序一致性与动作识别能力。</div>
+      <div class="hl-t">广泛的视频评测</div>
+      <div class="hl-d">0708 版本覆盖短视频与长视频理解、时序推理、动作识别与事件定位评测，包括 VideoMME、MLVU、LongVideoBench、EgoSchema、VSI-Bench 与 TimeLens 等基准。</div>
     </div>
     <div class="hl-card">
-      <div class="hl-t">卓越的多模态感知</div>
-      <div class="hl-d">展现出色的通用图文理解能力，在 BLINK 和 MMBench 等评测中，其细粒度物体识别与空间推理表现突出。</div>
+      <div class="hl-t">多模态感知覆盖</div>
+      <div class="hl-d">感知评测覆盖通用图文理解、细粒度识别、计数与空间理解，包括 MMBench、MMStar、RealWorldQA、BLINK、CountBench、CVBench 与 V* 等基准。</div>
     </div>
     <div class="hl-card">
-      <div class="hl-t">稳健的视觉推理</div>
-      <div class="hl-d">在 CVBench 和 VisuLogic 等复杂推理任务中，与 Qwen 系列的最新版本保持高度竞争力。</div>
+      <div class="hl-t">视觉推理覆盖</div>
+      <div class="hl-d">推理部分报告 VLMsAreBlind、VisuLogic、ERQA 与 EmbSpatial 结果，定位部分则包括 RefCOCO-REC 与 Ref-Adv。</div>
     </div>
     <div class="hl-card">
-      <div class="hl-t">可靠的文档理解</div>
-      <div class="hl-d">虽然模型主要针对通用感知和视频能力优化，但在 OCR 与文档分析方面依然取得 <b>83.9</b> 的成绩，确保文本提取与结构化信息处理的可靠性。</div>
+      <div class="hl-t">文档与 OCR 覆盖</div>
+      <div class="hl-d">0708 版本也在 DocVQA、ChartQA、InfoVQA、OCRBench、OCRBench-v2、OmniDocBench 与 CC-OCR-DocParse 等文档 / OCR 任务上进行了评测。</div>
     </div>
   </div>
 
-  <div class="col fx">
-    <h3>评测分析</h3>
-    <p>下图直观展示了 MOSS-VL 在 30 多个专业基准测试中平衡且全面的能力画像。如蓝色实心区域所示，MOSS-VL 实现了最广泛的综合覆盖，尤其在<b>视频理解</b>与<b>多模态感知</b>象限中展现出卓越的性能优势。</p>
-  </div>
-  <figure class="fig-img fx">
-    <img src="assets/radar.png" alt="MOSS-VL 评测雷达图" style="width:600px">
-    <figcaption><b>图 7：</b>MOSS-VL 评测分析图。</figcaption>
-  </figure>
 </section>
 
 <hr class="rule">
@@ -680,7 +670,7 @@ bash mossvl_finetune/scripts/run_sft_lora.sh</pre>
         <tr>
           <td><b>MOSS-VL-Realtime</b></td>
           <td><a href="https://huggingface.co/OpenMOSS-Team/MOSS-VL-Realtime">HuggingFace</a></td>
-          <td><a href="https://modelscope.cn/models/openmoss/MOSS-VL-Realtime">ModelScope</a></td>
+          <td><a href="https://www.modelscope.cn/models/openmoss/MOSS-VL-Realtime-0708">ModelScope</a></td>
         </tr>
       </tbody>
     </table>

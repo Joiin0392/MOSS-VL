@@ -62,32 +62,30 @@ a.inline:hover{text-decoration:underline}
   backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
   border-bottom:1px solid var(--grid);padding:.8rem 1.5rem;max-width:none}
 .sticky-nav .nav-content{max-width:var(--wide);margin:0 auto;display:flex;
-  align-items:center;justify-content:space-between}
-.sticky-nav .wordmark{font-family:var(--sans);font-weight:700;letter-spacing:.02em;
-  font-size:1rem;color:var(--ink)}
+  align-items:center;justify-content:space-between;gap:1.1rem;min-width:0}
+.brand-cluster{display:flex;align-items:center;gap:.65rem;min-width:0;flex:0 1 auto}
+.sticky-nav .wordmark,.sticky-nav .wordmark:hover{display:inline-flex;align-items:center;
+  font-family:var(--sans);font-weight:700;letter-spacing:.02em;font-size:1rem;
+  color:var(--ink);text-decoration:none;white-space:nowrap}
 .sticky-nav .wordmark span{color:var(--muted);font-weight:500}
-.sticky-nav .nav-links{display:flex;gap:1.5rem;align-items:center;
-  font-family:var(--sans);font-size:.85rem;font-weight:500}
+.model-switcher{display:inline-flex;align-items:center;gap:2px;padding:3px;border:1px solid var(--grid);
+  border-radius:999px;background:var(--surface);font:500 .76rem/1 var(--sans);min-width:0}
+.model-tab{display:inline-flex;align-items:center;justify-content:center;min-height:28px;padding:.35rem .72rem;
+  border-radius:999px;color:var(--ink-2);text-decoration:none;white-space:nowrap;transition:color .2s,background .2s}
+.model-tab:hover{color:var(--ink)}
+.model-tab[aria-current="page"]{background:var(--accent);color:#fff;box-shadow:0 1px 3px rgba(16,185,129,.35)}
+.model-tab:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.sticky-nav .nav-links{display:flex;flex:1 1 auto;min-width:0;justify-content:flex-end;gap:1.5rem;align-items:center;
+  font-family:var(--sans);font-size:.85rem;font-weight:500;flex-wrap:nowrap}
+.sticky-nav .nav-links>*{flex:0 0 auto}
 .sticky-nav .nav-links a{color:var(--ink-2);text-decoration:none;transition:color .2s}
 .sticky-nav .nav-links a:hover{color:var(--accent)}
-.sticky-nav .lang{color:var(--muted);font-size:.8rem;
-  margin-left:1rem;padding-left:1rem;border-left:1px solid var(--grid)}
+.sticky-nav .lang{display:inline-flex;align-items:center;gap:.25rem;color:var(--muted);font-size:.8rem;
+  margin-left:.2rem;padding-left:1rem;border-left:1px solid var(--grid)}
 .sticky-nav .lang b{color:var(--ink)}
-
-/* ---------- series switcher (segmented) ---------- */
-.series-nav{border-bottom:1px solid var(--grid);background:var(--plane)}
-.series-nav .si{max-width:var(--wide);margin:0 auto;padding:.55rem 1.5rem;
-  display:flex;align-items:center;gap:.85rem;flex-wrap:wrap;font-family:var(--sans)}
-.series-nav .sk{font-size:.68rem;font-weight:700;letter-spacing:.14em;
-  text-transform:uppercase;color:var(--muted)}
-.series-seg{display:inline-flex;padding:3px;gap:2px;border:1px solid var(--grid);
-  border-radius:99px;background:var(--surface)}
-.series-seg a{display:inline-flex;align-items:center;text-decoration:none;white-space:nowrap;
-  font-size:.82rem;font-weight:550;color:var(--ink-2);padding:.36rem 1.05rem;
-  border-radius:99px;transition:color .2s,background .2s}
-.series-seg a:hover{color:var(--ink)}
-.series-seg a.active{background:var(--accent);color:#fff;box-shadow:0 1px 3px rgba(16,185,129,.35)}
-@media(max-width:560px){.series-seg{display:flex;width:100%}.series-seg a{flex:1;justify-content:center}}
+@media(max-width:1100px){.sticky-nav .nav-content{display:block}.sticky-nav .nav-links{width:100%;margin-top:.65rem;justify-content:flex-start;
+  overflow-x:auto;overflow-y:hidden;white-space:nowrap;padding-bottom:.15rem;scrollbar-width:none}.sticky-nav .nav-links::-webkit-scrollbar{display:none}}
+@media(max-width:440px){.brand-cluster{display:grid;grid-template-columns:minmax(0,1fr);gap:.45rem}.sticky-nav .wordmark{font-size:.9rem}.model-switcher{width:100%}.model-tab{flex:1;min-width:0}.sticky-nav .nav-links{gap:.9rem}.sticky-nav .nav-links a{white-space:nowrap}}
 
 /* ---------- hero ---------- */
 header.hero{padding:4rem 0 2.5rem}
@@ -131,6 +129,9 @@ figure.fig-img.plain img{border:0;background:transparent}
 figure.fig-img figcaption{font-family:var(--sans);font-size:.8rem;color:var(--muted);
   margin:.9rem auto 0;line-height:1.55;max-width:52rem}
 figure.fig-img figcaption b{color:var(--ink-2)}
+.benchmark-frame{width:100%;height:1460px;border:0;border-radius:10px;background:var(--plane);display:block}
+.bench-scroll-hint{display:none;font-family:var(--sans);font-size:.8rem;color:var(--muted);margin:0 0 .65rem}
+@media(max-width:760px){.bench-scroll-hint{display:block}}
 
 /* ---------- code ---------- */
 pre.code{font-family:var(--mono);font-size:.8rem;line-height:1.7;color:var(--ink);
@@ -223,7 +224,13 @@ footer{max-width:var(--wide);margin:5rem auto 0;padding:2rem 1.5rem 3rem;
 
 <nav class="sticky-nav">
   <div class="nav-content">
-    <div class="wordmark">OpenMOSS <span>/ MOSS-VL</span></div>
+    <div class="brand-cluster">
+      <a class="wordmark" href="moss-vl.html">OpenMOSS <span>/ MOSS-VL</span></a>
+      <div class="model-switcher" role="group" aria-label="MOSS-VL model family">
+        <a class="model-tab" href="index.html" title="MOSS-VL-Realtime">Realtime</a>
+        <a class="model-tab" href="moss-vl.html" aria-current="page" title="MOSS-VL Foundation">MOSS-VL</a>
+      </div>
+    </div>
     <div class="nav-links">
       <a href="#s-arch">Architecture</a>
       <a href="#s-train">Training</a>
@@ -236,16 +243,6 @@ footer{max-width:var(--wide);margin:5rem auto 0;padding:2rem 1.5rem 3rem;
     </div>
   </div>
 </nav>
-
-<!-- ================= SERIES SWITCHER ================= -->
-<div class="series-nav">
-  <div class="si">
-    <div class="series-seg">
-      <a href="index.html">MOSS-VL-Realtime</a>
-      <a href="moss-vl.html" class="active">MOSS-VL Foundation</a>
-    </div>
-  </div>
-</div>
 
 <!-- ================= HERO ================= -->
 <header class="hero">
@@ -289,7 +286,7 @@ footer{max-width:var(--wide);margin:5rem auto 0;padding:2rem 1.5rem 3rem;
   <div class="col fx">
     <div class="eyebrow"><span class="n">01</span> Architecture</div>
     <h2>Decoupling Visual Encoding from Cognitive Reasoning</h2>
-    <p><b>MOSS-VL</b> adopts a cross-attention-based architecture that <b>decouples visual encoding from cognitive reasoning</b>. This design dramatically reduces latency, enabling immediate responses to dynamic video streams. With <b>native support for interleaved modalities</b>, the model handles complex image and video sequences in a unified pipeline, free of heavyweight preprocessing.</p>
+    <p><b>MOSS-VL</b> adopts a cross-attention-based architecture that <b>decouples visual encoding from cognitive reasoning</b>. This architecture provides a unified backbone for offline image and video understanding. With <b>native support for interleaved modalities</b>, the model handles complex image and video sequences in a unified pipeline, free of heavyweight preprocessing. Continuous-stream interaction is provided separately by <a class="inline" href="index.html">MOSS-VL-Realtime</a>.</p>
   </div>
   <figure class="fig-img fx">
     <img src="assets/mossvl-framework.png" alt="MOSS-VL overall architecture" style="width:100%">
@@ -436,43 +433,36 @@ footer{max-width:var(--wide);margin:5rem auto 0;padding:2rem 1.5rem 3rem;
   <div class="col fx">
     <div class="eyebrow"><span class="n">06</span> Evaluation</div>
     <h2>A Balanced and Comprehensive Capability Profile</h2>
-    <p>We evaluated MOSS-VL comprehensively across four key dimensions: multimodal perception, multimodal reasoning, document / OCR, and video understanding. The results show that MOSS-VL delivers excellent performance, standing out in <b>general multimodal perception</b> and <b>complex video analysis</b>.</p>
+    <p>We evaluated <b>MOSS-VL-Instruct-0708</b> for offline multimodal understanding across perception, video understanding, grounding, document / OCR, and reasoning. The table below reports the 0708 release alongside the previous MOSS-VL-0408 checkpoint and open-source baselines.</p>
     <h3>Overall Performance</h3>
-    <p>The figure below aggregates benchmark scores on a 0–100 scale. Overall, <b>MOSS-VL</b> consistently ranks first or second against industry-leading baselines such as Qwen2.5-VL and Qwen3-VL.</p>
+    <p>Scores are reported per benchmark rather than collapsed into a single aggregate. Bold red marks the best reported score in each row, and underlining marks the second best.</p>
   </div>
   <figure class="fig-img fx">
-    <img src="assets/MOSS-VL-Benchmark.png" alt="MOSS-VL benchmark comparison" style="width:90%">
-    <figcaption><b>Figure 6:</b> Detailed benchmark comparison between MOSS-VL and the Qwen series.</figcaption>
+    <p class="bench-scroll-hint" role="note">Swipe horizontally inside the chart to view the full benchmark.</p>
+    <iframe class="benchmark-frame" title="MOSS-VL-0708 offline benchmark comparison" src="benchmark_table_0714_en.html" scrolling="auto"></iframe>
+    <figcaption><b>Figure 6:</b> Offline benchmark comparison for MOSS-VL-0708, MOSS-VL-0408, and open-source baselines.</figcaption>
   </figure>
 
   <div class="col fx"><h3>Highlights</h3></div>
   <div class="hl-grid fx">
     <div class="hl-card">
-      <div class="hl-t">Leading Video Intelligence</div>
-      <div class="hl-d">Scores a high <b>65.8</b> on the video understanding dimension, clearly surpassing Qwen3-VL (+2pts). Demonstrates strong temporal consistency and action recognition on benchmarks such as VideoMME, MLVU, EgoSchema, and VSI-bench (<b>leading Qwen3-VL-8B-Instruct by 8.3 points</b>).</div>
+      <div class="hl-t">Broad Video Evaluation</div>
+      <div class="hl-d">The 0708 release is evaluated across short- and long-video understanding, temporal reasoning, action recognition, and event localization benchmarks, including VideoMME, MLVU, LongVideoBench, EgoSchema, VSI-Bench, and TimeLens.</div>
     </div>
     <div class="hl-card">
-      <div class="hl-t">Excellent Multimodal Perception</div>
-      <div class="hl-d">Shows outstanding general image–text understanding, with notable fine-grained object recognition and spatial reasoning on evaluations such as BLINK and MMBench.</div>
+      <div class="hl-t">Multimodal Perception Coverage</div>
+      <div class="hl-d">The perception suite covers general image–text understanding, fine-grained recognition, counting, and spatial understanding through benchmarks such as MMBench, MMStar, RealWorldQA, BLINK, CountBench, CVBench, and V*.</div>
     </div>
     <div class="hl-card">
-      <div class="hl-t">Robust Visual Reasoning</div>
-      <div class="hl-d">Remains highly competitive with the latest Qwen releases on complex reasoning tasks such as CVBench and VisuLogic.</div>
+      <div class="hl-t">Visual Reasoning Coverage</div>
+      <div class="hl-d">The reasoning section reports results on VLMsAreBlind, VisuLogic, ERQA, and EmbSpatial, while the grounding section includes RefCOCO-REC and Ref-Adv.</div>
     </div>
     <div class="hl-card">
-      <div class="hl-t">Reliable Document Understanding</div>
-      <div class="hl-d">Although optimized primarily for general perception and video capability, the model still achieves <b>83.9</b> on OCR and document analysis, ensuring dependable text extraction and structured information processing.</div>
+      <div class="hl-t">Document and OCR Coverage</div>
+      <div class="hl-d">The release is also evaluated on document and OCR tasks including DocVQA, ChartQA, InfoVQA, OCRBench, OCRBench-v2, OmniDocBench, and CC-OCR-DocParse.</div>
     </div>
   </div>
 
-  <div class="col fx">
-    <h3>Evaluation Analysis</h3>
-    <p>The figure below visualizes MOSS-VL's balanced and comprehensive capability profile across 30+ specialized benchmarks. As shown by the solid blue region, MOSS-VL achieves the broadest overall coverage, with pronounced advantages in the <b>video understanding</b> and <b>multimodal perception</b> quadrants.</p>
-  </div>
-  <figure class="fig-img fx">
-    <img src="assets/radar.png" alt="MOSS-VL evaluation radar chart" style="width:600px">
-    <figcaption><b>Figure 7:</b> Evaluation analysis of MOSS-VL.</figcaption>
-  </figure>
 </section>
 
 <hr class="rule">
@@ -680,7 +670,7 @@ bash mossvl_finetune/scripts/run_sft_lora.sh</pre>
         <tr>
           <td><b>MOSS-VL-Realtime</b></td>
           <td><a href="https://huggingface.co/OpenMOSS-Team/MOSS-VL-Realtime">HuggingFace</a></td>
-          <td><a href="https://modelscope.cn/models/openmoss/MOSS-VL-Realtime">ModelScope</a></td>
+          <td><a href="https://www.modelscope.cn/models/openmoss/MOSS-VL-Realtime-0708">ModelScope</a></td>
         </tr>
       </tbody>
     </table>

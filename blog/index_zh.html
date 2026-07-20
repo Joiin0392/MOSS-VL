@@ -49,6 +49,11 @@ p.lede{font-size:1.22rem;line-height:1.65;color:var(--ink-2)}
 p.lede b{color:var(--ink)}
 .figcap{font-family:var(--sans);font-size:.8rem;color:var(--muted);
   margin:.8rem auto 0;max-width:var(--col);line-height:1.5}
+.bench-scroll-hint{display:none}
+@media (max-width:600px){
+  .bench-scroll-hint{display:block;margin:.75rem 0 0;font-family:var(--sans);
+    font-size:.78rem;line-height:1.45;color:var(--muted);text-align:center}
+}
 hr.rule{border:0;border-top:1px solid var(--grid);max-width:var(--col);
   margin:2.5rem auto 0}
 code{font-family:var(--mono);font-size:.85em}
@@ -243,40 +248,43 @@ footer{max-width:var(--wide);margin:5rem auto 0;padding:2rem 1.5rem 3rem;
 .sticky-nav {
   position: sticky; top: 0; z-index: 100;
   background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-bottom: 1px solid var(--grid);
-  padding: 0.8rem 1.5rem;
-  max-width: none;
+  backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--grid); padding: .8rem 1.5rem; max-width: none;
 }
-.sticky-nav .nav-content {
-  max-width: var(--wide); margin: 0 auto;
-  display: flex; align-items: center; justify-content: space-between;
-}
-.sticky-nav .wordmark {
-  font-family: var(--sans); font-weight: 700; letter-spacing: .02em; font-size: 1rem; color: var(--ink);
-}
+.sticky-nav .nav-content { max-width: var(--wide); margin: 0 auto; display: flex;
+  align-items: center; justify-content: space-between; gap: 1.1rem; min-width: 0; }
+.brand-cluster { display: flex; align-items: center; gap: .65rem; min-width: 0; flex: 0 1 auto; }
+.sticky-nav .wordmark, .sticky-nav .wordmark:hover { display: inline-flex; align-items: center;
+  font-family: var(--sans); font-weight: 700; letter-spacing: .02em; font-size: 1rem;
+  color: var(--ink); text-decoration: none; white-space: nowrap; }
 .sticky-nav .wordmark span { color: var(--muted); font-weight: 500; }
-.sticky-nav .nav-links { display: flex; gap: 1.5rem; align-items: center; font-family: var(--sans); font-size: 0.85rem; font-weight: 500; }
-.sticky-nav .nav-links a { color: var(--ink-2); text-decoration: none; transition: color 0.2s; }
+.model-switcher { display: inline-flex; align-items: center; gap: 2px; padding: 3px;
+  border: 1px solid var(--grid); border-radius: 999px; background: var(--surface);
+  font: 500 .76rem/1 var(--sans); min-width: 0; }
+.model-tab { display: inline-flex; align-items: center; justify-content: center; min-height: 28px;
+  padding: .35rem .72rem; border-radius: 999px; color: var(--ink-2); text-decoration: none;
+  white-space: nowrap; transition: color .2s, background .2s; }
+.model-tab:hover { color: var(--ink); }
+.model-tab[aria-current="page"] { background: var(--accent); color: #fff;
+  box-shadow: 0 1px 3px rgba(16,185,129,.35); }
+.model-tab:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.sticky-nav .nav-links { display: flex; flex: 1 1 auto; min-width: 0; justify-content: flex-end;
+  gap: 1.5rem; align-items: center; font-family: var(--sans); font-size: .85rem;
+  font-weight: 500; flex-wrap: nowrap; }
+.sticky-nav .nav-links > * { flex: 0 0 auto; }
+.sticky-nav .nav-links a { color: var(--ink-2); text-decoration: none; transition: color .2s; }
 .sticky-nav .nav-links a:hover { color: var(--accent); }
-.sticky-nav .lang { color: var(--muted); cursor: not-allowed; font-size: 0.8rem; margin-left: 1rem; padding-left: 1rem; border-left: 1px solid var(--grid); }
+.sticky-nav .lang { display: inline-flex; align-items: center; gap: .25rem; color: var(--muted);
+  font-size: .8rem; margin-left: .2rem; padding-left: 1rem; border-left: 1px solid var(--grid); }
 .sticky-nav .lang b { color: var(--ink); }
-
-/* ---------- series switcher (segmented) ---------- */
-.series-nav{border-bottom:1px solid var(--grid);background:var(--plane)}
-.series-nav .si{max-width:var(--wide);margin:0 auto;padding:.55rem 1.5rem;
-  display:flex;align-items:center;gap:.85rem;flex-wrap:wrap;font-family:var(--sans)}
-.series-nav .sk{font-size:.68rem;font-weight:700;letter-spacing:.14em;
-  text-transform:uppercase;color:var(--muted)}
-.series-seg{display:inline-flex;padding:3px;gap:2px;border:1px solid var(--grid);
-  border-radius:99px;background:var(--surface)}
-.series-seg a{display:inline-flex;align-items:center;text-decoration:none;white-space:nowrap;
-  font-size:.82rem;font-weight:550;color:var(--ink-2);padding:.36rem 1.05rem;
-  border-radius:99px;transition:color .2s,background .2s}
-.series-seg a:hover{color:var(--ink)}
-.series-seg a.active{background:var(--accent);color:#fff;box-shadow:0 1px 3px rgba(16,185,129,.35)}
-@media(max-width:560px){.series-seg{display:flex;width:100%}.series-seg a{flex:1;justify-content:center}}
+@media (max-width: 1100px) { .sticky-nav .nav-content { display: block; }
+  .sticky-nav .nav-links { width: 100%; margin-top: .65rem; justify-content: flex-start;
+    overflow-x: auto; overflow-y: hidden; white-space: nowrap; padding-bottom: .15rem; scrollbar-width: none; }
+  .sticky-nav .nav-links::-webkit-scrollbar { display: none; } }
+@media (max-width: 440px) { .brand-cluster { display: grid; grid-template-columns: minmax(0,1fr); gap: .45rem; }
+  .sticky-nav .wordmark { font-size: .9rem; } .model-switcher { width: 100%; }
+  .model-tab { flex: 1; min-width: 0; } .sticky-nav .nav-links { gap: .9rem; }
+  .sticky-nav .nav-links a { white-space: nowrap; } }
 
 /* ---------- toc pills ---------- */
 .toc-pills { display: flex; gap: 0.6rem; flex-wrap: wrap; margin-top: 1.5rem; align-items: center; }
@@ -734,7 +742,13 @@ footer{max-width:var(--wide);margin:5rem auto 0;padding:2rem 1.5rem 3rem;
 
 <nav class="sticky-nav">
   <div class="nav-content">
-    <div class="wordmark">OpenMOSS <span>/ MOSS-VL-Realtime</span></div>
+    <div class="brand-cluster">
+      <a class="wordmark" href="index_zh.html">OpenMOSS <span>/ MOSS-VL</span></a>
+      <div class="model-switcher" role="group" aria-label="MOSS-VL 模型系列">
+        <a class="model-tab" href="index_zh.html" aria-current="page" title="MOSS-VL-Realtime">实时</a>
+        <a class="model-tab" href="moss-vl_zh.html" title="MOSS-VL 基座模型">MOSS-VL</a>
+      </div>
+    </div>
     <div class="nav-links">
       <a href="#s1">机制</a>
       <a href="#s2">能力演示</a>
@@ -746,17 +760,6 @@ footer{max-width:var(--wide);margin:5rem auto 0;padding:2rem 1.5rem 3rem;
     </div>
   </div>
 </nav>
-
-<!-- ================= SERIES SWITCHER (hidden for now) =================
-<div class="series-nav">
-  <div class="si">
-    <div class="series-seg">
-      <a href="index_zh.html" class="active">MOSS-VL-Realtime</a>
-      <a href="moss-vl_zh.html">MOSS-VL 基座</a>
-    </div>
-  </div>
-</div>
--->
 
 <!-- ================= HERO ================= -->
 <header class="hero">
@@ -930,18 +933,19 @@ footer{max-width:var(--wide);margin:5rem auto 0;padding:2rem 1.5rem 3rem;
     <ul>
       <li><strong>解耦交叉注意力（Decoupled Cross-Attention）</strong>：将视频特征提取与文本生成阶段的交叉注意力计算解耦，在处理高频视频帧时能够显著降低端到端的吞吐与延迟开销。</li>
       <li><strong>绝对时间戳（Absolute Timestamps）</strong>：为输入视频序列的每一帧编码绝对时间信息，使模型能感知物理世界的真实流速，不依赖固定的帧速率（FPS）或相对位置。</li>
-      <li><strong>跨维度旋转位置编码（XRoPE）</strong>：构建统一的时空位置表示，将视频特征的空间维度 $(h, w)$ 与时间维度 $t$ 统一映射，从而在长程上下文交互中提供精准的时空定位和特征关联。</li>
+      <li><strong>交叉注意力旋转位置编码（XRoPE）</strong>：构建统一的时空位置表示，将视频特征的空间维度 <code>(h, w)</code> 与时间维度 <code>t</code> 统一映射，从而在长程上下文交互中提供精准的时空定位和特征关联。</li>
 
     </ul>
 
     <figure class="d-media" style="margin: 2rem 0;">
-      <img src="assets/mossvl-realtime-architecture.png" alt="MOSS-VL-Realtime Architecture" style="max-width: 100%; height: auto; border: 1px solid var(--line); border-radius: 8px;" />
+      <img src="assets/mossvl-realtime-architecture.png" alt="MOSS-VL-Realtime Architecture" style="max-width: 100%; height: auto; border: 1px solid var(--grid); border-radius: 8px;" />
       <figcaption class="figcap" style="text-align:left; margin:.8rem 0 0;"><b>图 2：MOSS-VL-Realtime 架构示意图。</b>展示了解耦交叉注意力机制与时空表征模块的连接方式，支持音视频输入在统一的时空特征空间下进行高效交叉计算。</figcaption>
     </figure>
 
     <p>这种交互与时空建模能力不仅得益于架构的合理设计，更源于多模态语料的全面重构。我们引入了全新的流式 SFT 交互训练方案，使得模型能够在序列生成的任一时刻精准预测说话时机或主动保持沉默。</p>
 
   </div>
+</section>
 
 <hr class="rule">
 
@@ -1120,7 +1124,8 @@ footer{max-width:var(--wide);margin:5rem auto 0;padding:2rem 1.5rem 3rem;
      (generated by generate_streaming_grid_v2.py from baseline_streaming_scores.md;
       height auto-syncs via streamGridHeight postMessage) -->
     <div style="width:100%; margin-top:20px;">
-      <iframe id="stream-grid-frame" src="streaming_benchmark_grid_v2_green.html" width="100%" height="2780" frameborder="0" scrolling="no" style="border:none; display:block; width:100%; border-radius:12px;"></iframe>
+      <p class="bench-scroll-hint" role="note">在图表内左右滑动查看完整评测图。</p>
+      <iframe id="stream-grid-frame" title="流式评测子集图表" src="streaming_benchmark_grid_v2_green.html" width="100%" height="2780" frameborder="0" scrolling="auto" style="border:none; display:block; width:100%; border-radius:12px;"></iframe>
     </div>
     <script>
       window.addEventListener("message", function(ev){
@@ -1174,7 +1179,8 @@ footer{max-width:var(--wide);margin:5rem auto 0;padding:2rem 1.5rem 3rem;
     <h2>离线基础能力</h2>
     <p>在此次迭代中，我们对数据体系进行了<b>系统性重构与深度优化</b>，为模型夯实了强大的基础能力底座。得益于此，同代 <b>Instruct 模型</b>不仅在离线能力上保持了极佳的稳健水位，更在细粒度多模态感知（V*Bench 89.0, BLINK 78.0）及高难度时序动作定位任务中<b>取得了显著提升</b>。在长程视频理解（VideoMME, MLVU）与复杂文档表格分析（DocVQA, ChartQA）上，我们依然发挥极其稳定，综合能力<b>全面对齐甚至部分领跑</b>同等规模的顶级开源基线。</p>
     <div style="width: 100%; margin-top: 2rem; margin-bottom: 2rem;">
-        <iframe id="offline-bench-frame" src="benchmark_table_0714.html" width="100%" height="860px" scrolling="no" frameborder="0" style="border: none;"></iframe>
+        <p class="bench-scroll-hint" role="note">在图表内左右滑动查看完整评测图。</p>
+        <iframe id="offline-bench-frame" title="离线基准对比图" src="benchmark_table_0714.html" width="100%" height="860px" scrolling="auto" frameborder="0" style="border: none;"></iframe>
     </div>
   </div>
 </section>
