@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MOSS-VL · OpenMOSS</title>
 <style>
 /* ============================================================
-   MOSS-VL 基座模型 blog — 中文版
+   MOSS-VL foundation model blog — English version
    Shares the MOSS-VL-Realtime blog design system so the two
-   posts read as one series. Content adapted from README_zh.md.
+   posts read as one series. Content adapted from README.md.
    ============================================================ */
 :root{
   --plane:#ffffff;
@@ -70,7 +70,7 @@ a.inline:hover{text-decoration:underline}
   font-family:var(--sans);font-size:.85rem;font-weight:500}
 .sticky-nav .nav-links a{color:var(--ink-2);text-decoration:none;transition:color .2s}
 .sticky-nav .nav-links a:hover{color:var(--accent)}
-.sticky-nav .lang{color:var(--muted);cursor:not-allowed;font-size:.8rem;
+.sticky-nav .lang{color:var(--muted);font-size:.8rem;
   margin-left:1rem;padding-left:1rem;border-left:1px solid var(--grid)}
 .sticky-nav .lang b{color:var(--ink)}
 
@@ -225,14 +225,14 @@ footer{max-width:var(--wide);margin:5rem auto 0;padding:2rem 1.5rem 3rem;
   <div class="nav-content">
     <div class="wordmark">OpenMOSS <span>/ MOSS-VL</span></div>
     <div class="nav-links">
-      <a href="#s-arch">架构</a>
-      <a href="#s-train">训练</a>
-      <a href="#s-eval">评测</a>
-      <a href="#s-start">开始使用</a>
+      <a href="#s-arch">Architecture</a>
+      <a href="#s-train">Training</a>
+      <a href="#s-eval">Evaluation</a>
+      <a href="#s-start">Get Started</a>
       <div style="width:1px;height:14px;background:var(--grid);margin:0 .5rem;"></div>
       <a href="https://github.com/OpenMOSS/MOSS-VL">GitHub</a>
       <a href="https://OpenMOSS.github.io/MOSS-VL-Demo/#/">Demo</a>
-      <span class="lang"><b>中</b> | <a href="moss-vl.html">EN</a></span>
+      <span class="lang"><b>EN</b> | <a href="moss-vl_zh.html">中文</a></span>
     </div>
   </div>
 </nav>
@@ -241,8 +241,8 @@ footer{max-width:var(--wide);margin:5rem auto 0;padding:2rem 1.5rem 3rem;
 <div class="series-nav">
   <div class="si">
     <div class="series-seg">
-      <a href="index_zh.html">MOSS-VL-Realtime</a>
-      <a href="moss-vl_zh.html" class="active">MOSS-VL 基座</a>
+      <a href="index.html">MOSS-VL-Realtime</a>
+      <a href="moss-vl.html" class="active">MOSS-VL Foundation</a>
     </div>
   </div>
 </div>
@@ -251,35 +251,35 @@ footer{max-width:var(--wide);margin:5rem auto 0;padding:2rem 1.5rem 3rem;
 <header class="hero">
   <div class="col fx">
     <div class="logo-wrap"><img src="assets/logo.png" alt="MOSS-VL"></div>
-    <h1>MOSS-VL：面向视频理解的多模态基座</h1>
-    <p class="lede"><b>MOSS-VL</b> 是 OpenMOSS 生态系统中核心的多模态模型系列，致力于推动视觉理解技术的前沿发展。针对视频理解中固有的复杂挑战，我们的技术路线图在三个关键维度上实施了系统性的扩展（Scaling）策略。</p>
+    <h1>MOSS-VL: A Multimodal Foundation for Video Understanding</h1>
+    <p class="lede"><b>MOSS-VL</b> is the core multimodal model series in the OpenMOSS ecosystem, dedicated to pushing the frontier of visual understanding. To tackle the challenges inherent to video understanding, our technical roadmap pursues a systematic scaling strategy along three key dimensions.</p>
 
     <div class="core-features">
       <div class="core-feature-block">
-        <div class="core-feature-title">数据扩展</div>
-        <p class="core-feature-desc">通过构建大规模、高质量的多模态数据集，驱动模型实现强大的泛化能力。</p>
+        <div class="core-feature-title">Data Scaling</div>
+        <p class="core-feature-desc">Building large-scale, high-quality multimodal datasets to drive strong generalization.</p>
       </div>
       <div class="core-feature-block">
-        <div class="core-feature-title">参数扩展</div>
-        <p class="core-feature-desc">提升模型参数规模，以精准捕捉复杂的视觉—语言关联。</p>
+        <div class="core-feature-title">Parameter Scaling</div>
+        <p class="core-feature-desc">Growing model capacity to precisely capture complex vision–language associations.</p>
       </div>
       <div class="core-feature-block">
-        <div class="core-feature-title">上下文扩展</div>
-        <p class="core-feature-desc">延伸时间跨度，实现对长视频内容的深度推理。</p>
+        <div class="core-feature-title">Context Scaling</div>
+        <p class="core-feature-desc">Extending the temporal horizon to enable deep reasoning over long-form videos.</p>
       </div>
     </div>
 
     <div class="toc-pills">
-      <span class="k">目录</span>
-      <a href="#s-arch">模型架构</a>
-      <a href="#s-timestamp">绝对时间戳</a>
+      <span class="k">Contents</span>
+      <a href="#s-arch">Architecture</a>
+      <a href="#s-timestamp">Absolute Timestamps</a>
       <a href="#s-xrope">XRoPE</a>
-      <a href="#s-demo">演示视频</a>
-      <a href="#s-train">训练策略</a>
-      <a href="#s-eval">评测结果</a>
-      <a href="#s-start">快速上手</a>
-      <a href="#s-download">模型下载</a>
-      <a href="#s-roadmap">路线图</a>
+      <a href="#s-demo">Demos</a>
+      <a href="#s-train">Training</a>
+      <a href="#s-eval">Evaluation</a>
+      <a href="#s-start">Quick Start</a>
+      <a href="#s-download">Download</a>
+      <a href="#s-roadmap">Roadmap</a>
     </div>
   </div>
 </header>
@@ -287,13 +287,13 @@ footer{max-width:var(--wide);margin:5rem auto 0;padding:2rem 1.5rem 3rem;
 <!-- ================= 01 ARCHITECTURE ================= -->
 <section id="s-arch">
   <div class="col fx">
-    <div class="eyebrow"><span class="n">01</span> 模型架构</div>
-    <h2>解耦视觉编码与认知推理</h2>
-    <p><b>MOSS-VL</b> 采用基于交叉注意力（Cross-attention）的架构，实现了<b>视觉编码与认知推理的解耦</b>。该设计极大地降低了延迟，能够对动态视频流做出即时响应。由于<b>原生支持模态交错</b>，模型可在统一的流水线中处理复杂的图像与视频序列，无需繁重的预处理流程。</p>
+    <div class="eyebrow"><span class="n">01</span> Architecture</div>
+    <h2>Decoupling Visual Encoding from Cognitive Reasoning</h2>
+    <p><b>MOSS-VL</b> adopts a cross-attention-based architecture that <b>decouples visual encoding from cognitive reasoning</b>. This design dramatically reduces latency, enabling immediate responses to dynamic video streams. With <b>native support for interleaved modalities</b>, the model handles complex image and video sequences in a unified pipeline, free of heavyweight preprocessing.</p>
   </div>
   <figure class="fig-img fx">
-    <img src="assets/mossvl-framework.png" alt="MOSS-VL 整体架构图" style="width:100%">
-    <figcaption><b>图 1：</b>MOSS-VL 整体架构图。</figcaption>
+    <img src="assets/mossvl-framework.png" alt="MOSS-VL overall architecture" style="width:100%">
+    <figcaption><b>Figure 1:</b> Overall architecture of MOSS-VL.</figcaption>
   </figure>
 </section>
 
@@ -302,30 +302,30 @@ footer{max-width:var(--wide);margin:5rem auto 0;padding:2rem 1.5rem 3rem;
 <!-- ================= TIMESTAMP ================= -->
 <section id="s-timestamp">
   <div class="col fx">
-    <div class="eyebrow"><span class="n">02</span> 绝对时间戳</div>
-    <h2>把推理锚定在精确的时间基准上</h2>
-    <p>为了确保模型能够精准感知事件的节奏与时长，<b>MOSS-VL</b> 在每一采样帧中均注入了<b>绝对时间戳</b>，从而将推理过程锚定在<b>精确的时间参考基准</b>之上。</p>
-    <h3>输入表示</h3>
+    <div class="eyebrow"><span class="n">02</span> Absolute Timestamps</div>
+    <h2>Anchoring Reasoning to a Precise Time Reference</h2>
+    <p>To ensure the model precisely perceives the pace and duration of events, <b>MOSS-VL</b> injects an <b>absolute timestamp</b> into every sampled frame, anchoring the reasoning process to a <b>precise temporal reference</b>.</p>
+    <h3>Input Representation</h3>
   </div>
   <figure class="fig-img fx">
-    <img src="assets/timestamp_input.gif" alt="时戳序列输入示意图" style="width:90%">
-    <figcaption><b>图 2：</b>带有时间戳的视频序列输入示意图。</figcaption>
+    <img src="assets/timestamp_input.gif" alt="Timestamped sequence input illustration" style="width:90%">
+    <figcaption><b>Figure 2:</b> Illustration of video sequence input with timestamps.</figcaption>
   </figure>
   <div class="col fx">
-    <p>每段视频中都交织插入了<b>精确的时间标记</b>。每个时间戳均由<b>专用特殊 Token</b>（<code>&lt;|time_start|&gt;</code> … <code>&lt;|time_end|&gt;</code>）封装，从而明确地锚定了每一帧视觉图像的<b>时间位置</b>：</p>
+    <p><b>Precise time markers</b> are interleaved throughout each video. Every timestamp is wrapped in <b>dedicated special tokens</b> (<code>&lt;|time_start|&gt;</code> … <code>&lt;|time_end|&gt;</code>), explicitly anchoring the <b>temporal position</b> of every visual frame:</p>
   </div>
 <pre class="code"><span class="tok">&lt;|im_start|&gt;&lt;|vision_start|&gt;</span>
 <span class="tok">&lt;|time_start|&gt;</span>0.0 seconds<span class="tok">&lt;|time_end|&gt;&lt;|image_pad|&gt;</span>
 <span class="tok">&lt;|time_start|&gt;</span>1.2 seconds<span class="tok">&lt;|time_end|&gt;&lt;|image_pad|&gt;</span>
 <span class="tok">&lt;|time_start|&gt;</span>2.3 seconds<span class="tok">&lt;|time_end|&gt;&lt;|image_pad|&gt;</span>
 ...
-<span class="tok">&lt;|vision_end|&gt;</span>视频显示了一个具有连续动作的动态场景...<span class="tok">&lt;|im_end|&gt;</span></pre>
+<span class="tok">&lt;|vision_end|&gt;</span>The video shows a dynamic scene with continuous motion...<span class="tok">&lt;|im_end|&gt;</span></pre>
   <div class="callout fx">
-    <span class="k">设计初衷</span>
+    <span class="k">Design Rationale</span>
     <ul>
-      <li><b>可变帧率适配：</b>使用显式时间戳使模型能够处理非均匀采样率，而不丢失时序上下文。</li>
-      <li><b>精准动作定位：</b>引入绝对时间维度，实现细粒度的动作定位，使每一项响应都能精准锚定在特定的时间坐标上。</li>
-      <li><b>运动动力学分析：</b>通过引入时间间隔（<code>dt</code>），模型能够对运动物理规律进行推理，从而实现对速度、加速度和运动轨迹的精确估算。</li>
+      <li><b>Variable frame-rate adaptation:</b> Explicit timestamps let the model handle non-uniform sampling rates without losing temporal context.</li>
+      <li><b>Precise action grounding:</b> Introducing an absolute time axis enables fine-grained action localization, anchoring every response to exact temporal coordinates.</li>
+      <li><b>Motion dynamics analysis:</b> With time intervals (<code>dt</code>) available, the model can reason about the physics of motion, yielding accurate estimates of speed, acceleration, and trajectories.</li>
     </ul>
   </div>
 </section>
@@ -335,23 +335,23 @@ footer{max-width:var(--wide);margin:5rem auto 0;padding:2rem 1.5rem 3rem;
 <!-- ================= XROPE ================= -->
 <section id="s-xrope">
   <div class="col fx">
-    <div class="eyebrow"><span class="n">03</span> 交叉注意力旋转位置编码</div>
-    <h2>XRoPE：统一的 3D 时空坐标</h2>
-    <p>MOSS-VL 采用了专门针对其基于交叉注意力的视觉—语言架构而定制的<b>交叉注意力旋转位置编码（Cross-attention Rotary Position Embedding, XRoPE）</b>。该机制将文本 Token 和视频 Patch 映射到一个由时间（t）、高度（h）和宽度（w）定义的统一 3D 坐标空间中。</p>
+    <div class="eyebrow"><span class="n">03</span> Cross-Attention Rotary Position Embedding</div>
+    <h2>XRoPE: A Unified 3D Spatio-Temporal Coordinate Space</h2>
+    <p>MOSS-VL employs a <b>Cross-attention Rotary Position Embedding (XRoPE)</b> tailored to its cross-attention-based vision–language architecture. This mechanism maps text tokens and video patches into a unified 3D coordinate space defined by time (t), height (h), and width (w).</p>
   </div>
   <figure class="fig-img fx">
-    <img src="assets/3d-rope.png" alt="MOSS-VL XRoPE 架构示意图" style="width:80%">
-    <figcaption><b>图 3：</b>配备交叉注意力 RoPE（XRoPE）的 MOSS-VL 架构示意图。</figcaption>
+    <img src="assets/3d-rope.png" alt="MOSS-VL XRoPE architecture illustration" style="width:80%">
+    <figcaption><b>Figure 3:</b> The MOSS-VL architecture equipped with cross-attention RoPE (XRoPE).</figcaption>
   </figure>
   <div class="col fx">
-    <p>为了优化跨模态对齐，<b>XRoPE</b> 被注入到视觉部分的 <b>Key（K）</b> 中以增强位置感知能力，同时保持 <b>Value（V）</b> 不变，从而确保特征的保真度。与此同时，XRoPE 被应用于文本部分的 <b>Query（Q）</b>，使模型能够通过直接的坐标对齐，精准地检索任意时空区域的信息。</p>
+    <p>To optimize cross-modal alignment, <b>XRoPE</b> is injected into the vision-side <b>Keys (K)</b> to strengthen positional awareness while leaving the <b>Values (V)</b> untouched, preserving feature fidelity. Meanwhile, XRoPE is applied to the text-side <b>Queries (Q)</b>, allowing the model to retrieve information from any spatio-temporal region through direct coordinate alignment.</p>
   </div>
   <div class="callout fx">
-    <span class="k">核心价值</span>
+    <span class="k">Key Benefits</span>
     <ul>
-      <li><b>统一模态建模</b> —— 通过将时间表达为语言和视频共享的维度，XRoPE 实现了在单一坐标系下无缝、连贯的视频—文本推理。</li>
-      <li><b>精准时空锚定</b> —— 对齐的 (t, h, w) 坐标赋予了模型在 3D 视频空间中定位细小物体和瞬时动作的能力，其精度可细化至每一个 patch 和每一个瞬间。</li>
-      <li><b>动态输入支持</b> —— 3D 网格原生适配任意宽高比和分辨率，无需进行固定长度的填充（padding）或遵循严格的输入限制。</li>
+      <li><b>Unified modality modeling</b> — By expressing time as a dimension shared between language and video, XRoPE enables seamless, coherent video–text reasoning within a single coordinate system.</li>
+      <li><b>Precise spatio-temporal anchoring</b> — Aligned (t, h, w) coordinates give the model the ability to localize small objects and momentary actions in 3D video space, down to individual patches and instants.</li>
+      <li><b>Dynamic input support</b> — The 3D grid natively accommodates arbitrary aspect ratios and resolutions, with no fixed-length padding or rigid input constraints.</li>
     </ul>
   </div>
 </section>
@@ -361,9 +361,9 @@ footer{max-width:var(--wide);margin:5rem auto 0;padding:2rem 1.5rem 3rem;
 <!-- ================= DEMO ================= -->
 <section id="s-demo">
   <div class="col fx">
-    <div class="eyebrow"><span class="n">04</span> 演示视频</div>
-    <h2>能力速览</h2>
-    <p>以下为 MOSS-VL 在真实视频输入上的推理示例。更多示例请访问我们的<a class="inline" href="https://OpenMOSS.github.io/MOSS-VL-Demo/#/">交互式 Demo 页面</a>，或在 <a class="inline" href="https://huggingface.co/spaces/OpenMOSS-Team/MOSS-VL">HuggingFace Space</a> 在线体验。</p>
+    <div class="eyebrow"><span class="n">04</span> Demos</div>
+    <h2>Capabilities at a Glance</h2>
+    <p>Below are inference examples of MOSS-VL on real video inputs. For more examples, visit our <a class="inline" href="https://OpenMOSS.github.io/MOSS-VL-Demo/#/">interactive demo page</a>, or try it online in the <a class="inline" href="https://huggingface.co/spaces/OpenMOSS-Team/MOSS-VL">HuggingFace Space</a>.</p>
   </div>
   <div class="demo-videos fx">
     <video src="https://gist.github.com/user-attachments/assets/66406aaa-f09f-412c-87b1-97753895ef1f" controls playsinline></video>
@@ -376,55 +376,55 @@ footer{max-width:var(--wide);margin:5rem auto 0;padding:2rem 1.5rem 3rem;
 <!-- ================= TRAINING ================= -->
 <section id="s-train">
   <div class="col fx">
-    <div class="eyebrow"><span class="n">05</span> 训练策略</div>
-    <h2>逐步构建多模态能力</h2>
-    <p>MOSS-VL 采用多阶段训练方法，逐步构建多模态能力。</p>
+    <div class="eyebrow"><span class="n">05</span> Training</div>
+    <h2>Building Multimodal Capability Step by Step</h2>
+    <p>MOSS-VL follows a multi-stage training approach that builds multimodal capability progressively.</p>
   </div>
   <figure class="fig-img fx">
-    <img src="assets/total_data_distribution.png" alt="MOSS-VL 训练数据总分布" style="width:80%">
-    <figcaption><b>图 4：</b>MOSS-VL 训练数据总分布图。</figcaption>
+    <img src="assets/total_data_distribution.png" alt="MOSS-VL overall training data distribution" style="width:80%">
+    <figcaption><b>Figure 4:</b> Overall training data distribution of MOSS-VL.</figcaption>
   </figure>
 
   <div class="col fx">
-    <h3>预训练阶段（PT）</h3>
-    <p>MOSS-VL 通过系统性的<b>四阶段预训练</b>，从零开始逐步构建多模态能力：</p>
+    <h3>Pre-Training (PT)</h3>
+    <p>MOSS-VL builds multimodal capability from scratch through a systematic <b>four-stage pre-training</b> pipeline:</p>
   </div>
   <div class="stage-grid fx">
     <div class="stage-card">
       <div class="st-n">STAGE 1</div>
-      <div class="st-t">视觉—语言对齐</div>
-      <p>建立视觉特征与语言空间之间的初步桥梁。通过在大规模图文对上进行训练，模型学习将视觉概念与其对应的文本描述联系起来，同时培养基础的 OCR 能力，以理解图像中的文字。</p>
+      <div class="st-t">Vision–Language Alignment</div>
+      <p>Establishes the initial bridge between visual features and the language space. Training on large-scale image–text pairs teaches the model to associate visual concepts with their textual descriptions, while cultivating basic OCR ability to read text in images.</p>
     </div>
     <div class="stage-card">
       <div class="st-n">STAGE 2</div>
-      <div class="st-t">大规模多模态预训练</div>
-      <p>扩大模型对海量、多样化多模态语料库的接触面，拓宽模型对世界知识和复杂场景的掌握，为通用智能和高分辨率感知奠定坚实基础。此阶段还引入了短视频片段，以初步培养视频理解能力。</p>
+      <div class="st-t">Large-Scale Multimodal Pre-Training</div>
+      <p>Expands the model's exposure to a massive, diverse multimodal corpus, broadening its grasp of world knowledge and complex scenes, and laying a solid foundation for general intelligence and high-resolution perception. Short video clips are also introduced at this stage to seed video understanding.</p>
     </div>
     <div class="stage-card">
       <div class="st-n">STAGE 3</div>
-      <div class="st-t">高质量多模态预训练</div>
-      <p>通过在大量高质量的感知、理解和推理数据上进行训练，全面提升模型质量。此阶段结合了细粒度的图像感知、复杂的跨多图理解以及高保真视频推理，强化模型捕捉复杂视觉细节与时序关系的能力。</p>
+      <div class="st-t">High-Quality Multimodal Pre-Training</div>
+      <p>Comprehensively raises model quality by training on abundant high-quality perception, understanding, and reasoning data. This stage combines fine-grained image perception, complex multi-image understanding, and high-fidelity video reasoning, strengthening the model's ability to capture intricate visual details and temporal relations.</p>
     </div>
     <div class="stage-card">
       <div class="st-n">STAGE 4</div>
-      <div class="st-t">退火与长上下文外推</div>
-      <p>将模型的视野延伸至长视频理解，同时通过精心设计的退火（Annealing）策略，利用精选的顶级多模态数据进行训练，将模型的最终性能推向巅峰。</p>
+      <div class="st-t">Annealing &amp; Long-Context Extrapolation</div>
+      <p>Extends the model's horizon to long-video understanding, while a carefully designed annealing strategy trains on curated top-tier multimodal data to push final performance to its peak.</p>
     </div>
   </div>
 
   <div class="col fx">
-    <h3>指令微调（SFT）</h3>
-    <p>在预训练模型的基础上，<b>MOSS-VL</b> 通过<b>有监督微调（SFT）</b>进行了进一步优化，以对齐人类意图，并全面释放其交互与指令遵循能力。</p>
+    <h3>Supervised Fine-Tuning (SFT)</h3>
+    <p>On top of the pre-trained model, <b>MOSS-VL</b> is further refined through <b>supervised fine-tuning (SFT)</b> to align with human intent and fully unlock its interactive and instruction-following capabilities.</p>
   </div>
   <figure class="fig-img fx">
-    <img src="assets/SFT.png" alt="MOSS-VL SFT 数据组成" style="width:52%">
-    <figcaption><b>图 5：</b>MOSS-VL SFT 数据组成图。</figcaption>
+    <img src="assets/SFT.png" alt="MOSS-VL SFT data composition" style="width:52%">
+    <figcaption><b>Figure 5:</b> SFT data composition of MOSS-VL.</figcaption>
   </figure>
 
   <div class="callout fx">
-    <span class="k">人类反馈强化学习（RLHF）</span>
+    <span class="k">RLHF</span>
     <ul>
-      <li>MOSS-VL 目前正处于 RLHF 训练阶段。敬请期待后续更新。</li>
+      <li>MOSS-VL is currently undergoing RLHF training. Stay tuned for future updates.</li>
     </ul>
   </div>
 </section>
@@ -434,44 +434,44 @@ footer{max-width:var(--wide);margin:5rem auto 0;padding:2rem 1.5rem 3rem;
 <!-- ================= EVAL ================= -->
 <section id="s-eval">
   <div class="col fx">
-    <div class="eyebrow"><span class="n">06</span> 评测结果</div>
-    <h2>均衡而全面的能力画像</h2>
-    <p>我们对 MOSS-VL 在四个关键维度上进行了全面评估：多模态感知、多模态推理、文档 / OCR、以及视频理解。评估结果表明，MOSS-VL 取得了卓越的性能，尤其在<b>通用多模态感知</b>和<b>复杂视频分析</b>方面表现出色。</p>
-    <h3>综合表现</h3>
-    <p>下图汇总了 0—100 分制的基准测试评分。总体而言，与 Qwen2.5-VL 和 Qwen3-VL 等行业领先的基准模型相比，<b>MOSS-VL</b> 始终稳居第一或第二。</p>
+    <div class="eyebrow"><span class="n">06</span> Evaluation</div>
+    <h2>A Balanced and Comprehensive Capability Profile</h2>
+    <p>We evaluated MOSS-VL comprehensively across four key dimensions: multimodal perception, multimodal reasoning, document / OCR, and video understanding. The results show that MOSS-VL delivers excellent performance, standing out in <b>general multimodal perception</b> and <b>complex video analysis</b>.</p>
+    <h3>Overall Performance</h3>
+    <p>The figure below aggregates benchmark scores on a 0–100 scale. Overall, <b>MOSS-VL</b> consistently ranks first or second against industry-leading baselines such as Qwen2.5-VL and Qwen3-VL.</p>
   </div>
   <figure class="fig-img fx">
-    <img src="assets/MOSS-VL-Benchmark.png" alt="MOSS-VL Benchmark 对比" style="width:90%">
-    <figcaption><b>图 6：</b>MOSS-VL 与 Qwen 系列在各 Benchmark 上的详细对比。</figcaption>
+    <img src="assets/MOSS-VL-Benchmark.png" alt="MOSS-VL benchmark comparison" style="width:90%">
+    <figcaption><b>Figure 6:</b> Detailed benchmark comparison between MOSS-VL and the Qwen series.</figcaption>
   </figure>
 
-  <div class="col fx"><h3>核心亮点</h3></div>
+  <div class="col fx"><h3>Highlights</h3></div>
   <div class="hl-grid fx">
     <div class="hl-card">
-      <div class="hl-t">领先的视频智能</div>
-      <div class="hl-d">在视频理解维度取得 <b>65.8</b> 的高分，显著超越 Qwen3-VL（+2pts）。在 VideoMME、MLVU、EgoSchema 以及 VSI-bench（<b>领先 Qwen3-VL-8B-Instruct 达 8.3 个百分点</b>）等基准上展现出色的时序一致性与动作识别能力。</div>
+      <div class="hl-t">Leading Video Intelligence</div>
+      <div class="hl-d">Scores a high <b>65.8</b> on the video understanding dimension, clearly surpassing Qwen3-VL (+2pts). Demonstrates strong temporal consistency and action recognition on benchmarks such as VideoMME, MLVU, EgoSchema, and VSI-bench (<b>leading Qwen3-VL-8B-Instruct by 8.3 points</b>).</div>
     </div>
     <div class="hl-card">
-      <div class="hl-t">卓越的多模态感知</div>
-      <div class="hl-d">展现出色的通用图文理解能力，在 BLINK 和 MMBench 等评测中，其细粒度物体识别与空间推理表现突出。</div>
+      <div class="hl-t">Excellent Multimodal Perception</div>
+      <div class="hl-d">Shows outstanding general image–text understanding, with notable fine-grained object recognition and spatial reasoning on evaluations such as BLINK and MMBench.</div>
     </div>
     <div class="hl-card">
-      <div class="hl-t">稳健的视觉推理</div>
-      <div class="hl-d">在 CVBench 和 VisuLogic 等复杂推理任务中，与 Qwen 系列的最新版本保持高度竞争力。</div>
+      <div class="hl-t">Robust Visual Reasoning</div>
+      <div class="hl-d">Remains highly competitive with the latest Qwen releases on complex reasoning tasks such as CVBench and VisuLogic.</div>
     </div>
     <div class="hl-card">
-      <div class="hl-t">可靠的文档理解</div>
-      <div class="hl-d">虽然模型主要针对通用感知和视频能力优化，但在 OCR 与文档分析方面依然取得 <b>83.9</b> 的成绩，确保文本提取与结构化信息处理的可靠性。</div>
+      <div class="hl-t">Reliable Document Understanding</div>
+      <div class="hl-d">Although optimized primarily for general perception and video capability, the model still achieves <b>83.9</b> on OCR and document analysis, ensuring dependable text extraction and structured information processing.</div>
     </div>
   </div>
 
   <div class="col fx">
-    <h3>评测分析</h3>
-    <p>下图直观展示了 MOSS-VL 在 30 多个专业基准测试中平衡且全面的能力画像。如蓝色实心区域所示，MOSS-VL 实现了最广泛的综合覆盖，尤其在<b>视频理解</b>与<b>多模态感知</b>象限中展现出卓越的性能优势。</p>
+    <h3>Evaluation Analysis</h3>
+    <p>The figure below visualizes MOSS-VL's balanced and comprehensive capability profile across 30+ specialized benchmarks. As shown by the solid blue region, MOSS-VL achieves the broadest overall coverage, with pronounced advantages in the <b>video understanding</b> and <b>multimodal perception</b> quadrants.</p>
   </div>
   <figure class="fig-img fx">
-    <img src="assets/radar.png" alt="MOSS-VL 评测雷达图" style="width:600px">
-    <figcaption><b>图 7：</b>MOSS-VL 评测分析图。</figcaption>
+    <img src="assets/radar.png" alt="MOSS-VL evaluation radar chart" style="width:600px">
+    <figcaption><b>Figure 7:</b> Evaluation analysis of MOSS-VL.</figcaption>
   </figure>
 </section>
 
@@ -480,21 +480,21 @@ footer{max-width:var(--wide);margin:5rem auto 0;padding:2rem 1.5rem 3rem;
 <!-- ================= QUICK START ================= -->
 <section id="s-start">
   <div class="col fx">
-    <div class="eyebrow"><span class="n">07</span> 快速上手</div>
-    <h2>环境配置与推理</h2>
-    <h3>环境配置</h3>
+    <div class="eyebrow"><span class="n">07</span> Quick Start</div>
+    <h2>Environment Setup &amp; Inference</h2>
+    <h3>Environment Setup</h3>
   </div>
 <pre class="code">conda create -n moss_vl python=3.12 pip -y
 conda activate moss_vl
 pip install -i https://pypi.org/simple --no-build-isolation -r requirements.txt</pre>
 
   <div class="col fx">
-    <h3>模型推理</h3>
-    <p>更多可直接运行的推理示例和 Demo 素材，请参阅 <code>inference/README.md</code>。推理支持全模态离线查询，包括纯文本、单图、多图、单视频、多视频，以及基于 <code>messages</code> 格式的图视频交错输入。</p>
+    <h3>Model Inference</h3>
+    <p>For more ready-to-run inference examples and demo assets, see <code>inference/README.md</code>. Inference supports full-modality offline queries, including text-only, single-image, multi-image, single-video, multi-video, and interleaved image–video inputs via the <code>messages</code> format.</p>
   </div>
 
   <details class="code-details">
-    <summary>使用 <code>offline_generate</code> 做单条推理</summary>
+    <summary>Single-query inference with <code>offline_generate</code></summary>
 <pre class="code">import queue
 import threading
 import torch
@@ -521,7 +521,7 @@ query = {
             "role": "user",
             "content": [
                 {"type": "image", "image": "path/to/example.jpg"},
-                {"type": "text", "text": "描述这张图片。"},
+                {"type": "text", "text": "Describe this image."},
             ],
         }
     ],
@@ -560,11 +560,11 @@ worker.join()</pre>
   </details>
 
   <div class="col fx">
-    <p>如果需要简单的 batch 离线推理，也可以直接使用 <code>offline_batch_generate</code>：</p>
+    <p>For simple batch offline inference, you can also use <code>offline_batch_generate</code> directly:</p>
   </div>
 
   <details class="code-details">
-    <summary>使用 <code>offline_batch_generate</code> 做 batch 推理</summary>
+    <summary>Batch inference with <code>offline_batch_generate</code></summary>
 <pre class="code">import torch
 from transformers import AutoModelForCausalLM, AutoProcessor
 
@@ -588,7 +588,7 @@ queries = [
         "messages": [
             {
                 "role": "user",
-                "content": [{"type": "text", "text": "描述样本 A。"}],
+                "content": [{"type": "text", "text": "Describe sample A."}],
             }
         ],
         "media_kwargs": {},
@@ -598,7 +598,7 @@ queries = [
         "messages": [
             {
                 "role": "user",
-                "content": [{"type": "text", "text": "描述样本 B。"}],
+                "content": [{"type": "text", "text": "Describe sample B."}],
             }
         ],
         "media_kwargs": {},
@@ -618,28 +618,28 @@ print(texts)</pre>
   </details>
 
   <div class="col fx">
-    <h3>微调（Fine-Tuning）</h3>
-    <p>我们提供了一套基于 HuggingFace <code>transformers.Trainer</code> 的轻量级 SFT 微调框架，支持全参数训练与 LoRA，且可独立控制视觉编码器、语言模型和 LM Head 是否参与训练。</p>
+    <h3>Fine-Tuning</h3>
+    <p>We provide a lightweight SFT fine-tuning framework built on HuggingFace <code>transformers.Trainer</code>, supporting both full-parameter training and LoRA, with independent control over whether the vision encoder, language model, and LM head participate in training.</p>
   </div>
-<pre class="code"><span class="cmt"># 全参数 SFT（默认冻结视觉编码器）</span>
+<pre class="code"><span class="cmt"># Full-parameter SFT (vision encoder frozen by default)</span>
 bash mossvl_finetune/scripts/run_sft.sh
 
 <span class="cmt"># LoRA SFT</span>
 pip install -i https://pypi.org/simple peft
 bash mossvl_finetune/scripts/run_sft_lora.sh</pre>
   <div class="col fx">
-    <p>训练数据采用与推理查询格式兼容的 JSON 结构，只需额外添加 <code>response</code> 字段：</p>
+    <p>Training data uses a JSON structure compatible with the inference query format, requiring only an extra <code>response</code> field:</p>
   </div>
 <pre class="code">[
   {
-    "prompt": "描述这张图片。",
-    "response": "一幅群山环绕的美丽风景画。",
+    "prompt": "Describe this image.",
+    "response": "A beautiful landscape painting surrounded by mountains.",
     "images": ["path/to/image.jpg"],
     "videos": []
   }
 ]</pre>
   <div class="col fx">
-    <p>同时支持多轮对话格式，详细文档请参阅 <code>mossvl_finetune/README.md</code>。</p>
+    <p>Multi-turn dialogue formats are also supported; see <code>mossvl_finetune/README.md</code> for full documentation.</p>
   </div>
 </section>
 
@@ -648,13 +648,13 @@ bash mossvl_finetune/scripts/run_sft_lora.sh</pre>
 <!-- ================= DOWNLOAD ================= -->
 <section id="s-download">
   <div class="col fx">
-    <div class="eyebrow"><span class="n">08</span> 模型下载与部署</div>
-    <h2>开放权重</h2>
+    <div class="eyebrow"><span class="n">08</span> Download &amp; Deployment</div>
+    <h2>Open Weights</h2>
   </div>
   <div class="tbl-wrap fx">
     <table class="dtable">
       <thead>
-        <tr><th>模型</th><th>🤗 Download</th><th>🤖 ModelScope</th></tr>
+        <tr><th>Model</th><th>🤗 Download</th><th>🤖 ModelScope</th></tr>
       </thead>
       <tbody>
         <tr>
@@ -687,20 +687,20 @@ bash mossvl_finetune/scripts/run_sft_lora.sh</pre>
   </div>
   <div class="col fx">
     <h3>SGLang</h3>
-    <p>SGLang 官方已正式支持 MOSS-VL。如需查看基于 SGLang 的部署与服务化说明，请参考 <code>sglang/README_zh.md</code>。</p>
+    <p>SGLang officially supports MOSS-VL. For SGLang-based deployment and serving instructions, see <code>sglang/README.md</code>.</p>
   </div>
   <div class="cards fx">
     <a class="card" href="https://github.com/OpenMOSS/MOSS-VL">
-      <div class="ct">GitHub 仓库</div>
-      <div class="cd">源码、推理与微调脚本，以及完整文档。</div>
+      <div class="ct">GitHub Repository</div>
+      <div class="cd">Source code, inference and fine-tuning scripts, and full documentation.</div>
     </a>
     <a class="card" href="https://OpenMOSS.github.io/MOSS-VL-Demo/#/">
-      <div class="ct">交互式 Demo</div>
-      <div class="cd">在线体验 MOSS-VL 的图像与视频理解能力。</div>
+      <div class="ct">Interactive Demo</div>
+      <div class="cd">Experience MOSS-VL's image and video understanding online.</div>
     </a>
     <a class="card" href="https://huggingface.co/spaces/OpenMOSS-Team/MOSS-VL">
       <div class="ct">HuggingFace Space</div>
-      <div class="cd">无需本地部署，直接在浏览器中试用。</div>
+      <div class="cd">Try it in your browser — no local deployment required.</div>
     </a>
   </div>
 </section>
@@ -710,34 +710,34 @@ bash mossvl_finetune/scripts/run_sft_lora.sh</pre>
 <!-- ================= ROADMAP ================= -->
 <section id="s-roadmap">
   <div class="col fx">
-    <div class="eyebrow"><span class="n">09</span> 路线图与待办</div>
-    <h2>已达成 &amp; 即将到来</h2>
+    <div class="eyebrow"><span class="n">09</span> Roadmap</div>
+    <h2>Achieved &amp; Upcoming</h2>
   </div>
   <div class="roadmap fx">
     <div>
-      <h3>✅ 已达成里程碑</h3>
+      <h3>✅ Milestones Achieved</h3>
       <ul>
-        <li>✅ <b>核心架构：</b>实现了交叉注意力旋转位置编码（XRoPE）。</li>
-        <li>✅ <b>高性能基础设施：</b>集成了 Megatron-LM 与 CUDA Flash Attention 3。</li>
-        <li>✅ <b>模型发布：</b>已开源 MOSS-VL-Base 与 MOSS-VL-Instruct 模型。</li>
-        <li>✅ <b>模型推理：</b>已发布支持图像与视频理解的推理代码。</li>
-        <li>✅ <b>实时能力：</b>专用的实时视频理解模型 <a class="inline" href="index_zh.html">MOSS-VL-Realtime</a> 已发布。</li>
+        <li>✅ <b>Core architecture:</b> Implemented Cross-attention Rotary Position Embedding (XRoPE).</li>
+        <li>✅ <b>High-performance infrastructure:</b> Integrated Megatron-LM and CUDA Flash Attention 3.</li>
+        <li>✅ <b>Model release:</b> Open-sourced the MOSS-VL-Base and MOSS-VL-Instruct models.</li>
+        <li>✅ <b>Model inference:</b> Released inference code supporting image and video understanding.</li>
+        <li>✅ <b>Real-time capability:</b> The dedicated real-time video understanding model <a class="inline" href="index.html">MOSS-VL-Realtime</a> has been released.</li>
       </ul>
     </div>
     <div>
-      <h3>🚀 即将到来</h3>
+      <h3>🚀 Coming Soon</h3>
       <ul>
-        <li>⬜ <b>训练引擎：</b>MOSS-VL 的完整训练代码。</li>
-        <li>⬜ <b>RL 后训练：</b>MOSS-VL 系列的人类反馈强化学习（RLHF）。</li>
-        <li>⬜ <b>技术报告：</b>详尽的技术报告与实验分析。</li>
+        <li>⬜ <b>Training engine:</b> The complete training code for MOSS-VL.</li>
+        <li>⬜ <b>RL post-training:</b> RLHF for the MOSS-VL series.</li>
+        <li>⬜ <b>Technical report:</b> A detailed technical report with experimental analysis.</li>
       </ul>
     </div>
   </div>
   <div class="col fx" style="margin-top:2rem">
     <div class="callout" style="margin-left:0;margin-right:0">
-      <span class="k">下一篇</span>
+      <span class="k">Next in the Series</span>
       <ul>
-        <li>本系列的第二篇 <a class="inline" href="index_zh.html"><b>MOSS-VL-Realtime</b></a> 已经发布——让视频理解从「看录像」走向「看直播」。</li>
+        <li>The second post in this series, <a class="inline" href="index.html"><b>MOSS-VL-Realtime</b></a>, has been released — taking video understanding from "watching recordings" to "watching live".</li>
       </ul>
     </div>
   </div>
@@ -748,16 +748,16 @@ bash mossvl_finetune/scripts/run_sft_lora.sh</pre>
 <!-- ================= NEWS ================= -->
 <section id="s-news">
   <div class="col fx">
-    <div class="eyebrow"><span class="n">10</span> 新闻</div>
-    <h2>项目动态</h2>
+    <div class="eyebrow"><span class="n">10</span> News</div>
+    <h2>Project Updates</h2>
     <ul class="news">
-      <li><span class="dt">2026/07/14</span><span>🚀 发布 MOSS-VL-Realtime，同时发布全新的 MOSS-VL-Instruct-0708 与 MOSS-VL-Base-0708。</span></li>
-      <li><span class="dt">2026/04/24</span><span>🚀 SGLang 官方已正式支持 MOSS-VL，详见 sgl-project/sglang。</span></li>
-      <li><span class="dt">2026/04/22</span><span>🚀 推出基于 SGLang 的 MOSS-VL 推理支持；🤗 HuggingFace 推理代码更新至最新版本。</span></li>
-      <li><span class="dt">2026/04/08</span><span>🚀 MOSS-VL-Base-0408 与 MOSS-VL-Instruct-0408 正式开源。</span></li>
-      <li><span class="dt">2026/04/03</span><span>🏆 完成 MOSS-VL 全阶段训练（PT &amp; SFT）。</span></li>
-      <li><span class="dt">2025/10/18</span><span>🔍 启动了 MOSS-VL 项目。</span></li>
-      <li><span class="dt">2025/09/30</span><span>✨ MOSS-Video-Preview 训练完成。</span></li>
+      <li><span class="dt">2026/07/14</span><span>🚀 Released MOSS-VL-Realtime, together with the new MOSS-VL-Instruct-0708 and MOSS-VL-Base-0708.</span></li>
+      <li><span class="dt">2026/04/24</span><span>🚀 SGLang officially supports MOSS-VL; see sgl-project/sglang.</span></li>
+      <li><span class="dt">2026/04/22</span><span>🚀 Released SGLang-based inference support for MOSS-VL; 🤗 updated HuggingFace inference code to the latest version.</span></li>
+      <li><span class="dt">2026/04/08</span><span>🚀 Open-sourced MOSS-VL-Base-0408 and MOSS-VL-Instruct-0408.</span></li>
+      <li><span class="dt">2026/04/03</span><span>🏆 Completed all training stages of MOSS-VL (PT &amp; SFT).</span></li>
+      <li><span class="dt">2025/10/18</span><span>🔍 Kicked off the MOSS-VL project.</span></li>
+      <li><span class="dt">2025/09/30</span><span>✨ Finished training MOSS-Video-Preview.</span></li>
     </ul>
   </div>
 </section>
@@ -767,10 +767,10 @@ bash mossvl_finetune/scripts/run_sft_lora.sh</pre>
 <!-- ================= ACK & CITE ================= -->
 <section id="s-cite">
   <div class="col fx">
-    <div class="eyebrow">致谢与引用</div>
-    <h2>致谢</h2>
-    <p>我们衷心感谢 <b>NVIDIA</b> 提供的 Megatron-LM 框架，以及 <b>Qwen 团队</b> 提供的强大的 Qwen 系列语言模型；这些优秀的开源工作为我们的训练基础设施和核心语言模型奠定了坚实基础。同时，我们也由衷感谢 <b>SGLang 团队</b> 提供的高性能 SGLang 推理服务框架，为 MOSS-VL 的高效部署提供了重要支持。</p>
-    <h3>引用</h3>
+    <div class="eyebrow">Acknowledgements &amp; Citation</div>
+    <h2>Acknowledgements</h2>
+    <p>We sincerely thank <b>NVIDIA</b> for the Megatron-LM framework and the <b>Qwen team</b> for the powerful Qwen series of language models; these outstanding open-source works laid a solid foundation for our training infrastructure and core language model. We are also deeply grateful to the <b>SGLang team</b> for the high-performance SGLang inference and serving framework, which provides vital support for the efficient deployment of MOSS-VL.</p>
+    <h3>Citation</h3>
   </div>
   <div class="cite fx">
 <pre>@misc{moss_vl_2026,
@@ -785,7 +785,7 @@ bash mossvl_finetune/scripts/run_sft_lora.sh</pre>
 
 <footer>
   <span>© 2026 OpenMOSS · Apache-2.0</span>
-  <span>MOSS-VL 系列 · 第一篇（基座模型）</span>
+  <span>MOSS-VL series · Part 1 (Foundation models)</span>
 </footer>
 
 <script>

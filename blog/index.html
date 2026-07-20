@@ -774,10 +774,10 @@ footer{max-width:var(--wide);margin:5rem auto 0;padding:2rem 1.5rem 3rem;
   </div>
 
   <div class="col" style="margin-top: 3.5rem;">
-    <p class="lede"><b>The world has no progress bar.</b>It does not pause, cannot rewind, and waits for no one.</p>
+    <p class="lede"><b>The world has no progress bar.</b> It does not pause, cannot rewind, and waits for no one.</p>
     <p>Yet, the default paradigm of video models remains offline: AI acts like an observer watching a recording after the fact, waiting for the world to end before answering; once answering, it turns a blind eye to newly unfolding events. This "watch first, answer later" mode works well for post-game analysis, but is sluggish in a real world where every second counts.</p>
-    <p><b>We believe that when AI truly steps into the physical world, it must live in the "present continuous tense".</b>We want to equip the model with the ability to handle real-world pacing: judging when to speak, instantly responding to sudden events, quietly observing when information is scarce, and even correcting itself mid-sentence when the scene flips.</p>
-    <p><b>Today, we open-source MOSS-VL-Realtime:</b>An 11B open-weights streaming video understanding model. This is not just a new tech release, but our answer to breaking this "time barrier".</p>
+    <p><b>We believe that when AI truly steps into the physical world, it must live in the "present continuous tense".</b> We want to equip the model with the ability to handle real-world pacing: judging when to speak, instantly responding to sudden events, quietly observing when information is scarce, and even correcting itself mid-sentence when the scene flips.</p>
+    <p><b>Today, we open-source MOSS-VL-Realtime:</b> An 11B open-weights streaming video understanding model. This is not just a new tech release, but our answer to breaking this "time barrier".</p>
     <p>Our goal is simple: shift video understanding entirely from "watching recordings" to "watching live". Watching and answering are no longer sequential; answers are generated and corrected while watching. Every token chooses between speaking and silence. We hope to finally align AI with the physical world, inviting the community to explore the next step of multimodal interaction in an open-source way.</p>
   </div>
 
@@ -791,15 +791,15 @@ footer{max-width:var(--wide);margin:5rem auto 0;padding:2rem 1.5rem 3rem;
     <div class="core-features">
       <div class="core-feature-block">
         <div class="core-feature-title">Anytime Response</div>
-        <p class="core-feature-desc"><b>Breaking the latency of "watch first, answer later".</b>Users can ask at any second, and the model instantly responds based on the current frame.</p>
+        <p class="core-feature-desc"><b>Breaking the latency of "watch first, answer later".</b> Users can ask at any second, and the model instantly responds based on the current frame.</p>
       </div>
       <div class="core-feature-block">
         <div class="core-feature-title">Proactive Silence</div>
-        <p class="core-feature-desc"><b>"letting the bullet fly".</b>Independently remaining silent and waiting when information is insufficient or no key events occur.</p>
+        <p class="core-feature-desc"><b>"letting the bullet fly".</b> Independently remaining silent and waiting when information is insufficient or no key events occur.</p>
       </div>
       <div class="core-feature-block">
         <div class="core-feature-title">Timely Correction</div>
-        <p class="core-feature-desc"><b>Cognition updates dynamically with the scene.</b>Instantly adjusting and correcting previous answers as new frames flow in.</p>
+        <p class="core-feature-desc"><b>Cognition updates dynamically with the scene.</b> Instantly adjusting and correcting previous answers as new frames flow in.</p>
       </div>
     </div>
     
@@ -812,7 +812,7 @@ footer{max-width:var(--wide);margin:5rem auto 0;padding:2rem 1.5rem 3rem;
       <div class="animbar">
         <button id="f2a-replay">&#8635; Replay</button>
         <button id="f2a-pause">&#10074;&#10074; Pause</button>
-        <span class="hint">Auto loop · <b>Move mouse left/right on film strip = progress bar</b>(Pause freezes, drag back rewinds) · Hover below: A & B column matches highlight</span>
+        <span class="hint">Auto loop · <b>Move mouse left/right on film strip = progress bar</b> (Pause freezes, drag back rewinds) · Hover below: A & B column matches highlight</span>
       </div>
 <svg id="fig2anim" viewBox="0 0 1600 850" xmlns="http://www.w3.org/2000/svg" font-family="Helvetica, Arial, sans-serif">
   <rect width="1600" height="850" fill="#FAF9F5"/>
@@ -1102,6 +1102,10 @@ footer{max-width:var(--wide);margin:5rem auto 0;padding:2rem 1.5rem 3rem;
           var fg = document.getElementById("stream-grid-frame");
           if(fg) fg.style.height = (ev.data.height + 2) + "px";
         }
+        if(ev.data && ev.data.type === "offlineBenchHeight"){
+          var f2 = document.getElementById("offline-bench-frame");
+          if(f2) f2.style.height = (ev.data.height + 2) + "px";
+        }
       });
     </script>
   </div>
@@ -1144,7 +1148,7 @@ footer{max-width:var(--wide);margin:5rem auto 0;padding:2rem 1.5rem 3rem;
     <h2>Offline Foundation</h2>
     <p>During this iteration, <b>we</b> systematically refactored and deeply optimized the data system, solidifying a powerful foundation of fundamental capabilities. Thanks to this, the co-generation <b>Instruct model</b> not only maintains a highly robust benchmark profile in offline capabilities, but also achieves significant improvements in fine-grained multimodal perception (V*Bench 89.0, BLINK 78.0) and high-difficulty temporal action grounding tasks. It continues to deliver remarkably stable performance in long-context video understanding (VideoMME, MLVU) and complex document and chart analysis (DocVQA, ChartQA), comprehensively aligning with or even leading top-tier open-source baselines of comparable scale.</p>
     <div style="width: 100%; margin-top: 2rem; margin-bottom: 2rem;">
-        <iframe src="benchmark_table_0714.html" width="100%" height="800px" frameborder="0" style="border: none;"></iframe>
+        <iframe id="offline-bench-frame" src="benchmark_table_0714.html" width="100%" height="800px" scrolling="no" frameborder="0" style="border: none;"></iframe>
     </div>
   </div>
 </section>
