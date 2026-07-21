@@ -24,7 +24,12 @@
 
 
 
-<!-- demo 视频占位:终版素材到位后在此嵌入 -->
+<div align="center">
+  <a href="https://huggingface.co/datasets/henrywch2huggingface/MOSS-VL-Realtime-Demo-Videos/resolve/main/MOSS_VL_1.mp4">
+    <img src="assets/demo-video-cover.jpg" alt="MOSS-VL-Realtime 演示视频" width="100%"/>
+  </a>
+  <p><em>▶ 点击封面观看 MOSS-VL-Realtime 演示视频</em></p>
+</div>
 
 ---
 

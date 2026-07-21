@@ -22,7 +22,12 @@
 
 Unlike the default paradigm of offline video models ("watch first, answer after"), **MOSS-VL-Realtime** is designed for real-time interaction on continuous video streams: it runs multimodal perception and text generation in parallel on a continuously arriving stream, natively supporting multi-turn real-time dialogue and dynamic scene understanding, autonomously deciding when to speak, achieving fine-grained temporal grounding, and streaming its responses.
 
-<!-- Demo video placeholder: embed the final asset here when it lands -->
+<div align="center">
+  <a href="https://huggingface.co/datasets/henrywch2huggingface/MOSS-VL-Realtime-Demo-Videos/resolve/main/MOSS_VL_1.mp4">
+    <img src="assets/demo-video-cover.jpg" alt="MOSS-VL-Realtime demo video" width="100%"/>
+  </a>
+  <p><em>▶ Click the cover to watch the MOSS-VL-Realtime demo</em></p>
+</div>
 
 ---
 
