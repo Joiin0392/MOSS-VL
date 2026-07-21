@@ -12,12 +12,7 @@
     <a href="./README.md"><b>English</b></a> | <a href="./README_zh.md"><b>中文</b></a>
 </p>
 
-<div align="center">
-  <a href="https://huggingface.co/datasets/henrywch2huggingface/MOSS-VL-Realtime-Demo-Videos/resolve/main/MOSS_VL_1.mp4">
-    <img src="assets/demo-video-cover.jpg" alt="MOSS-VL-Realtime 演示视频" width="100%"/>
-  </a>
-  <p><em>▶ 点击封面观看 MOSS-VL-Realtime 演示视频</em></p>
-</div>
+https://github.com/user-attachments/assets/678ec713-0e01-4792-a5b3-c72e483c4d5f
 
 # MOSS-VL
 
