@@ -12,6 +12,13 @@
     <a href="./README.md"><b>English</b></a> | <a href="./README_zh.md"><b>中文</b></a>
 </p>
 
+<div align="center">
+  <a href="https://huggingface.co/datasets/henrywch2huggingface/MOSS-VL-Realtime-Demo-Videos/resolve/main/MOSS_VL_1.mp4">
+    <img src="assets/demo-video-cover.jpg" alt="MOSS-VL-Realtime 演示视频" width="100%"/>
+  </a>
+  <p><em>▶ 点击封面观看 MOSS-VL-Realtime 演示视频</em></p>
+</div>
+
 # MOSS-VL
 
 **MOSS-VL** 是一个基于统一**交叉注意力**（Cross-Attention）架构、专注于长时、实时视频理解的开源模型系列，三个模型均为 11B、开放权重。
@@ -21,15 +28,6 @@
 *   **`MOSS-VL-Base`**：开放的**预训练基座**，提供强大的视频-语言基础表征，便于社区进行继续预训练与下游微调。
 
 区别于传统视频模型“先看完整段、再作答”的离线范式，**MOSS-VL-Realtime** 专为持续视频流上的实时交互而设计：它能在不断到来的视频流上并行执行多模态感知与文本生成，原生支持多轮实时对话与动态场景理解，可自主判断开口时机、实现细粒度的时间定位，并给出流式回应。
-
-
-
-<div align="center">
-  <a href="https://huggingface.co/datasets/henrywch2huggingface/MOSS-VL-Realtime-Demo-Videos/resolve/main/MOSS_VL_1.mp4">
-    <img src="assets/demo-video-cover.jpg" alt="MOSS-VL-Realtime 演示视频" width="100%"/>
-  </a>
-  <p><em>▶ 点击封面观看 MOSS-VL-Realtime 演示视频</em></p>
-</div>
 
 ---
 
