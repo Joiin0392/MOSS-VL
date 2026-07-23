@@ -21,6 +21,26 @@ resolve_query_media_paths = run_inference.resolve_query_media_paths
 
 
 class ResolveQueryMediaPathsTest(unittest.TestCase):
+    def test_normalizes_image_url_content_type_for_model(self):
+        image_url = "https://example.com/images/sample.jpg"
+        query = {
+            "messages": [
+                {
+                    "role": "user",
+                    "content": [
+                        {"type": "image_url", "image_url": image_url},
+                    ],
+                }
+            ],
+        }
+
+        resolved = resolve_query_media_paths(query, Path("/tmp/queries"))
+
+        self.assertEqual(
+            resolved["messages"][0]["content"][0],
+            {"type": "image", "image_url": image_url},
+        )
+
     def test_preserves_remote_image_references(self):
         image_url = "https://example.com/images/sample.jpg?size=large"
         query = {
