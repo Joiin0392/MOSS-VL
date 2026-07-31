@@ -218,16 +218,12 @@ We would like to express our gratitude to **NVIDIA** for the [Megatron-LM](https
 }
 ```
 
-## 🌟 Star History
+## Star History
 
-<a href="https://www.star-history.com/?repos=openmoss%2Fmoss-vl&type=date&legend=top-left">
+<a href="https://www.star-history.com/?repos=OpenMOSS%2FMOSS-VL&type=date&legend=top-left">
  <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=openmoss/moss-vl&type=date&theme=dark&legend=top-left&sealed_token=BXY8sTPECAnXvcpkP2jlDtSjYCKPG-GFAzGR3FLqTirELX994LHRczHmXe3WRBb0DIu3ONeoH3qy37Jwlaub5GoFSIMDeNxAZss1BTzr95HhnkyJ8IFbOzl0cFlOxCwg092wsnIJxCmQGGf5CVBm0183k960W4huA9W_2YZ5R3BKF_QGotWo7lsBeDJK" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=openmoss/moss-vl&type=date&legend=top-left&sealed_token=BXY8sTPECAnXvcpkP2jlDtSjYCKPG-GFAzGR3FLqTirELX994LHRczHmXe3WRBb0DIu3ONeoH3qy37Jwlaub5GoFSIMDeNxAZss1BTzr95HhnkyJ8IFbOzl0cFlOxCwg092wsnIJxCmQGGf5CVBm0183k960W4huA9W_2YZ5R3BKF_QGotWo7lsBeDJK" />
-   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=openmoss/moss-vl&type=date&legend=top-left&sealed_token=BXY8sTPECAnXvcpkP2jlDtSjYCKPG-GFAzGR3FLqTirELX994LHRczHmXe3WRBb0DIu3ONeoH3qy37Jwlaub5GoFSIMDeNxAZss1BTzr95HhnkyJ8IFbOzl0cFlOxCwg092wsnIJxCmQGGf5CVBm0183k960W4huA9W_2YZ5R3BKF_QGotWo7lsBeDJK" />
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=OpenMOSS/MOSS-VL&type=date&theme=dark&legend=top-left&sealed_token=UVh2Xw5d8MlxhWel1HsfqZNi2n0Hw0mhhqyXh4qlawxvAfwCNo45VRoy5_DYEYqLRWVgk_jzncaAFFWO_nnrUDAJVH8IU93Pvgssl-oHaTEsnp9VatppJPgWOLyzuwec66AasWOik9CcipiBoI_sDm0nAPh9cyUuNcUdKyKpbiP1nHkqLvf5Ck9TtgLB" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=OpenMOSS/MOSS-VL&type=date&legend=top-left&sealed_token=UVh2Xw5d8MlxhWel1HsfqZNi2n0Hw0mhhqyXh4qlawxvAfwCNo45VRoy5_DYEYqLRWVgk_jzncaAFFWO_nnrUDAJVH8IU93Pvgssl-oHaTEsnp9VatppJPgWOLyzuwec66AasWOik9CcipiBoI_sDm0nAPh9cyUuNcUdKyKpbiP1nHkqLvf5Ck9TtgLB" />
+   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=OpenMOSS/MOSS-VL&type=date&legend=top-left&sealed_token=UVh2Xw5d8MlxhWel1HsfqZNi2n0Hw0mhhqyXh4qlawxvAfwCNo45VRoy5_DYEYqLRWVgk_jzncaAFFWO_nnrUDAJVH8IU93Pvgssl-oHaTEsnp9VatppJPgWOLyzuwec66AasWOik9CcipiBoI_sDm0nAPh9cyUuNcUdKyKpbiP1nHkqLvf5Ck9TtgLB" />
  </picture>
 </a>
-
-<p align="center">
-Built with ❤️ by the <b>OpenMOSS Team</b>
-</p>
