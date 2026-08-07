@@ -141,6 +141,17 @@ print([item["text"] for item in result["results"]])
 
 ## 🛠️ Advanced Resources & Ecosystem
 
+### Specialized FlashAttention-3 Backend
+
+The [`flash-attention-src/`](./flash-attention-src/) directory contains the
+FlashAttention-3 backend used by MOSS-VL cross-attention. It adds the
+`cross_kv_boundary` interface, which represents the visible KV prefix of each
+query row with one `int32` value instead of materializing a dense attention
+mask. The source is derived from upstream FlashAttention and is bundled here
+with its original license and attribution. See
+[`flash-attention-src/README.md`](./flash-attention-src/README.md) for the mask
+contract, supported paths, build instructions, and source lineage.
+
 ### Deployment & Inference Engines
 MOSS-VL can also be efficiently deployed with the following inference backends:
 - **SGLang**: see [`sglang/README.md`](./sglang/README.md)

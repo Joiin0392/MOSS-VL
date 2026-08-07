@@ -141,6 +141,16 @@ print([item["text"] for item in result["results"]])
 
 ## 🛠️ 进阶资源与生态
 
+### MOSS-VL 定制 FlashAttention-3 后端
+
+[`flash-attention-src/`](./flash-attention-src/) 目录提供 MOSS-VL
+交叉注意力使用的定制 FlashAttention-3 后端。该版本增加了
+`cross_kv_boundary` 接口，用每个 query 对应的一个 `int32` 边界表示可见
+KV 前缀，避免构造稠密注意力掩码。它是基于上游 FlashAttention 修改的
+MOSS-VL 专用版本，并非通用 FlashAttention 发行版。具体掩码约定、支持范围、
+构建方法、上游版本和许可证信息见
+[`flash-attention-src/README.md`](./flash-attention-src/README.md)。
+
 ### 部署与推理引擎
 本模型同时支持以下推理后端引擎进行高效部署：
 - **SGLang**: 详见 [`sglang/README_zh.md`](./sglang/README_zh.md)

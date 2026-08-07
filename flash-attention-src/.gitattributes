@@ -1,0 +1,13 @@
+# Preserve the exact formatting of this imported upstream source snapshot.
+* -whitespace conflict-marker-size=100 linguist-vendored
+
+# Highlight the MOSS-VL-maintained FA3 backend and its documentation.
+README.md -linguist-vendored
+hopper/** -linguist-vendored
+
+# Prevent binary assets from being rendered as text diffs.
+*.gif binary
+*.jpeg binary
+*.jpg binary
+*.pdf binary
+*.png binary

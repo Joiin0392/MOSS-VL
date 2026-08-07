@@ -1,7 +1,7 @@
 README_compare.md
 README_bk.md
 README_bak.md
-model/
+/model/
 assets/benchmark_table.png
 
 # Python cache
@@ -10,7 +10,7 @@ __pycache__/
 .ipynb_checkpoints/
 
 # Training outputs
-checkpoints/
+/checkpoints/
 
 # Conductor control room (session-local state; not shared via git)
 /.conductor/
