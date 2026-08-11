@@ -28,5 +28,8 @@ __pycache__/
 /image.png
 /streaming_benchmark_grid.png
 
+# Local realtime inference drafts (not distributed)
+/realtime_inference/API_SERVICE_zh.md
+
 # Local realtime inference media (not distributed)
 /realtime_inference/data/BV1qo4y1872f_aerial-xinjiang_1080P.mp4
