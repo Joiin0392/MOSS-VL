@@ -162,13 +162,13 @@ We provide a lightweight SFT framework built on HuggingFace `transformers.Traine
 
 ```bash
 # Full-parameter SFT (vision encoder frozen by default)
-bash mossvl_finetune/scripts/run_sft.sh
+bash finetune/scripts/run_sft.sh
 
 # LoRA SFT
 pip install -i https://pypi.org/simple peft
-bash mossvl_finetune/scripts/run_sft_lora.sh
+bash finetune/scripts/run_sft_lora.sh
 ```
-See [`mossvl_finetune/README.md`](mossvl_finetune/README.md) for full documentation.
+See [`finetune/README.md`](finetune/README.md) for full documentation.
 
 ### Model Download
 

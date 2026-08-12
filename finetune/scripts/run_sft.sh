@@ -11,7 +11,7 @@ NPROC_PER_NODE="${NPROC_PER_NODE:-$(nvidia-smi --list-gpus | wc -l)}"
 
 # ---- Paths ----------------------------------------------------------------
 CHECKPOINT="/path/to/checkpoint"
-DATA_PATH="mossvl_finetune/demo/sft_data.json"
+DATA_PATH="finetune/demo/sft_data.json"
 OUTPUT_DIR="./checkpoints/moss_vl_sft"
 
 # ---- Launch ---------------------------------------------------------------
@@ -19,7 +19,7 @@ torchrun \
     --nproc_per_node="$NPROC_PER_NODE" \
     --master_addr="$MASTER_ADDR" \
     --master_port="$MASTER_PORT" \
-    mossvl_finetune/train.py \
+    finetune/train.py \
     \
     --model_name_or_path "$CHECKPOINT" \
     --data_path "$DATA_PATH" \

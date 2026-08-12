@@ -612,11 +612,11 @@ print(texts)</pre>
     <p>We provide a lightweight SFT fine-tuning framework built on HuggingFace <code>transformers.Trainer</code>, supporting both full-parameter training and LoRA, with independent control over whether the vision encoder, language model, and LM head participate in training.</p>
   </div>
 <pre class="code"><span class="cmt"># Full-parameter SFT (vision encoder frozen by default)</span>
-bash mossvl_finetune/scripts/run_sft.sh
+bash finetune/scripts/run_sft.sh
 
 <span class="cmt"># LoRA SFT</span>
 pip install -i https://pypi.org/simple peft
-bash mossvl_finetune/scripts/run_sft_lora.sh</pre>
+bash finetune/scripts/run_sft_lora.sh</pre>
   <div class="col fx">
     <p>Training data uses a JSON structure compatible with the inference query format, requiring only an extra <code>response</code> field:</p>
   </div>
@@ -629,7 +629,7 @@ bash mossvl_finetune/scripts/run_sft_lora.sh</pre>
   }
 ]</pre>
   <div class="col fx">
-    <p>Multi-turn dialogue formats are also supported; see <code>mossvl_finetune/README.md</code> for full documentation.</p>
+    <p>Multi-turn dialogue formats are also supported; see <code>finetune/README.md</code> for full documentation.</p>
   </div>
 </section>
 

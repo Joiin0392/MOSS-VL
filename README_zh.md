@@ -161,13 +161,13 @@ MOSS-VL 专用版本，并非通用 FlashAttention 发行版。具体掩码约�
 
 ```bash
 # 全参数 SFT(默认冻结视觉编码器)
-bash mossvl_finetune/scripts/run_sft.sh
+bash finetune/scripts/run_sft.sh
 
 # LoRA SFT
 pip install -i https://pypi.org/simple peft
-bash mossvl_finetune/scripts/run_sft_lora.sh
+bash finetune/scripts/run_sft_lora.sh
 ```
-详细文档请参阅 [`mossvl_finetune/README.md`](mossvl_finetune/README.md)。
+详细文档请参阅 [`finetune/README.md`](finetune/README.md)。
 
 ### 模型下载汇总
 

@@ -5,7 +5,7 @@ Supervised fine-tuning framework for MOSS-VL, built on HuggingFace `transformers
 ## Directory Structure
 
 ```
-mossvl_finetune/
+finetune/
 ├── train.py          # Training entry point
 ├── data.py           # Dataset and data collator
 ├── arguments.py      # Argument dataclasses
@@ -164,21 +164,21 @@ In the example above, there are two segmented video entries and each entry has o
 ### Full-Parameter SFT
 
 ```bash
-bash mossvl_finetune/scripts/run_sft.sh
+bash finetune/scripts/run_sft.sh
 ```
 
 ### LoRA SFT
 
 ```bash
-bash mossvl_finetune/scripts/run_sft_lora.sh
+bash finetune/scripts/run_sft_lora.sh
 ```
 
 ### Single-GPU Quick Test
 
 ```bash
-python mossvl_finetune/train.py \
+python finetune/train.py \
   --model_name_or_path /path/to/checkpoint \
-  --data_path mossvl_finetune/demo/sft_data.json \
+  --data_path finetune/demo/sft_data.json \
   --output_dir ./checkpoints/test \
   --bf16 True \
   --per_device_train_batch_size 1 \
@@ -238,7 +238,7 @@ When LoRA is enabled (`--lora_enable True`), all base parameters are frozen and 
 Pass a DeepSpeed config via `--deepspeed`:
 
 ```bash
-torchrun --nproc_per_node=8 mossvl_finetune/train.py \
+torchrun --nproc_per_node=8 finetune/train.py \
   ... \
   --deepspeed ds_config_zero2.json
 ```

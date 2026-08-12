@@ -612,11 +612,11 @@ print(texts)</pre>
     <p>我们提供了一套基于 HuggingFace <code>transformers.Trainer</code> 的轻量级 SFT 微调框架，支持全参数训练与 LoRA，且可独立控制视觉编码器、语言模型和 LM Head 是否参与训练。</p>
   </div>
 <pre class="code"><span class="cmt"># 全参数 SFT（默认冻结视觉编码器）</span>
-bash mossvl_finetune/scripts/run_sft.sh
+bash finetune/scripts/run_sft.sh
 
 <span class="cmt"># LoRA SFT</span>
 pip install -i https://pypi.org/simple peft
-bash mossvl_finetune/scripts/run_sft_lora.sh</pre>
+bash finetune/scripts/run_sft_lora.sh</pre>
   <div class="col fx">
     <p>训练数据采用与推理查询格式兼容的 JSON 结构，只需额外添加 <code>response</code> 字段：</p>
   </div>
@@ -629,7 +629,7 @@ bash mossvl_finetune/scripts/run_sft_lora.sh</pre>
   }
 ]</pre>
   <div class="col fx">
-    <p>同时支持多轮对话格式，详细文档请参阅 <code>mossvl_finetune/README.md</code>。</p>
+    <p>同时支持多轮对话格式，详细文档请参阅 <code>finetune/README.md</code>。</p>
   </div>
 </section>
 

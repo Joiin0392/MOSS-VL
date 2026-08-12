@@ -2,9 +2,9 @@
 
 Usage::
 
-    torchrun --nproc_per_node=8 mossvl_finetune/train.py \\
+    torchrun --nproc_per_node=8 finetune/train.py \\
         --model_name_or_path /path/to/checkpoint \\
-        --data_path mossvl_finetune/demo/sft_data.json \\
+        --data_path finetune/demo/sft_data.json \\
         --output_dir ./checkpoints \\
         --bf16 True \\
         --per_device_train_batch_size 1 \\

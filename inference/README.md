@@ -76,7 +76,7 @@ Each query can use either of the following formats:
 
 Optional fields such as `media_kwargs`, `generate_kwargs`, and `system_prompt` are also supported.
 
-For JSONL inputs, the script also accepts the standard SFT training formats documented in `mossvl_finetune/README.md`:
+For JSONL inputs, the script also accepts the standard SFT training formats documented in `finetune/README.md`:
 
 - `messages` or `conversations` with top-level `images` / `videos`
 - `prompt` / `response` with optional `images` / `videos`
