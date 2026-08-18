@@ -214,7 +214,7 @@ We would like to express our gratitude to **NVIDIA** for the [Megatron-LM](https
 
 ## 📜 Citation
 ```bibtex
-@misc{mossvl2026,
+@misc{mossvl,
   title         = {MOSS-VL Technical Report},
   author        = {Wang, Pengyu and Tan, Chenkun and Zhou, Shaojun and Zhou, Qirui and Chen, Yanxin and He, Xingyang and Zeng, Huazheng and Cheng, Jijun and Wang, Chenghao and Qian, Xiaomeng and Wang, Pengfei and Huang, Zhan and Gao, Shanqing and Huang, Wei and Cao, Longjun and Ran, Wu and Liu, Jie and Zhu, Changtai and Wang, Hongkai and Tian, Yixian and Liu, Chenghao and Ye, Zhen and Wang, Xinghao and Jiang, Botian and Feng, Guoguo and Fei, Zhaoye and Li, Ruixiao and Chen, Mingshu and Gao, Yang and Cheng, Qinyuan and Li, Shimin and Qiu, Xipeng},
   year          = {2026},
@@ -224,7 +224,7 @@ We would like to express our gratitude to **NVIDIA** for the [Megatron-LM](https
   url           = {https://arxiv.org/abs/2608.15045}
 }
 
-@misc{mossvideopreview2026,
+@misc{mossvideopreview,
   title         = {{MOSS-Video-Preview: Toward Real-Time Video Understanding via Cross-Attention}},
   author        = {Pengyu Wang and Chenkun Tan and Shaojun Zhou and Wei Huang and Qirui Zhou and Zhan Huang and Zhen Ye and Jijun Cheng and Xiaomeng Qian and Yanxin Chen and Xingyang He and Huazheng Zeng and Chenghao Wang and Pengfei Wang and Hongkai Wang and Shanqing Gao and Yixian Tian and Chenghao Liu and Xinghao Wang and Botian Jiang and Xipeng Qiu},
   year          = {2026},
