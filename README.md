@@ -214,7 +214,7 @@ We would like to express our gratitude to **NVIDIA** for the [Megatron-LM](https
 
 ## 📜 Citation
 ```bibtex
-@misc{wang2026mossvltechnicalreport,
+@misc{mossvl2026,
   title         = {MOSS-VL Technical Report},
   author        = {Wang, Pengyu and Tan, Chenkun and Zhou, Shaojun and Zhou, Qirui and Chen, Yanxin and He, Xingyang and Zeng, Huazheng and Cheng, Jijun and Wang, Chenghao and Qian, Xiaomeng and Wang, Pengfei and Huang, Zhan and Gao, Shanqing and Huang, Wei and Cao, Longjun and Ran, Wu and Liu, Jie and Zhu, Changtai and Wang, Hongkai and Tian, Yixian and Liu, Chenghao and Ye, Zhen and Wang, Xinghao and Jiang, Botian and Feng, Guoguo and Fei, Zhaoye and Li, Ruixiao and Chen, Mingshu and Gao, Yang and Cheng, Qinyuan and Li, Shimin and Qiu, Xipeng},
   year          = {2026},
