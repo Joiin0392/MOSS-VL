@@ -2023,15 +2023,28 @@ class ServerArgs:
                 logger.info("Use triton as default attention backend for Gemma4")
         elif model_arch == "MossVLForConditionalGeneration":
             if self.is_attention_backend_not_set():
-                self.prefill_attention_backend = "flashinfer"
-                logger.info(
-                    "Use flashinfer as default prefill attention backend for Moss-VL"
-                )
+                if self.device == "npu":
+                    self.attention_backend = "ascend"
+                    logger.info(
+                        "Use ascend as default attention backend for Moss-VL on NPU"
+                    )
+                else:
+                    self.prefill_attention_backend = "flashinfer"
+                    logger.info(
+                        "Use flashinfer as default prefill attention backend for Moss-VL"
+                    )
             prefill_backend, _ = self.get_attention_backends()
-            assert prefill_backend == "flashinfer", (
-                "MossVLForConditionalGeneration requires flashinfer prefill "
-                "attention backend for cross-attention custom mask support."
-            )
+            if self.device != "npu":
+                assert prefill_backend == "flashinfer", (
+                    "MossVLForConditionalGeneration requires flashinfer prefill "
+                    "attention backend for cross-attention custom mask support."
+                )
+            else:
+                logger.warning(
+                    "MossVLForConditionalGeneration on NPU: cross-attention custom "
+                    "mask is not supported on ascend backend. All vision tokens "
+                    "will be visible to all text tokens during prefill."
+                )
         elif model_arch in ["Exaone4ForCausalLM", "ExaoneMoEForCausalLM"]:
             if hf_config.sliding_window_pattern is not None:
                 logger.warning(
