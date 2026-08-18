@@ -30,6 +30,8 @@ A local checkpoint or a different Hugging Face model ID can be selected with `--
 
 Run commands from the root of this repository.
 
+> **NPU note:** Replace `CUDA_VISIBLE_DEVICES=0` with `ASCEND_VISIBLE_DEVICES=0` for Ascend NPU. Ensure CANN environment is sourced (`source /usr/local/Ascend/ascend-toolkit/set_env.sh`) before running.
+
 Offline video simulated as a realtime stream:
 
 ```bash

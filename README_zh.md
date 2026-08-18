@@ -84,10 +84,21 @@ MOSS-VL-Realtime 的流式交互能力显著提升，在多项流式视频理解
 ## 🚀 快速上手
 
 ### 环境配置
+
+**NVIDIA GPU (CUDA):**
 ```bash
 conda create -n moss_vl python=3.12 pip -y
 conda activate moss_vl
 pip install -i https://pypi.org/simple --no-build-isolation -r requirements.txt
+```
+
+**华为昇腾 NPU (CANN 9.0.0+):**
+```bash
+conda create -n moss_vl python=3.12 pip -y
+conda activate moss_vl
+pip install -i https://pypi.org/simple --no-build-isolation -r requirements-npu.txt
+# 运行前确保 CANN 环境已加载：
+source /usr/local/Ascend/ascend-toolkit/set_env.sh
 ```
 
 ### 实时推理
@@ -95,7 +106,17 @@ pip install -i https://pypi.org/simple --no-build-isolation -r requirements.txt
 实时推理会增量接收带时间戳的视频帧，因此模型可以在持续感知视频流的同时作答，并随时接收新的问题。最快的本地视频回放方式是：
 
 ```bash
+# NVIDIA GPU
 CUDA_VISIBLE_DEVICES=0 python realtime_inference/run_online_inference.py \
+  --checkpoint OpenMOSS-Team/MOSS-VL-Realtime \
+  --source video \
+  --video path/to/example.mp4 \
+  --sample-fps 1 \
+  --playback-speed 1 \
+  --max-frames 256
+
+# 昇腾 NPU
+ASCEND_VISIBLE_DEVICES=0 python realtime_inference/run_online_inference.py \
   --checkpoint OpenMOSS-Team/MOSS-VL-Realtime \
   --source video \
   --video path/to/example.mp4 \

@@ -84,10 +84,21 @@ We have systematically restructured and deeply optimized our data system, compre
 ## 🚀 Quick Start
 
 ### Environment Setup
+
+**NVIDIA GPU (CUDA):**
 ```bash
 conda create -n moss_vl python=3.12 pip -y
 conda activate moss_vl
 pip install -i https://pypi.org/simple --no-build-isolation -r requirements.txt
+```
+
+**Huawei Ascend NPU (CANN 9.0.0+):**
+```bash
+conda create -n moss_vl python=3.12 pip -y
+conda activate moss_vl
+pip install -i https://pypi.org/simple --no-build-isolation -r requirements-npu.txt
+# Ensure CANN environment is sourced before running:
+source /usr/local/Ascend/ascend-toolkit/set_env.sh
 ```
 
 ### Real-time Inference
@@ -95,7 +106,17 @@ pip install -i https://pypi.org/simple --no-build-isolation -r requirements.txt
 Real-time inference consumes timestamped frames incrementally, so the model can keep perceiving a live video stream while it answers and can accept new questions at any time. The fastest way to replay a local video against its media clock is:
 
 ```bash
+# NVIDIA GPU
 CUDA_VISIBLE_DEVICES=0 python realtime_inference/run_online_inference.py \
+  --checkpoint OpenMOSS-Team/MOSS-VL-Realtime \
+  --source video \
+  --video path/to/example.mp4 \
+  --sample-fps 1 \
+  --playback-speed 1 \
+  --max-frames 256
+
+# Ascend NPU
+ASCEND_VISIBLE_DEVICES=0 python realtime_inference/run_online_inference.py \
   --checkpoint OpenMOSS-Team/MOSS-VL-Realtime \
   --source video \
   --video path/to/example.mp4 \
