@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-        💻 <a href="https://github.com/OpenMOSS/MOSS-VL"><b>GitHub</b></a>&nbsp&nbsp | &nbsp&nbsp🤗 <a href="https://huggingface.co/collections/OpenMOSS-Team/moss-vl">Hugging Face</a>&nbsp&nbsp | &nbsp&nbsp🤖 <a href="https://modelscope.cn/collections/openmoss/MOSS-VL">ModelScope</a>&nbsp&nbsp | &nbsp&nbsp📑 <a href="https://openmoss.ai/MOSS-VL/index_zh.html">Blog</a>&nbsp&nbsp | &nbsp&nbsp📚 <a href="https://arxiv.org/abs/2606.07639">Paper</a>
+        💻 <a href="https://github.com/OpenMOSS/MOSS-VL"><b>GitHub</b></a>&nbsp&nbsp | &nbsp&nbsp🤗 <a href="https://huggingface.co/collections/OpenMOSS-Team/moss-vl">Hugging Face</a>&nbsp&nbsp | &nbsp&nbsp🤖 <a href="https://modelscope.cn/collections/openmoss/MOSS-VL">ModelScope</a>&nbsp&nbsp | &nbsp&nbsp📑 <a href="https://openmoss.ai/MOSS-VL/index_zh.html">Blog</a>&nbsp&nbsp | &nbsp&nbsp📚 <a href="https://arxiv.org/abs/2608.15045">Paper</a>
 <br>
 🚀 <a href="https://huggingface.co/spaces/OpenMOSS-Team/MOSS-VL">HF Space</a>&nbsp&nbsp | &nbsp&nbsp💬 <a href="assets/feishu.jpg">Feishu (飞书)</a>&nbsp&nbsp | &nbsp&nbsp🫨 <a href="https://discord.gg/JBZEkJ4Egj">Discord</a>&nbsp&nbsp | &nbsp&nbsp📜 <a href="./LICENSE">License</a>
 </p>
@@ -46,6 +46,7 @@ https://github.com/user-attachments/assets/678ec713-0e01-4792-a5b3-c72e483c4d5f
 ---
 
 ## 🔥 新闻
+- **2026/08/15**: 📚 [MOSS-VL 技术报告](https://arxiv.org/abs/2608.15045)已在 arXiv 发布，系统介绍模型架构、训练课程、实时推理系统，以及完整的离线与流式评测结果。
 - **2026/08/14**: 🤝 MOSS-VL 已接入 [LlamaFactory](https://github.com/hiyouga/LlamaFactory) 主线，LoRA 与全参数微调工作流现已开箱即用。详见[中文教程](https://blog.llamafactory.net/posts/moss_vl_finetuning/)或[英文教程](https://blog.llamafactory.net/en/posts/moss_vl_finetuning/)，也可参阅[模思智能博客](https://mosi.cn/blog/moss-vl-llamafactory)。
 - **2026/08/11**: ⚡ 发布 MOSS-VL 的 24 GiB 量化模型，Instruct-0708 与 Realtime 均提供 FP8 和 NF4 两种版本：**MOSS-VL-Instruct-0708-FP8**（[Hugging Face](https://huggingface.co/OpenMOSS-Team/MOSS-VL-Instruct-0708-FP8) | [ModelScope](https://modelscope.cn/models/openmoss/MOSS-VL-Instruct-0708-FP8)）、**MOSS-VL-Instruct-0708-NF4**（[Hugging Face](https://huggingface.co/OpenMOSS-Team/MOSS-VL-Instruct-0708-NF4) | [ModelScope](https://www.modelscope.cn/models/openmoss/MOSS-VL-Instruct-0708-NF4)）、**MOSS-VL-Realtime-FP8**（[Hugging Face](https://huggingface.co/OpenMOSS-Team/MOSS-VL-Realtime-FP8) | [ModelScope](https://www.modelscope.cn/models/openmoss/MOSS-VL-Realtime-FP8)）和 **MOSS-VL-Realtime-NF4**（[Hugging Face](https://huggingface.co/OpenMOSS-Team/MOSS-VL-Realtime-NF4) | [ModelScope](https://modelscope.cn/models/openmoss/MOSS-VL-Realtime-NF4)），支持在单张 24 GB NVIDIA GPU 上高效推理。
 - **2026/07/14**: 🏆 MOSS-VL-Realtime 在 **PA@OmniMMI** 上取得 **66.0**，并获 [OmniMMI 官方仓库](https://github.com/OmniMMI/OmniMMI)祝贺。
@@ -202,7 +203,7 @@ bash finetune/scripts/run_sft_lora.sh
 ### 🚀 即将到来 (Upcoming)
 - [ ] **训练引擎:** MOSS-VL 的完整训练代码。
 - [ ] **RL 后训练:** MOSS-VL 系列的强化学习后训练。
-- [ ] **技术报告:** 详尽的技术报告与实验分析。
+- [x] **技术报告:** 已发布 MOSS-VL 技术报告。
 - [ ] **Cookbook:** 任务级可运行 notebook。
 
 ---
@@ -212,12 +213,14 @@ bash finetune/scripts/run_sft_lora.sh
 
 ## 📜 引用
 ```bibtex
-@misc{moss_vl_2026,
-  title         = {{MOSS-VL Technical Report}},
-  author        = {OpenMOSS Team},
+@misc{wang2026mossvltechnicalreport,
+  title         = {MOSS-VL Technical Report},
+  author        = {Wang, Pengyu and Tan, Chenkun and Zhou, Shaojun and Zhou, Qirui and Chen, Yanxin and He, Xingyang and Zeng, Huazheng and Cheng, Jijun and Wang, Chenghao and Qian, Xiaomeng and Wang, Pengfei and Huang, Zhan and Gao, Shanqing and Huang, Wei and Cao, Longjun and Ran, Wu and Liu, Jie and Zhu, Changtai and Wang, Hongkai and Tian, Yixian and Liu, Chenghao and Ye, Zhen and Wang, Xinghao and Jiang, Botian and Feng, Guoguo and Fei, Zhaoye and Li, Ruixiao and Chen, Mingshu and Gao, Yang and Cheng, Qinyuan and Li, Shimin and Qiu, Xipeng},
   year          = {2026},
-  howpublished  = {\url{https://github.com/OpenMOSS/MOSS-VL}},
-  note          = {GitHub repository}
+  eprint        = {2608.15045},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.CV},
+  url           = {https://arxiv.org/abs/2608.15045}
 }
 
 @misc{mossvideopreview2026,

@@ -238,6 +238,7 @@ footer{max-width:var(--wide);margin:5rem auto 0;padding:2rem 1.5rem 3rem;
       <a href="#s-start">开始使用</a>
       <div style="width:1px;height:14px;background:var(--grid);margin:0 .5rem;"></div>
       <a href="https://github.com/OpenMOSS/MOSS-VL">GitHub</a>
+      <a href="https://arxiv.org/abs/2608.15045">论文</a>
       <a href="https://OpenMOSS.github.io/MOSS-VL-Demo/#/">Demo</a>
       <span class="lang"><b>中</b> | <a href="moss-vl.html">EN</a></span>
     </div>
@@ -712,6 +713,7 @@ bash finetune/scripts/run_sft_lora.sh</pre>
         <li>✅ <b>模型发布：</b>已开源 MOSS-VL-Base 与 MOSS-VL-Instruct 模型。</li>
         <li>✅ <b>模型推理：</b>已发布支持图像与视频理解的推理代码。</li>
         <li>✅ <b>实时能力：</b>专用的实时视频理解模型 <a class="inline" href="index_zh.html">MOSS-VL-Realtime</a> 已发布。</li>
+        <li>✅ <b>技术报告：</b>已发布 <a class="inline" href="https://arxiv.org/abs/2608.15045">MOSS-VL 技术报告</a>。</li>
       </ul>
     </div>
     <div>
@@ -719,7 +721,6 @@ bash finetune/scripts/run_sft_lora.sh</pre>
       <ul>
         <li>⬜ <b>训练引擎：</b>MOSS-VL 的完整训练代码。</li>
         <li>⬜ <b>RL 后训练：</b>MOSS-VL 系列的人类反馈强化学习（RLHF）。</li>
-        <li>⬜ <b>技术报告：</b>详尽的技术报告与实验分析。</li>
       </ul>
     </div>
   </div>
@@ -741,6 +742,7 @@ bash finetune/scripts/run_sft_lora.sh</pre>
     <div class="eyebrow"><span class="n">10</span> 新闻</div>
     <h2>项目动态</h2>
     <ul class="news">
+      <li><span class="dt">2026/08/15</span><span>📚 <a class="inline" href="https://arxiv.org/abs/2608.15045">MOSS-VL 技术报告</a>已在 arXiv 发布，系统介绍模型架构、训练课程、实时推理系统，以及完整的离线与流式评测结果。</span></li>
       <li><span class="dt">2026/08/14</span><span>🤝 MOSS-VL 已接入 <a class="inline" href="https://github.com/hiyouga/LlamaFactory">LlamaFactory</a> 主线，LoRA 与全参数微调工作流现已开箱即用。详见 <a class="inline" href="https://blog.llamafactory.net/posts/moss_vl_finetuning/">中文教程</a> 或 <a class="inline" href="https://blog.llamafactory.net/en/posts/moss_vl_finetuning/">英文教程</a>，也可参阅 <a class="inline" href="https://mosi.cn/blog/moss-vl-llamafactory">模思智能博客</a>。</span></li>
       <li><span class="dt">2026/07/14</span><span>🏆 MOSS-VL-Realtime 在 <b>PA@OmniMMI</b> 上取得 <b>66.0</b>，并获 <a class="inline" href="https://github.com/OmniMMI/OmniMMI">OmniMMI 官方仓库</a>祝贺。</span></li>
       <li><span class="dt">2026/07/14</span><span>🚀 发布 MOSS-VL-Realtime，同时发布全新的 MOSS-VL-Instruct-0708 与 MOSS-VL-Base-0708。</span></li>
@@ -765,12 +767,14 @@ bash finetune/scripts/run_sft_lora.sh</pre>
     <h3>引用</h3>
   </div>
   <div class="cite fx">
-<pre>@misc{moss_vl_2026,
-  title         = {{MOSS-VL Technical Report}},
-  author        = {OpenMOSS Team},
+<pre>@misc{wang2026mossvltechnicalreport,
+  title         = {MOSS-VL Technical Report},
+  author        = {Wang, Pengyu and Tan, Chenkun and Zhou, Shaojun and Zhou, Qirui and Chen, Yanxin and He, Xingyang and Zeng, Huazheng and Cheng, Jijun and Wang, Chenghao and Qian, Xiaomeng and Wang, Pengfei and Huang, Zhan and Gao, Shanqing and Huang, Wei and Cao, Longjun and Ran, Wu and Liu, Jie and Zhu, Changtai and Wang, Hongkai and Tian, Yixian and Liu, Chenghao and Ye, Zhen and Wang, Xinghao and Jiang, Botian and Feng, Guoguo and Fei, Zhaoye and Li, Ruixiao and Chen, Mingshu and Gao, Yang and Cheng, Qinyuan and Li, Shimin and Qiu, Xipeng},
   year          = {2026},
-  howpublished  = {\url{https://github.com/OpenMOSS/MOSS-VL}},
-  note          = {GitHub repository}
+  eprint        = {2608.15045},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.CV},
+  url           = {https://arxiv.org/abs/2608.15045}
 }</pre>
   </div>
 </section>
