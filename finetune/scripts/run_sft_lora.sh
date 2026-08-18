@@ -7,7 +7,11 @@ set -euo pipefail
 # ---- Distributed config --------------------------------------------------
 MASTER_ADDR="${MASTER_ADDR:-127.0.0.1}"
 MASTER_PORT="${MASTER_PORT:-$(shuf -i 20000-29999 -n 1)}"
-NPROC_PER_NODE="${NPROC_PER_NODE:-$(nvidia-smi --list-gpus | wc -l)}"
+if command -v npu-smi &>/dev/null; then
+    NPROC_PER_NODE="${NPROC_PER_NODE:-$(npu-smi info -l | grep -c 'NPU ID')}"
+else
+    NPROC_PER_NODE="${NPROC_PER_NODE:-$(nvidia-smi --list-gpus 2>/dev/null | wc -l)}"
+fi
 
 # ---- Paths ----------------------------------------------------------------
 CHECKPOINT="/path/to/checkpoint"
