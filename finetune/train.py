@@ -15,12 +15,16 @@ from __future__ import annotations
 
 import logging
 import pathlib
+import sys
 from typing import Dict
+
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent))
 
 import torch
 import transformers
 from transformers import AutoModelForCausalLM, AutoProcessor, Trainer
 
+import npu_utils
 from arguments import ModelArguments, DataArguments, TrainingArguments
 from data import MossVLSFTDataset, MossVLDataCollator
 
@@ -36,7 +40,7 @@ def safe_save_model_for_hf_trainer(
     output_dir: str,
 ) -> None:
     if trainer.deepspeed:
-        torch.cuda.synchronize()
+        npu_utils.synchronize()
         trainer.save_model(output_dir)
         return
     state_dict = trainer.model.state_dict()
@@ -80,6 +84,7 @@ def log_trainable_summary(model) -> None:
 # ------------------------------------------------------------------
 
 def train() -> None:
+    npu_utils.print_device_info()
     parser = transformers.HfArgumentParser(
         (ModelArguments, DataArguments, TrainingArguments),
     )
@@ -102,7 +107,7 @@ def train() -> None:
         model_args.model_name_or_path,
         trust_remote_code=True,
         torch_dtype=torch.bfloat16,
-        attn_implementation="flash_attention_2",
+        attn_implementation=npu_utils.get_default_attn_impl(),
     )
     model.config.use_cache = False
 
