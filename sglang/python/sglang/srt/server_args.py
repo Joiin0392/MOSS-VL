@@ -2045,6 +2045,27 @@ class ServerArgs:
                     "mask is not supported on ascend backend. All vision tokens "
                     "will be visible to all text tokens during prefill."
                 )
+                # Containment for a deterministic-repeatability bug: with the
+                # Ascend paged KV cache (default page_size=128), radix cache
+                # inserts encoder (vision) KV into the tree on request finish.
+                # Those retained encoder pages change the decode paged-KV
+                # layout across runs, which makes Ascend attention produce
+                # non-deterministic logits under temperature=0 (observed
+                # ~0.06 logprob drift and exact ties), causing top-1 flips
+                # and occasional hallucinated/keyword-missing outputs (~20%
+                # failure rate). Disabling radix cache fully restores
+                # determinism. This is near-lossless for MossVL because image
+                # tokens dominate the prompt (3291/3306 here) and are not
+                # reusable across different images; the reusable text prefix
+                # is tiny. Root cause lives in the Ascend paged-attention
+                # kernel's sensitivity to KV page layout and requires a
+                # vllm-ascend/sgl_kernel_npu-level fix.
+                if not self.disable_radix_cache:
+                    self.disable_radix_cache = True
+                    logger.warning(
+                        "MossVLForConditionalGeneration on NPU: disabling radix "
+                        "cache to keep temperature-0 decode deterministic."
+                    )
         elif model_arch in ["Exaone4ForCausalLM", "ExaoneMoEForCausalLM"]:
             if hf_config.sliding_window_pattern is not None:
                 logger.warning(
