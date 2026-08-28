@@ -1,8 +1,8 @@
 # Open-Source Training Datasets
 
-MOSS-VL's training data consists of (1) open-source datasets collected from the community and (2) in-house synthetic data. This page lists the 203 open-source datasets used in our training (different splits/variants of the same public dataset are merged into one entry; every link has been verified accessible).
+MOSS-VL's training data consists of (1) open-source datasets collected from the community and (2) in-house synthetic data. This page lists the 205 open-source datasets used in our training.
 
-> **Note:** Before being used in training, these open-source datasets went through our internal curation pipeline, including format unification, quality filtering, deduplication, and additional cleaning and re-annotation. As a result, the actual training samples may differ from the raw public releases. In-house synthetic data and internally processed variants are not included below.
+> **Note:** Before being used in training, these open-source datasets went through our internal curation pipeline, including format unification, quality filtering, deduplication, and additional cleaning and re-annotation. As a result, the actual training samples may differ from the raw public releases.
 
 - [AI-MO/NuminaMath-CoT](https://huggingface.co/datasets/AI-MO/NuminaMath-CoT)
 - [AI2D-Caption](https://huggingface.co/datasets/abhayzala/AI2D-Caption)
@@ -77,7 +77,9 @@ MOSS-VL's training data consists of (1) open-source datasets collected from the 
 - [ImageNet-Think-250K](https://arxiv.org/abs/2510.01582)
 - [InfographicVQA](https://arxiv.org/abs/2204.12756)
 - [Interplay-LM-Reasoning](https://github.com/Interplay-LM-Reasoning/Interplay-LM-Reasoning)
-- [Jackrong HF 用户名下三个数据集](https://huggingface.co/datasets/Jackrong/GLM-5.1-Reasoning-1M-Cleaned)
+- [Jackrong/Competitive-Programming-python-blend](https://huggingface.co/datasets/Jackrong/Competitive-Programming-python-blend)
+- [Jackrong/DeepSeek-V3.2-Exp-reasoning-example](https://huggingface.co/datasets/Jackrong/DeepSeek-V3.2-Exp-reasoning-example)
+- [Jackrong/GLM-5.1-Reasoning-1M-Cleaned](https://huggingface.co/datasets/Jackrong/GLM-5.1-Reasoning-1M-Cleaned)
 - [jeggers/competition_math](https://huggingface.co/datasets/jeggers/competition_math)
 - [JHU-CROWD++](http://www.crowd-counting.com/)
 - [jimmycarter/textocr-gpt4v](https://huggingface.co/datasets/jimmycarter/textocr-gpt4v)
