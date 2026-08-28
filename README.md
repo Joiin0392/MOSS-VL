@@ -46,6 +46,7 @@ At the architectural level, **MOSS-VL-Realtime** adopts the following core desig
 ---
 
 ## 🔥 News
+- **2026/08/28**: 📋 Released the [list of open-source datasets](docs/open_source_datasets.md) used in MOSS-VL training.
 - **2026/08/21**: 🤝 MOSS-VL is now supported as a first-class multimodal model in [ms-swift](https://github.com/modelscope/ms-swift), enabling image/video inference with `swift infer` and LoRA or full-parameter fine-tuning with `swift sft`. See [PR #9944](https://github.com/modelscope/ms-swift/pull/9944).
 - **2026/08/15**: 📚 Published the [MOSS-VL Technical Report](https://arxiv.org/abs/2608.15045) on arXiv, covering the model architecture, training curriculum, real-time inference system, and comprehensive offline and streaming evaluations.
 - **2026/08/14**: 🤝 MOSS-VL is now supported by [LlamaFactory](https://github.com/hiyouga/LlamaFactory), with LoRA and full fine-tuning workflows available out of the box. See the [English tutorial](https://blog.llamafactory.net/en/posts/moss_vl_finetuning/) or [Chinese tutorial](https://blog.llamafactory.net/posts/moss_vl_finetuning/), and the [Mosi AI blog post](https://mosi.cn/blog/moss-vl-llamafactory).
