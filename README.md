@@ -12,6 +12,11 @@
     <a href="./README.md"><b>English</b></a> | <a href="./README_zh.md"><b>中文</b></a>
 </p>
 
+<p align="center">
+    <a href="https://paperswithcode.co/api/v1/papers/2608.15045/leaderboard-badge-link?eval=25843"><img src="https://paperswithcode.co/api/v1/papers/2608.15045/leaderboard-badge.svg?eval=25843&live=1" alt="Papers with Code: #2 on POPE"/></a>
+    <a href="https://paperswithcode.co/api/v1/papers/2608.15045/leaderboard-badge-link?eval=25850"><img src="https://paperswithcode.co/api/v1/papers/2608.15045/leaderboard-badge.svg?eval=25850&live=1" alt="Papers with Code: #3 on TOMATO"/></a>
+</p>
+
 https://github.com/user-attachments/assets/678ec713-0e01-4792-a5b3-c72e483c4d5f
 
 # MOSS-VL
