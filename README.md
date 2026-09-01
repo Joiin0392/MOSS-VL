@@ -51,6 +51,7 @@ At the architectural level, **MOSS-VL-Realtime** adopts the following core desig
 ---
 
 ## 🔥 News
+- **2026/08/31**: ⚖️ Published the [MOSS-VL quantization tutorial](quant/README.md) ([中文](quant/README_zh.md)): our FP8-Dynamic and NF4 recipes, KV-cache quantization, and how to quantize your own fine-tuned (e.g. SFT) MOSS-VL checkpoints.
 - **2026/08/28**: 📋 Released the [list of open-source datasets](docs/open_source_datasets.md) used in MOSS-VL training.
 - **2026/08/21**: 🤝 MOSS-VL is now supported as a first-class multimodal model in [ms-swift](https://github.com/modelscope/ms-swift), enabling image/video inference with `swift infer` and LoRA or full-parameter fine-tuning with `swift sft`. See [PR #9944](https://github.com/modelscope/ms-swift/pull/9944).
 - **2026/08/15**: 📚 Published the [MOSS-VL Technical Report](https://arxiv.org/abs/2608.15045) on arXiv, covering the model architecture, training curriculum, real-time inference system, and comprehensive offline and streaming evaluations.
@@ -179,6 +180,9 @@ pip install -i https://pypi.org/simple peft
 bash finetune/scripts/run_sft_lora.sh
 ```
 See [`finetune/README.md`](finetune/README.md) for full documentation.
+
+### Quantization
+We release 24 GiB FP8 and NF4 quantized checkpoints for both Instruct-0708 and Realtime, and share the calibration-free PTQ recipes behind them in [`quant/README.md`](quant/README.md) ([中文教程](quant/README_zh.md)). The guide covers the selective layer coverage rules (which language-model Linears to quantize and which multimodal modules to keep in BF16), runtime KV-cache quantization (Transformers HQQ / SGLang), and the same validation checklist we used — so you can quantize your own fine-tuned (e.g. SFT) MOSS-VL checkpoints directly.
 
 ### Model Download
 

@@ -51,6 +51,7 @@ https://github.com/user-attachments/assets/678ec713-0e01-4792-a5b3-c72e483c4d5f
 ---
 
 ## 🔥 新闻
+- **2026/08/31**: ⚖️ 发布 [MOSS-VL 量化教程](quant/README_zh.md)（[English](quant/README.md)）：包含 FP8-Dynamic 与 NF4 量化配方、KV Cache 量化，以及如何量化自己微调（如 SFT）后的 MOSS-VL checkpoint。
 - **2026/08/28**: 📋 公开 MOSS-VL 训练使用的[开源数据集列表](docs/open_source_datasets.md)。
 - **2026/08/21**: 🤝 MOSS-VL 已正式接入 [ms-swift](https://github.com/modelscope/ms-swift)，作为 Transformers 后端的一等多模态模型，现可通过 `swift infer` 进行图像/视频推理，并通过 `swift sft` 进行 LoRA 与全参数微调。详见 [PR #9944](https://github.com/modelscope/ms-swift/pull/9944)。
 - **2026/08/15**: 📚 [MOSS-VL 技术报告](https://arxiv.org/abs/2608.15045)已在 arXiv 发布，系统介绍模型架构、训练课程、实时推理系统，以及完整的离线与流式评测结果。
@@ -178,6 +179,9 @@ pip install -i https://pypi.org/simple peft
 bash finetune/scripts/run_sft_lora.sh
 ```
 详细文档请参阅 [`finetune/README.md`](finetune/README.md)。
+
+### 量化 (Quantization)
+我们为 Instruct-0708 与 Realtime 提供 24 GiB 的 FP8 与 NF4 量化模型，并在 [`quant/README_zh.md`](quant/README_zh.md)（[English](quant/README.md)）中公开了背后的免校准 PTQ 量化配方。教程涵盖语言层 Linear 的选择性量化范围（哪些量化、哪些多模态模块保留 BF16）、运行时 KV Cache 量化（Transformers HQQ / SGLang），以及我们实际使用的验收清单——你可以直接用它量化自己微调（如 SFT）后的 MOSS-VL checkpoint。
 
 ### 模型下载汇总
 
