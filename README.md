@@ -182,7 +182,7 @@ bash finetune/scripts/run_sft_lora.sh
 See [`finetune/README.md`](finetune/README.md) for full documentation.
 
 ### Quantization
-We release 24 GiB FP8 and NF4 quantized checkpoints for both Instruct-0708 and Realtime, and share the calibration-free PTQ recipes behind them in [`quant/README.md`](quant/README.md) ([中文教程](quant/README_zh.md)). The guide covers the selective layer coverage rules (which language-model Linears to quantize and which multimodal modules to keep in BF16), runtime KV-cache quantization (Transformers HQQ / SGLang), and the same validation checklist we used — so you can quantize your own fine-tuned (e.g. SFT) MOSS-VL checkpoints directly.
+We release FP8 and NF4 quantized checkpoints for both Instruct-0708 and Realtime, and share the calibration-free PTQ recipes behind them in [`quant/README.md`](quant/README.md) ([中文教程](quant/README_zh.md)). The guide covers selective layer coverage — which language-model Linears to quantize versus which multimodal modules stay in BF16 — runtime KV-cache quantization for Transformers and SGLang, and reproduction scripts that work directly on your own fine-tuned or SFT checkpoints.
 
 ### Model Download
 

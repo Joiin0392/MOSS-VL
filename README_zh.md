@@ -181,7 +181,7 @@ bash finetune/scripts/run_sft_lora.sh
 详细文档请参阅 [`finetune/README.md`](finetune/README.md)。
 
 ### 量化 (Quantization)
-我们为 Instruct-0708 与 Realtime 提供 24 GiB 的 FP8 与 NF4 量化模型，并在 [`quant/README_zh.md`](quant/README_zh.md)（[English](quant/README.md)）中公开了背后的免校准 PTQ 量化配方。教程涵盖语言层 Linear 的选择性量化范围（哪些量化、哪些多模态模块保留 BF16）、运行时 KV Cache 量化（Transformers HQQ / SGLang），以及我们实际使用的验收清单——你可以直接用它量化自己微调（如 SFT）后的 MOSS-VL checkpoint。
+我们为 Instruct-0708 与 Realtime 提供 FP8 与 NF4 量化模型，并在 [`quant/README_zh.md`](quant/README_zh.md)（[English](quant/README.md)）中公开了背后的免校准 PTQ 量化配方。教程涵盖语言层 Linear 的选择性量化范围、多模态敏感模块的 BF16 保留规则、Transformers 与 SGLang 的运行时 KV Cache 量化，以及可直接作用于你自己微调或 SFT 后 checkpoint 的复现脚本。
 
 ### 模型下载汇总
 
