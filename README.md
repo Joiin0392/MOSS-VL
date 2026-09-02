@@ -12,6 +12,11 @@
     <a href="./README.md"><b>English</b></a> | <a href="./README_zh.md"><b>中文</b></a>
 </p>
 
+<p align="center">
+    <a href="https://paperswithcode.co/api/v1/papers/2608.15045/leaderboard-badge-link?eval=25843"><img src="https://paperswithcode.co/api/v1/papers/2608.15045/leaderboard-badge.svg?eval=25843&live=1" alt="Papers with Code: #2 on POPE"/></a>
+    <a href="https://paperswithcode.co/api/v1/papers/2608.15045/leaderboard-badge-link?eval=25850"><img src="https://paperswithcode.co/api/v1/papers/2608.15045/leaderboard-badge.svg?eval=25850&live=1" alt="Papers with Code: #3 on TOMATO"/></a>
+</p>
+
 https://github.com/user-attachments/assets/678ec713-0e01-4792-a5b3-c72e483c4d5f
 
 # MOSS-VL
@@ -46,6 +51,9 @@ At the architectural level, **MOSS-VL-Realtime** adopts the following core desig
 ---
 
 ## 🔥 News
+- **2026/08/31**: ⚖️ Published the [MOSS-VL quantization tutorial](quant/README.md) ([中文](quant/README_zh.md)): our FP8-Dynamic and NF4 recipes, KV-cache quantization, and how to quantize your own fine-tuned (e.g. SFT) MOSS-VL checkpoints.
+- **2026/08/28**: 📋 Released the [list of open-source datasets](docs/open_source_datasets.md) used in MOSS-VL training.
+- **2026/08/21**: 🤝 MOSS-VL is now supported as a first-class multimodal model in [ms-swift](https://github.com/modelscope/ms-swift), enabling image/video inference with `swift infer` and LoRA or full-parameter fine-tuning with `swift sft`. See [PR #9944](https://github.com/modelscope/ms-swift/pull/9944).
 - **2026/08/15**: 📚 Published the [MOSS-VL Technical Report](https://arxiv.org/abs/2608.15045) on arXiv, covering the model architecture, training curriculum, real-time inference system, and comprehensive offline and streaming evaluations.
 - **2026/08/14**: 🤝 MOSS-VL is now supported by [LlamaFactory](https://github.com/hiyouga/LlamaFactory), with LoRA and full fine-tuning workflows available out of the box. See the [English tutorial](https://blog.llamafactory.net/en/posts/moss_vl_finetuning/) or [Chinese tutorial](https://blog.llamafactory.net/posts/moss_vl_finetuning/), and the [Mosi AI blog post](https://mosi.cn/blog/moss-vl-llamafactory).
 - **2026/08/11**: ⚡ Released 24 GiB quantized checkpoints for MOSS-VL, with FP8 and NF4 variants for both Instruct-0708 and Realtime: **MOSS-VL-Instruct-0708-FP8** ([Hugging Face](https://huggingface.co/OpenMOSS-Team/MOSS-VL-Instruct-0708-FP8) | [ModelScope](https://modelscope.cn/models/openmoss/MOSS-VL-Instruct-0708-FP8)), **MOSS-VL-Instruct-0708-NF4** ([Hugging Face](https://huggingface.co/OpenMOSS-Team/MOSS-VL-Instruct-0708-NF4) | [ModelScope](https://www.modelscope.cn/models/openmoss/MOSS-VL-Instruct-0708-NF4)), **MOSS-VL-Realtime-FP8** ([Hugging Face](https://huggingface.co/OpenMOSS-Team/MOSS-VL-Realtime-FP8) | [ModelScope](https://www.modelscope.cn/models/openmoss/MOSS-VL-Realtime-FP8)) and **MOSS-VL-Realtime-NF4** ([Hugging Face](https://huggingface.co/OpenMOSS-Team/MOSS-VL-Realtime-NF4) | [ModelScope](https://modelscope.cn/models/openmoss/MOSS-VL-Realtime-NF4)), enabling efficient inference on a single 24 GB NVIDIA GPU.
@@ -173,6 +181,9 @@ bash finetune/scripts/run_sft_lora.sh
 ```
 See [`finetune/README.md`](finetune/README.md) for full documentation.
 
+### Quantization
+We release FP8 and NF4 quantized checkpoints for both Instruct-0708 and Realtime, and share the calibration-free PTQ recipes behind them in [`quant/README.md`](quant/README.md) ([中文教程](quant/README_zh.md)). The guide covers selective layer coverage — which language-model Linears to quantize versus which multimodal modules stay in BF16 — runtime KV-cache quantization for Transformers and SGLang, and reproduction scripts that work directly on your own fine-tuned or SFT checkpoints.
+
 ### Model Download
 
 This generation ships three models from the same rebuilt data: **MOSS-VL-Realtime** for continuous video streams, **Instruct** for offline tasks, and **Base** for continued pre-training and fine-tuning.
@@ -214,7 +225,7 @@ We would like to express our gratitude to **NVIDIA** for the [Megatron-LM](https
 
 ## 📜 Citation
 ```bibtex
-@misc{wang2026mossvltechnicalreport,
+@misc{mossvl,
   title         = {MOSS-VL Technical Report},
   author        = {Wang, Pengyu and Tan, Chenkun and Zhou, Shaojun and Zhou, Qirui and Chen, Yanxin and He, Xingyang and Zeng, Huazheng and Cheng, Jijun and Wang, Chenghao and Qian, Xiaomeng and Wang, Pengfei and Huang, Zhan and Gao, Shanqing and Huang, Wei and Cao, Longjun and Ran, Wu and Liu, Jie and Zhu, Changtai and Wang, Hongkai and Tian, Yixian and Liu, Chenghao and Ye, Zhen and Wang, Xinghao and Jiang, Botian and Feng, Guoguo and Fei, Zhaoye and Li, Ruixiao and Chen, Mingshu and Gao, Yang and Cheng, Qinyuan and Li, Shimin and Qiu, Xipeng},
   year          = {2026},
@@ -224,7 +235,7 @@ We would like to express our gratitude to **NVIDIA** for the [Megatron-LM](https
   url           = {https://arxiv.org/abs/2608.15045}
 }
 
-@misc{mossvideopreview2026,
+@misc{mossvideopreview,
   title         = {{MOSS-Video-Preview: Toward Real-Time Video Understanding via Cross-Attention}},
   author        = {Pengyu Wang and Chenkun Tan and Shaojun Zhou and Wei Huang and Qirui Zhou and Zhan Huang and Zhen Ye and Jijun Cheng and Xiaomeng Qian and Yanxin Chen and Xingyang He and Huazheng Zeng and Chenghao Wang and Pengfei Wang and Hongkai Wang and Shanqing Gao and Yixian Tian and Chenghao Liu and Xinghao Wang and Botian Jiang and Xipeng Qiu},
   year          = {2026},

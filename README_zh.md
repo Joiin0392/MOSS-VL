@@ -12,6 +12,11 @@
     <a href="./README.md"><b>English</b></a> | <a href="./README_zh.md"><b>中文</b></a>
 </p>
 
+<p align="center">
+    <a href="https://paperswithcode.co/api/v1/papers/2608.15045/leaderboard-badge-link?eval=25843"><img src="https://paperswithcode.co/api/v1/papers/2608.15045/leaderboard-badge.svg?eval=25843&live=1" alt="Papers with Code: #2 on POPE"/></a>
+    <a href="https://paperswithcode.co/api/v1/papers/2608.15045/leaderboard-badge-link?eval=25850"><img src="https://paperswithcode.co/api/v1/papers/2608.15045/leaderboard-badge.svg?eval=25850&live=1" alt="Papers with Code: #3 on TOMATO"/></a>
+</p>
+
 https://github.com/user-attachments/assets/678ec713-0e01-4792-a5b3-c72e483c4d5f
 
 # MOSS-VL
@@ -46,6 +51,9 @@ https://github.com/user-attachments/assets/678ec713-0e01-4792-a5b3-c72e483c4d5f
 ---
 
 ## 🔥 新闻
+- **2026/08/31**: ⚖️ 发布 [MOSS-VL 量化教程](quant/README_zh.md)（[English](quant/README.md)）：包含 FP8-Dynamic 与 NF4 量化配方、KV Cache 量化，以及如何量化自己微调（如 SFT）后的 MOSS-VL checkpoint。
+- **2026/08/28**: 📋 公开 MOSS-VL 训练使用的[开源数据集列表](docs/open_source_datasets.md)。
+- **2026/08/21**: 🤝 MOSS-VL 已正式接入 [ms-swift](https://github.com/modelscope/ms-swift)，作为 Transformers 后端的一等多模态模型，现可通过 `swift infer` 进行图像/视频推理，并通过 `swift sft` 进行 LoRA 与全参数微调。详见 [PR #9944](https://github.com/modelscope/ms-swift/pull/9944)。
 - **2026/08/15**: 📚 [MOSS-VL 技术报告](https://arxiv.org/abs/2608.15045)已在 arXiv 发布，系统介绍模型架构、训练课程、实时推理系统，以及完整的离线与流式评测结果。
 - **2026/08/14**: 🤝 MOSS-VL 已接入 [LlamaFactory](https://github.com/hiyouga/LlamaFactory) 主线，LoRA 与全参数微调工作流现已开箱即用。详见[中文教程](https://blog.llamafactory.net/posts/moss_vl_finetuning/)或[英文教程](https://blog.llamafactory.net/en/posts/moss_vl_finetuning/)，也可参阅[模思智能博客](https://mosi.cn/blog/moss-vl-llamafactory)。
 - **2026/08/11**: ⚡ 发布 MOSS-VL 的 24 GiB 量化模型，Instruct-0708 与 Realtime 均提供 FP8 和 NF4 两种版本：**MOSS-VL-Instruct-0708-FP8**（[Hugging Face](https://huggingface.co/OpenMOSS-Team/MOSS-VL-Instruct-0708-FP8) | [ModelScope](https://modelscope.cn/models/openmoss/MOSS-VL-Instruct-0708-FP8)）、**MOSS-VL-Instruct-0708-NF4**（[Hugging Face](https://huggingface.co/OpenMOSS-Team/MOSS-VL-Instruct-0708-NF4) | [ModelScope](https://www.modelscope.cn/models/openmoss/MOSS-VL-Instruct-0708-NF4)）、**MOSS-VL-Realtime-FP8**（[Hugging Face](https://huggingface.co/OpenMOSS-Team/MOSS-VL-Realtime-FP8) | [ModelScope](https://www.modelscope.cn/models/openmoss/MOSS-VL-Realtime-FP8)）和 **MOSS-VL-Realtime-NF4**（[Hugging Face](https://huggingface.co/OpenMOSS-Team/MOSS-VL-Realtime-NF4) | [ModelScope](https://modelscope.cn/models/openmoss/MOSS-VL-Realtime-NF4)），支持在单张 24 GB NVIDIA GPU 上高效推理。
@@ -172,6 +180,9 @@ bash finetune/scripts/run_sft_lora.sh
 ```
 详细文档请参阅 [`finetune/README.md`](finetune/README.md)。
 
+### 量化 (Quantization)
+我们为 Instruct-0708 与 Realtime 提供 FP8 与 NF4 量化模型，并在 [`quant/README_zh.md`](quant/README_zh.md)（[English](quant/README.md)）中公开了背后的免校准 PTQ 量化配方。教程涵盖语言层 Linear 的选择性量化范围、多模态敏感模块的 BF16 保留规则、Transformers 与 SGLang 的运行时 KV Cache 量化，以及可直接作用于你自己微调或 SFT 后 checkpoint 的复现脚本。
+
 ### 模型下载汇总
 
 本代基于同一套重构数据交付三个模型:**MOSS-VL-Realtime** 面向持续视频流,**Instruct** 承接离线任务,**Base** 供继续预训练与微调。
@@ -213,7 +224,7 @@ bash finetune/scripts/run_sft_lora.sh
 
 ## 📜 引用
 ```bibtex
-@misc{wang2026mossvltechnicalreport,
+@misc{mossvl,
   title         = {MOSS-VL Technical Report},
   author        = {Wang, Pengyu and Tan, Chenkun and Zhou, Shaojun and Zhou, Qirui and Chen, Yanxin and He, Xingyang and Zeng, Huazheng and Cheng, Jijun and Wang, Chenghao and Qian, Xiaomeng and Wang, Pengfei and Huang, Zhan and Gao, Shanqing and Huang, Wei and Cao, Longjun and Ran, Wu and Liu, Jie and Zhu, Changtai and Wang, Hongkai and Tian, Yixian and Liu, Chenghao and Ye, Zhen and Wang, Xinghao and Jiang, Botian and Feng, Guoguo and Fei, Zhaoye and Li, Ruixiao and Chen, Mingshu and Gao, Yang and Cheng, Qinyuan and Li, Shimin and Qiu, Xipeng},
   year          = {2026},
@@ -223,7 +234,7 @@ bash finetune/scripts/run_sft_lora.sh
   url           = {https://arxiv.org/abs/2608.15045}
 }
 
-@misc{mossvideopreview2026,
+@misc{mossvideopreview,
   title         = {{MOSS-Video-Preview: Toward Real-Time Video Understanding via Cross-Attention}},
   author        = {Pengyu Wang and Chenkun Tan and Shaojun Zhou and Wei Huang and Qirui Zhou and Zhan Huang and Zhen Ye and Jijun Cheng and Xiaomeng Qian and Yanxin Chen and Xingyang He and Huazheng Zeng and Chenghao Wang and Pengfei Wang and Hongkai Wang and Shanqing Gao and Yixian Tian and Chenghao Liu and Xinghao Wang and Botian Jiang and Xipeng Qiu},
   year          = {2026},
