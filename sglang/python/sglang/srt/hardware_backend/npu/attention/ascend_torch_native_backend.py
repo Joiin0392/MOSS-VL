@@ -156,8 +156,8 @@ class AscendTorchNativeAttnBackend:
                         mask_offset : mask_offset + q_len_r * kv_len
                     ].reshape(q_len_r, kv_len)
                     # Packed mask: 1=visible, 0=masked.
-                    # sdpa attn_mask: True=masked (blocked), False=visible.
-                    per_req_attn_mask = (mask_slice == 0).unsqueeze(0).unsqueeze(0)
+                    # PyTorch sdpa attn_mask (bool): True=visible, False=masked.
+                    per_req_attn_mask = mask_slice.bool().unsqueeze(0).unsqueeze(0)
                     mask_offset += q_len_r * kv_len
 
                 if logit_cap > 0:
