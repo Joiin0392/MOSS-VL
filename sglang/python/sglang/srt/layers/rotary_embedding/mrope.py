@@ -263,18 +263,14 @@ class MRotaryEmbedding(RotaryEmbedding):
         assert (
             fused_set_kv_buffer_arg is None
         ), "fused_set_kv_buffer_arg is not supported for npu implementation"
-        # torch_npu.npu_mrope was called with a hardcoded mrope_section=[0,0,0]
-        # and ignores mrope_interleaved entirely, so every request with
-        # per-axis positions (any multimodal prompt) got corrupted rotary
-        # embeddings. The CANN op does not support sectioned/interleaved
-        # mrope — use the triton fused kernel instead, which honours
-        # mrope_section/mrope_interleaved and matches the HF reference
-        # (verified against forward_native; also ~12x faster than native).
-        if positions.ndim == 1:
-            # the triton kernel indexes positions per-axis; 1D inputs (not
-            # produced by the mrope scheduler, kept for safety) become (3, N)
-            positions = positions.unsqueeze(0).expand(3, -1).contiguous()
-        return self.forward_triton(positions, query, key)
+        # torch_npu.npu_mrope hardcodes mrope_section=[0,0,0] and ignores
+        # mrope_interleaved, corrupting rotary embeddings for any multimodal
+        # prompt with per-axis positions.  Mirror forward_cuda: use the
+        # triton fused kernel for 2D+section inputs, fall back to native
+        # otherwise (text-only / no section).
+        if positions.ndim == 2 and self.mrope_section:
+            return self.forward_triton(positions, query, key)
+        return self.forward_native(positions, query, key, fused_set_kv_buffer_arg)
 
     @staticmethod
     def get_rope_index(

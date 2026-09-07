@@ -174,33 +174,19 @@ class AscendTorchNativeAttnBackend:
                     per_req_attn_mask = (mask_slice == 0).unsqueeze(0).unsqueeze(0)
                     mask_offset += q_len_r * kv_len
 
-                if per_req_attn_mask is not None:
-                    per_req_out_redudant = (
-                        scaled_dot_product_attention(
-                            per_req_query_redudant.unsqueeze(0),
-                            per_req_key.unsqueeze(0),
-                            per_req_value.unsqueeze(0),
-                            enable_gqa=enable_gqa,
-                            scale=scaling,
-                            is_causal=False,
-                            attn_mask=per_req_attn_mask,
-                        )
-                        .squeeze(0)
-                        .movedim(query.dim() - 2, 0)
+                per_req_out_redudant = (
+                    scaled_dot_product_attention(
+                        per_req_query_redudant.unsqueeze(0),
+                        per_req_key.unsqueeze(0),
+                        per_req_value.unsqueeze(0),
+                        enable_gqa=enable_gqa,
+                        scale=scaling,
+                        is_causal=causal if per_req_attn_mask is None else False,
+                        attn_mask=per_req_attn_mask,
                     )
-                else:
-                    per_req_out_redudant = (
-                        scaled_dot_product_attention(
-                            per_req_query_redudant.unsqueeze(0),
-                            per_req_key.unsqueeze(0),
-                            per_req_value.unsqueeze(0),
-                            enable_gqa=enable_gqa,
-                            scale=scaling,
-                            is_causal=causal,
-                        )
-                        .squeeze(0)
-                        .movedim(query.dim() - 2, 0)
-                    )
+                    .squeeze(0)
+                    .movedim(query.dim() - 2, 0)
+                )
             output[start_q:end_q, :, :] = per_req_out_redudant[prefill_seq_len_q:, :, :]
             start_q, start_kv = end_q, end_kv
         return output
