@@ -17,6 +17,8 @@
     <a href="https://paperswithcode.co/api/v1/papers/2608.15045/leaderboard-badge-link?eval=25850"><img src="https://paperswithcode.co/api/v1/papers/2608.15045/leaderboard-badge.svg?eval=25850&live=1" alt="Papers with Code: #3 on TOMATO"/></a>
 </p>
 
+**Start here:** [Try the demo](https://huggingface.co/spaces/OpenMOSS-Team/MOSS-VL) · [Quick start](#-quick-start) · [Real-time inference](#real-time-inference) · [Offline inference](#offline-inference) · [Model weights](https://huggingface.co/collections/OpenMOSS-Team/moss-vl)
+
 https://github.com/user-attachments/assets/678ec713-0e01-4792-a5b3-c72e483c4d5f
 
 # MOSS-VL
@@ -51,7 +53,7 @@ At the architectural level, **MOSS-VL-Realtime** adopts the following core desig
 ---
 
 ## 🔥 News
-- **2026/08/31**: ⚖️ Published the [MOSS-VL quantization tutorial](quant/README.md) ([中文](quant/README_zh.md)): our FP8-Dynamic and NF4 recipes, KV-cache quantization, and how to quantize your own fine-tuned (e.g. SFT) MOSS-VL checkpoints.
+- **2026/08/31**: ⚖️ Published the MOSS-VL quantization tutorial ([English](quant/README.md) | [中文](quant/README_zh.md)): our FP8-Dynamic and NF4 recipes, KV-cache quantization, and how to quantize your own fine-tuned (e.g. SFT) MOSS-VL checkpoints.
 - **2026/08/28**: 📋 Released the [list of open-source datasets](docs/open_source_datasets.md) used in MOSS-VL training.
 - **2026/08/21**: 🤝 MOSS-VL is now supported as a first-class multimodal model in [ms-swift](https://github.com/modelscope/ms-swift), enabling image/video inference with `swift infer` and LoRA or full-parameter fine-tuning with `swift sft`. See [PR #9944](https://github.com/modelscope/ms-swift/pull/9944).
 - **2026/08/15**: 📚 Published the [MOSS-VL Technical Report](https://arxiv.org/abs/2608.15045) on arXiv, covering the model architecture, training curriculum, real-time inference system, and comprehensive offline and streaming evaluations.
