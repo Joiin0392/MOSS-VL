@@ -143,6 +143,60 @@ class AscendTorchNativeAttnBackend:
                 per_req_key = per_req_key.to(per_req_query.dtype)
                 per_req_value = per_req_value.to(per_req_query.dtype)
 
+            if is_cross_attention:
+                # Cross-attention: query = new text tokens (extend_seq_len),
+                # key/value = encoder (vision) tokens (encoder_len).
+                # No padding needed — dimensions are already clean.
+                # Mask shape: [extend_seq_len, encoder_len].
+                per_req_attn_mask = None
+                if cross_attention_custom_mask is not None:
+                    kv_len = per_req_key.shape[1]  # = encoder_len
+                    q_len_r = extend_seq_len_q
+                    mask_slice = cross_attention_custom_mask[
+                        mask_offset : mask_offset + q_len_r * kv_len
+                    ].reshape(q_len_r, kv_len)
+                    # Packed mask: 1=visible, 0=masked.
+                    # sdpa attn_mask: True=masked (blocked), False=visible.
+                    per_req_attn_mask = (mask_slice == 0).unsqueeze(0).unsqueeze(0)
+                    mask_offset += q_len_r * kv_len
+
+                if logit_cap > 0:
+                    per_req_out = (
+                        self.scaled_dot_product_attention_with_softcapping(
+                            per_req_query.unsqueeze(0),
+                            per_req_key.unsqueeze(0),
+                            per_req_value.unsqueeze(0),
+                            enable_gqa=enable_gqa,
+                            scale=scaling,
+                            is_causal=False,
+                            logit_cap=logit_cap,
+                            logit_capping_method=logit_capping_method,
+                        )
+                        .squeeze(0)
+                        .movedim(query.dim() - 2, 0)
+                    )
+                else:
+                    per_req_out = (
+                        scaled_dot_product_attention(
+                            per_req_query.unsqueeze(0),
+                            per_req_key.unsqueeze(0),
+                            per_req_value.unsqueeze(0),
+                            enable_gqa=enable_gqa,
+                            scale=scaling,
+                            is_causal=False,
+                            attn_mask=per_req_attn_mask,
+                        )
+                        .squeeze(0)
+                        .movedim(query.dim() - 2, 0)
+                    )
+                # Cross-attention output has extend_seq_len rows; place
+                # them at the new-token offset in the output buffer.
+                output[start_q:end_q, :, :] = per_req_out
+                start_q, start_kv = end_q, end_kv
+                continue
+
+            # Self-attention path (below): query is padded to seq_len_kv
+            # because self-attention attends to all cached tokens.
             if logit_cap > 0:
                 per_req_out_redudant = (
                     self.scaled_dot_product_attention_with_softcapping(
@@ -159,39 +213,6 @@ class AscendTorchNativeAttnBackend:
                     .movedim(query.dim() - 2, 0)
                 )
             else:
-                per_req_attn_mask = None
-                if (
-                    is_cross_attention
-                    and cross_attention_custom_mask is not None
-                ):
-                    kv_len = per_req_key.shape[1]
-                    # Use extend_seq_len (new tokens only), NOT
-                    # per_req_query_redudant.shape[1] (= seq_len_kv, full
-                    # length including cached prefix).  The mask was built
-                    # with q_len = extend_seq_len in _build_cross_attention_
-                    # custom_mask, so we must read the same count here.
-                    q_len_r = extend_seq_lens[seq_idx]
-                    mask_slice = cross_attention_custom_mask[
-                        mask_offset : mask_offset + q_len_r * kv_len
-                    ].reshape(q_len_r, kv_len)
-                    # Packed mask: 1=visible, 0=masked.
-                    # sdpa attn_mask: True=masked (blocked), False=visible.
-                    # The query tensor has shape [heads, seq_len_kv, dim]
-                    # but only [heads, prefill_len:prefill_len+q_len_r, :]
-                    # has real data.  Pad the mask to match seq_len_kv,
-                    # with the prefix rows unmasked (visible) — the prefix
-                    # tokens attend to all encoder tokens.
-                    full_mask = torch.ones(
-                        seq_len_kv, kv_len,
-                        dtype=torch.bool,
-                        device=per_req_query_redudant.device,
-                    )
-                    full_mask[prefill_seq_len_q : prefill_seq_len_q + q_len_r] = (
-                        mask_slice == 0
-                    )
-                    per_req_attn_mask = full_mask.unsqueeze(0).unsqueeze(0)
-                    mask_offset += q_len_r * kv_len
-
                 per_req_out_redudant = (
                     scaled_dot_product_attention(
                         per_req_query_redudant.unsqueeze(0),
@@ -199,8 +220,7 @@ class AscendTorchNativeAttnBackend:
                         per_req_value.unsqueeze(0),
                         enable_gqa=enable_gqa,
                         scale=scaling,
-                        is_causal=causal if per_req_attn_mask is None else False,
-                        attn_mask=per_req_attn_mask,
+                        is_causal=causal,
                     )
                     .squeeze(0)
                     .movedim(query.dim() - 2, 0)
