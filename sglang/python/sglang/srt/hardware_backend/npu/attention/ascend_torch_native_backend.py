@@ -119,8 +119,18 @@ class AscendTorchNativeAttnBackend:
                 if is_cross_attention:
                     atten_end_kv = encoder_lens[seq_idx]
                 else:
+                    # The page-table row is [encoder slots | decoder slots]:
+                    # self-attention must read the *entire* decoder text KV
+                    # (prefix + this chunk), exactly like the decode path —
+                    # not just the last extend_seq_len_q cells, which alias
+                    # the oldest prefix slots (extend turns) or overrun the
+                    # filled region into stale slots from previous requests
+                    # (initial prefill). Root cause of progressive
+                    # degeneration (sentence loops, single-char runs) on
+                    # image+text generations.  From smoke patches
+                    # npu/0004+0007.
                     atten_start_kv = encoder_lens[seq_idx]
-                    atten_end_kv = encoder_lens[seq_idx] + extend_seq_len_q
+                    atten_end_kv = encoder_lens[seq_idx] + seq_len_kv
 
             per_req_query = query[:, start_q:end_q, :]
             per_req_query_redudant = torch.empty(
